@@ -14,9 +14,10 @@
   l = log --graph --all --pretty=format:'%C(yellow)%h%C(cyan)%d%Creset %s %C(white)- %an, %ar%Creset'
   ll = log --stat --abbrev-commit
   lol = log --oneline --graph --decorate
-  plush = !sh -c \"git up && git push\"
+  plush = !sh -c \"git pull && git push\"
   s = status -s
   st = status
+  tyup = !sh -c \"git up && git push\"
 
 [color]
   ui = auto
