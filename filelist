@@ -1,0 +1,11 @@
+# Files
+.bashrc
+.gitconfig
+.irbrc
+.profile
+.tmux
+.tmux.conf
+.vimrc
+# Directories
+.ssh
+bin
