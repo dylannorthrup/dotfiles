@@ -3,9 +3,9 @@
 .gitconfig
 .irbrc
 .profile
-.tmux
 .tmux.conf
 .vimrc
 # Directories
+.tmux
 .ssh
 bin
