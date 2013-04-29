@@ -48,7 +48,7 @@ check_and_copy_file() {
       copy_file $fname
     fi
   else
-    echo "No differences, continuing to next directory"
+    echo "No differences, continuing to next file"
   fi
 }
 
