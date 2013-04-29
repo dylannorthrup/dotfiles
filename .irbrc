@@ -21,6 +21,17 @@ IRB.conf[:SAVE_HISTORY] = 1000
 IRB.conf[:HISTORY_FILE] = "#{ENV['HOME']}/.irb_history"
 IRB.conf[:EVAL_HISTORY] = 100
 
+# Set up prompt
+IRB.conf[:PROMPT][:DYLAN] = {
+  :PROMPT_I => '(%m):%03n:%i> ',
+  :PROMPT_S => '(%m):%03n:%i> ',
+  :PROMPT_C => '(%m):%03n:%i%l ',
+  :PROMPT_N => '(%m):%03n:%i* ',
+  :RETURN => "  ==> %s\n",
+}
+IRB.conf[:PROMPT_MODE] = :DYLAN
+IRB.conf[:AUTO_INDENT] = true
+
 def reset_irb
   exec($0)
 end
