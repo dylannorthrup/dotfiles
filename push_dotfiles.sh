@@ -23,7 +23,7 @@ diff_dir() {
 confirm_copy() {
   fname=$1
   read -p "Copy ${fname} (Y/N) " -n 1
-  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
     return 1
   fi
   echo "Skipping copy for ${fname}"
@@ -31,7 +31,7 @@ confirm_copy() {
 }
 
 copy_file() {
-  echo cp -rp $1 ~/$1
+  cp -rp $1 ~/$1
 }
 
 check_and_copy_file() {
