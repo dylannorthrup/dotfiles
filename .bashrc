@@ -179,6 +179,11 @@ function countdown {
   echo 0
 }
 
+gcb() {
+  cd ~/repos
+  git clone git@bitbucket.org:vgtf/cookbook-${1}.git
+}
+
 function gitup {
   for i in ~/repos/*; do
     if [ -d ${i}/.git ]; then
