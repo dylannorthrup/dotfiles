@@ -22,7 +22,7 @@ fi
 
 PROMPT_COMMAND='/Users/dnorthrup/bin/show_git_branch.sh'
 
-PATH=/usr/local/opt/ruby/bin:$PATH:~/repos/chef-master/bin
+PATH=/usr/local/opt/ruby/bin:$PATH:~/repos/chef-master/bin:/opt/bin:/opt/local/bin:~/bin
 
 # User specific aliases and functions
 alias be='bundle exec'
