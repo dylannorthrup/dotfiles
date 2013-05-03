@@ -180,6 +180,14 @@ function countdown {
   echo 0
 }
 
+cr() {
+  cd ~/repos/${1}
+}
+
+crc() {
+  cr cookbook-${1}
+}
+
 gcb() {
   cd ~/repos
   git clone git@bitbucket.org:vgtf/cookbook-${1}.git
