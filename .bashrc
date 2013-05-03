@@ -67,6 +67,7 @@ alias resetmaster='cd ~/repos; rm -rf chef-master; mkdir chef-master; git clone 
 alias rg='rolegrep'
 alias rls='find . | egrep -v "CVS|.svn"'
 alias ssr='ssh -l root'
+alias ssu='ssh -l ubuntu'
 alias ssz='ssh -i ~/.ssh/id_rsa.zenoss -l zenoss'
 alias ta='tmux new -t 0'
 alias view='vim -R'
