@@ -2,5 +2,4 @@
 CURL='curl -sS -o /dev/null -v'
 
  
-curl -sS -o /dev/null -v -L $* 2>&1 | colorize cyan 'HTTP.*' grey 'Cache-Control.*' blue 'Date:.*' red 'GET.*' pink 'Host:.*' yellow 'X-UA-Profile.*' #fawn 'Content-Length.*'
-echo '============================================' | colorize white '=*' 
+curl -sS -o /dev/null -v -L $* 2>&1 | hlhttp
