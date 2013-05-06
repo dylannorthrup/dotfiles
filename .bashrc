@@ -182,7 +182,7 @@ function countdown {
   echo 0
 }
 
-cr() {
+cdr() {
   cd ~/repos/${1}
 }
 
