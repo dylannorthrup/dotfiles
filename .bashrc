@@ -185,7 +185,7 @@ cr() {
   cd ~/repos/${1}
 }
 
-crc() {
+cdc() {
   cr cookbook-${1}
 }
 
