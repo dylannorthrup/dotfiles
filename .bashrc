@@ -56,6 +56,7 @@ alias more='less -X'
 alias ng='nodegrep'
 alias lng='laxnodegrep'
 alias p2='ssh phalanx2'
+alias pegasus='ssh pegasus'
 alias prespace='sed -e "s/^/ /g"'
 alias psu='cd ~/repos/svnrepo/puppet; svn up; cd -'
 alias puppet-master="ssh puppet"
