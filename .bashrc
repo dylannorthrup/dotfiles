@@ -106,6 +106,19 @@ function emw {
   mwin $(echo $*)
 }
 
+function cblink {
+  cdr cbs
+  target="../cookbook-$1"
+  if [ -d $target ]; then
+    ln -s $target $1
+    ls -l $1
+  else
+    echo "Expected directory '${target}' does not exist. Please try again with the "
+    echo "correct parameters"
+  fi
+  cd -
+}
+
 function demonbox {
   scp -rp $* docxstudios@johnnyblaze.dreamhost.com:~/dropbox/demon/
 }
