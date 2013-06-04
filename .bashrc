@@ -25,6 +25,7 @@ PROMPT_COMMAND='~/bin/show_git_branch.sh'
 PATH=/opt/junkdrawer/bin:/usr/local/opt/ruby/bin:$PATH:~/repos/chef-master/bin:/opt/bin:/opt/local/bin:~/bin
 
 # User specific aliases and functions
+alias 5ng='56nodegrep'
 alias be='bundle exec'
 alias beb='bundle exec berks'
 alias bebr='bundle exec braid'
@@ -32,10 +33,10 @@ alias bek='bundle exec knife'
 alias beke='bundle exec knife environment'
 alias bel='bundle exec librarian-chef'
 alias bev='bundle exec vagrant'
-alias cd56='cd ~/repos/chef-cnn-56m'
+alias cd56='cd ~/repos/chef-cnn/56m'
 alias cdcnn='cd ~/repos/chef-cnn'
 alias cdgust='cd ~/repos/svnrepo/puppet/branches/STAGE/files/gust'
-alias cdlax='cd ~/repos/chef-cnn-lax'
+alias cdlax='cd ~/repos/chef-cnn/lax'
 alias cdmain='cd ~/repos/chef-main'
 alias cdmaster='cd ~/repos/chef-master'
 alias cdpup='cd ~/repos/svnrepo/puppet/branches/STAGE/'
@@ -115,6 +116,10 @@ function dropbox {
 
 function kick_nginx {
   ssh $* 'sudo /etc/init.d/nginx restart'
+}
+
+function 56nodegrep {
+  egrep "$@" ~/knife/56m-node-list
 }
 
 function laxnodegrep {
