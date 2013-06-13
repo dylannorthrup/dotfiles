@@ -217,6 +217,11 @@ gcb() {
   git clone git@bitbucket.org:vgtf/cookbook-${1}.git
 }
 
+gco() {
+  cd ~/repos
+  git clone git@bitbucket.org:vgtf/chef-${1}.git
+}
+
 function gitup {
   for i in ~/repos/*; do
     if [ -d ${i}/.git ]; then
