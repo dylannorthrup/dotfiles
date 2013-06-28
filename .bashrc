@@ -212,6 +212,10 @@ cdc() {
   cdr cookbook-${1}
 }
 
+cdo() {
+  cdr chef-${1}
+}
+
 gcb() {
   cd ~/repos
   git clone git@bitbucket.org:vgtf/cookbook-${1}.git
