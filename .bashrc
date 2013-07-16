@@ -225,6 +225,8 @@ gcb() {
 gco() {
   cd ~/repos
   git clone git@bitbucket.org:vgtf/chef-${1}.git
+  cd chef-${1}
+  bundle
 }
 
 function gitup {
