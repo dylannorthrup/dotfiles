@@ -6,17 +6,21 @@
   a = !git add . && git status
   au = !git add -u . && git status
   aa = !git add . && git add -u . && git status
+  br = branch
   co = checkout
   ci = commit
   cm = commit -m
   d = diff --color-words
   dh = diff --color-words head
-  l = log --graph --all --pretty=format:'%C(yellow)%h%C(cyan)%d%Creset %s %C(white)- %an, %ar%Creset'
+  dump = cat-file -p
+  hist = log --pretty=format:'%C(yellow)%h %C(cyan)%C(ul)%ad%Creset | %s%C(cyan)%d%Creset [%C(white)%an%Creset]' --graph --date=short
+  l = log --graph --all --pretty=format:'%C(yellow)%h%C(cyan)%d%Creset %s - %C(white)%an, %ar%Creset'
   ll = log --stat --abbrev-commit
   lol = log --oneline --graph --decorate
   plush = !sh -c \"git pull && git push\"
   s = status -s
   st = status
+  type = cat-file -t
   tyup = !sh -c \"git up && git push\"
 
 [color]
@@ -34,3 +38,10 @@
   added = yellow
   changed = green
   untracked = cyan
+[core]
+	autocrlf = input
+	safecrlf = true
+[format]
+	pretty = %C(yellow)%h %C(cyan)%C(ul)%ad%Creset | %s%C(cyan)%d%Creset [%C(white)%an%Creset]
+[log]
+	date = short
