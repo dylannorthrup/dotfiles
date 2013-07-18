@@ -229,6 +229,13 @@ gco() {
   bundle
 }
 
+clink() {
+  cd ~/repos/cbs
+  ln -s ../cookbook-${1} ${1}
+  ls -l ${1}
+  cd -
+}
+
 function gitup {
   for i in ~/repos/*; do
     if [ -d ${i}/.git ]; then
