@@ -248,6 +248,11 @@ function gitup {
   done
 }
 
+function cab() {
+  curlv http://${1}${3} | hlhttp
+  curlv http://${2}${3} | hlhttp
+}
+
 function which {
   if declare -f "$*" > /dev/null; then
     type $*
@@ -261,6 +266,19 @@ function which {
   fi
 }
 
+# Completion for chef repos (thanks to Mark J Reed)
+_cdc_dirs() {
+  local cur=${COMP_WORDS[COMP_CWORD]};
+  COMPREPLY=($(\cd ~/repos; compgen -d "cookbook-$cur" | sed -e 's,^cookbook-,,' -e 's,$,/,'))
+}
+
+_cdo_dirs() {
+  local cur=${COMP_WORDS[COMP_CWORD]};
+  COMPREPLY=($(\cd ~/repos; compgen -d "chef-$cur" | sed -e 's,^chef-,,' -e 's,$,/,'))
+}
+
+complete -o filenames -o nospace -F _cdc_dirs cdc
+complete -o filenames -o nospace -F _cdo_dirs cdo
 
 # User-Agent Strings
 # These are some example UA strings for use in curl strings
