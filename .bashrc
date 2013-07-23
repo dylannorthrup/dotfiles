@@ -266,6 +266,10 @@ function which {
   fi
 }
 
+espy() {
+  knife search node "advertises:${1}" -i
+}
+
 # Completion for chef repos (thanks to Mark J Reed)
 _cdc_dirs() {
   local cur=${COMP_WORDS[COMP_CWORD]};
