@@ -220,6 +220,8 @@ cdo() {
 gcb() {
   cd ~/repos
   git clone git@bitbucket.org:vgtf/cookbook-${1}.git
+  cd -
+  cd ~/repos/cookbook-${1}
 }
 
 gco() {
