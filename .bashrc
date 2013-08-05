@@ -283,8 +283,15 @@ _cdo_dirs() {
   COMPREPLY=($(\cd ~/repos; compgen -d "chef-$cur" | sed -e 's,^chef-,,' -e 's,$,/,'))
 }
 
+_kcu_dirs() {
+  local cur=${COMP_WORDS[COMP_CWORD]};
+  COMPREPLY=($(\cd ~/repos/cbs; compgen -d "$cur" | sed -e 's,$,/,'))
+#  echo $COMPREPLY
+}
+
 complete -o filenames -o nospace -F _cdc_dirs cdc
 complete -o filenames -o nospace -F _cdo_dirs cdo
+complete -o filenames -o nospace -F _kcu_dirs kcu
 
 # User-Agent Strings
 # These are some example UA strings for use in curl strings
