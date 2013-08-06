@@ -268,6 +268,23 @@ function which {
   fi
 }
 
+encrypt() {
+  if [ -f "${@}.gpg" ]; then
+    rm ${@}.gpg
+  fi
+  gpg --encrypt --recipient 'northrup@gmail.com' $@
+  rm $@
+}
+
+decrypt() {
+  FNAME=$(echo $@ | sed -e 's/.gpg$//')
+  gpg --output $FNAME --decrypt $@
+}
+
+decat() {
+  gpg --decrypt $@
+}
+
 espy() {
   knife search node "advertises:${1}" -i
 }
