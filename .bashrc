@@ -300,6 +300,10 @@ nuke() {
   knife aerosol guest delete "$@" --nuke -y
 }
 
+sd() {
+  svn diff "$@" | colorize blue "^+.*" red "^-.*"
+}
+
 # User-Agent Strings
 # These are some example UA strings for use in curl strings
 export AMIGA='AmigaVoyager/2.95 (compatible; MC680x0; AmigaOS)'
