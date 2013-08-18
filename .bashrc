@@ -296,6 +296,10 @@ complete -o filenames -o nospace -F _cdc_dirs cdc
 complete -o filenames -o nospace -F _cdo_dirs cdo
 complete -o filenames -o nospace -F _kcu_dirs kcu
 
+nuke() {
+  knife aerosol guest delete "$@" --nuke -y
+}
+
 # User-Agent Strings
 # These are some example UA strings for use in curl strings
 export AMIGA='AmigaVoyager/2.95 (compatible; MC680x0; AmigaOS)'
