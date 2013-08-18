@@ -1,0 +1,39 @@
+#!/usr/bin/env ruby
+#
+# Wrapper around the shell script that does the VM spinning up since I don't want to do
+# command line arguments in bash since they make my brain hurt
+
+require 'getoptlong'
+
+nsu_cmd = "#{ENV['HOME']}/bin/new-spin-up"
+
+def usage(msg)
+  $stderr.puts "#{msg}"
+  $stderr.puts "Usage: #{File.basename($0)} [-r '<run list>'] [-s <size>]"
+  exit 2
+end
+
+$size = 'small'
+$run_list = 'recipe[base]'
+
+opts = GetoptLong.new(
+  ['-h', '--help',      GetoptLong::NO_ARGUMENT],
+  ['-r', '--run_list',  GetoptLong::OPTIONAL_ARGUMENT],
+  ['-s', '--size',      GetoptLong::OPTIONAL_ARGUMENT]
+)
+
+opts.each do |opt, arg|
+  case opt
+    when "-h"
+      usage("Printing out Usage")
+    exit
+    when "-r"
+      $run_list = arg
+    when "-s"
+      $size = arg
+    end
+end
+
+cmd = "#{nsu_cmd} #{$size} '#{$run_list}'"
+puts "Running '#{cmd}'"
+system(cmd)

@@ -2,5 +2,9 @@
 
 ZONE=$(pwd | xargs basename)
 SIZE=${1:-'small'}
+RUNLIST=${2:-'recipe[base]'}
 
-knife aerosol guest create -z $ZONE --size $SIZE --image precise -r 'recipe[base]' --identity-file ~/.ssh/id_rsa.pub 
+knife aerosol guest create -z $ZONE --size $SIZE --image precise -r "${RUNLIST}" --identity-file ~/.ssh/id_rsa.pub 
+
+
+# 10.60.140.189
