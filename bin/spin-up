@@ -9,7 +9,7 @@ nsu_cmd = "#{ENV['HOME']}/bin/new-spin-up"
 
 def usage(msg)
   $stderr.puts "#{msg}"
-  $stderr.puts "Usage: #{File.basename($0)} [-r '<run list>'] [-s <size>]"
+  $stderr.puts "Usage: #{File.basename($0)} <-n name> [-r '<run list>'] [-s <size>]"
   exit 2
 end
 
