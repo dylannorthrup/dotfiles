@@ -66,3 +66,5 @@ for i in $(grep -v '^#' filelist); do
     echo "Not a file or directory. Skipping"
   fi
 done
+
+echo ''
