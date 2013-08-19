@@ -42,6 +42,6 @@ if $hostname.nil?
   usage("Hostname is required")
 end
 
-cmd = "#{nsu_cmd} #{$size} '#{$run_list}'"
+cmd = "#{nsu_cmd} #{$hostname} #{$size} '#{$run_list}'"
 puts "Running '#{cmd}'"
 system(cmd)
