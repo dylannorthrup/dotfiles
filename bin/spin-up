@@ -13,6 +13,7 @@ def usage(msg)
   exit 2
 end
 
+$hostname = nil
 $size = 'small'
 $run_list = 'recipe[base]'
 
@@ -28,11 +29,17 @@ opts.each do |opt, arg|
     when "-h"
       usage("Printing out Usage")
     exit
+    when "-n"
+      $hostname = arg
     when "-r"
       $run_list = arg
     when "-s"
       $size = arg
     end
+end
+
+if $hostname.nil?
+  usage("Hostname is required")
 end
 
 cmd = "#{nsu_cmd} #{$size} '#{$run_list}'"
