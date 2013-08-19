@@ -18,6 +18,7 @@ $run_list = 'recipe[base]'
 
 opts = GetoptLong.new(
   ['-h', '--help',      GetoptLong::NO_ARGUMENT],
+  ['-n', '--name',      GetoptLong::REQUIRED_ARGUMENT],
   ['-r', '--run_list',  GetoptLong::OPTIONAL_ARGUMENT],
   ['-s', '--size',      GetoptLong::OPTIONAL_ARGUMENT]
 )
