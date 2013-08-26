@@ -296,6 +296,13 @@ complete -o filenames -o nospace -F _cdc_dirs cdc
 complete -o filenames -o nospace -F _cdo_dirs cdo
 complete -o filenames -o nospace -F _kcu_dirs kcu
 
+notes() {
+  NDIR="~/tickets/$@"
+  mkdir $NDIR
+  cd $NDIR
+  vim notes
+}
+
 nuke() {
   knife aerosol guest delete "$@" --nuke -y
 }
@@ -320,3 +327,4 @@ export SAMSUNGU365='SCH-U365/1.0.NetFront/3.0.22.2.23.(GUI).MMP/2.0'
 export WP7='Mozilla/5.0 (compatible; MSIE 9.0; Windows Phone OS 7.5; Trident/5.0; IEMobile/9.0; NOKIA; Lumia 800)'
 export WP8='Mozilla/5.0 (compatible; MSIE 10.0; Windows Phone 8.0; Trident/6.0; IEMobile/10.0; ARM; Touch; NOKIA; Lumia 920'
 export BB9700='BlackBerry9700/5.0.0.862 Profile/MIDP-2.1 Configuration/CLDC-1.1 VendorID/120'
+export NOKIA8310='Mozilla/5.0 (Symbian/3; Series60/5.3 NokiaE7-00/111.040.1511; Profile/MIDP-2.1 Configuration/CLDC-1.1 ) AppleWebKit/535.1 (KHTML, like Gecko) NokiaBrowser/8.3.1.4 Mobile Safari/535.1'
