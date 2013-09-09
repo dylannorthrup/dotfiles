@@ -328,7 +328,7 @@ showinfravip() {
 }
 
 showvipsearch() {
-  showvip "$@" | egrep '^(Searching in|search:)'
+  showinfravip "$@" | egrep '^(Searching in|search:)'
 }
 
 showhostsearch() {
