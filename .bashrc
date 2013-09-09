@@ -307,6 +307,17 @@ nuke() {
   knife aerosol guest delete "$@" --nuke -y
 }
 
+showvip() {
+  pushd ~/repos/chef-infrastructure/56m > /dev/null
+  pushd ~/repos/chef-infrastructure/cop > /dev/null
+  echo Searching in $(basename $(pwd))
+  knife search ozone_vips ip:"$@"
+  popd > /dev/null
+  echo Searching in $(basename $(pwd))
+  knife search ozone_vips ip:"$@"
+  popd > /dev/null
+}
+
 sd() {
   svn diff "$@" | colorize blue "^+.*" red "^-.*"
 }
