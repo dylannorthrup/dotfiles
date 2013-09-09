@@ -313,6 +313,10 @@ nuke() {
 }
 
 showvip() {
+  knife ozone vip show $(knife ozone vip list | grep "$@" | awk '{print $1}') --ozone
+}
+
+showinfravip() {
   pushd ~/repos/chef-infrastructure/56m > /dev/null
   pushd ~/repos/chef-infrastructure/cop > /dev/null
   echo Searching in $(basename $(pwd))
@@ -325,6 +329,10 @@ showvip() {
 
 showvipsearch() {
   showvip "$@" | egrep '^(Searching in|search:)'
+}
+
+showhostsearch() {
+  for i in $(dig +trace "$@" | awk '/IN.*A.*157\./ {print $NF}'); do echo === IP: $i ===; showvipsearch $i; done
 }
 
 sd() {
