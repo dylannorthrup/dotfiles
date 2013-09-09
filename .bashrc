@@ -289,12 +289,17 @@ _cdo_dirs() {
 _kcu_dirs() {
   local cur=${COMP_WORDS[COMP_CWORD]};
   COMPREPLY=($(\cd ~/repos/cbs; compgen -d "$cur" | sed -e 's,$,/,'))
-#  echo $COMPREPLY
+}
+
+_cdr_dirs() {
+  local cur=${COMP_WORDS[COMP_CWORD]};
+  COMPREPLY=($(\cd ~/repos; compgen -d "$cur" | sed -e 's,$,/,'))
 }
 
 complete -o filenames -o nospace -F _cdc_dirs cdc
 complete -o filenames -o nospace -F _cdo_dirs cdo
 complete -o filenames -o nospace -F _kcu_dirs kcu
+complete -o filenames -o nospace -F _cdr_dirs cdr
 
 notes() {
   NDIR="~/tickets/$@"
