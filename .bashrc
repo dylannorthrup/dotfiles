@@ -318,6 +318,10 @@ showvip() {
   popd > /dev/null
 }
 
+showvipsearch() {
+  showvip "$@" | egrep '^(Searching in|search:)'
+}
+
 sd() {
   svn diff "$@" | colorize blue "^+.*" red "^-.*"
 }
