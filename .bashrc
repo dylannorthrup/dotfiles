@@ -313,7 +313,7 @@ nuke() {
 }
 
 showvip() {
-  knife ozone vip show $(knife ozone vip list | grep "$@" | awk '{print $1}') --ozone
+  knife ozone vip list | awk "/$*/ "'{print $1}' | xargs -n 1 knife ozone vip show --ozone
 }
 
 showinfravip() {
