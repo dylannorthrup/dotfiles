@@ -263,9 +263,10 @@ function which {
   if declare -f "$*" > /dev/null; then
     type $*
   else
-    /usr/bin/which -s $*
+    WHICHOUT=$(/usr/bin/which $* 2>&1)
     if [ $? -eq 0 ]; then
-      /usr/bin/which $*
+      echo $WHICHOUT
+      #/usr/bin/which $*
     else
       echo "Command '${*}' not found"
     fi
