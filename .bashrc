@@ -82,6 +82,7 @@ alias ssz='ssh -i ~/.ssh/id_rsa.zenoss -l zenoss'
 alias sz='say -v Zarvox'
 alias ta='tmux new -t 0'
 alias view='vim -R'
+alias watch='watch -d --color'
 alias xwing='ssh xwing.turner.com'
 alias ywing='ssh ywing.cnn.vgtf.net'
 
