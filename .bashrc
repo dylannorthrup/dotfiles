@@ -338,6 +338,31 @@ showhostsearch() {
   for i in $(dig +trace "$@" | awk '/IN.*A.*157\./ {print $NF}'); do echo === IP: $i ===; showvipsearch $i; done
 }
 
+# Dig for A record and strip out all but the interesting part
+_arecorddig() {
+  dig -t A "$@" | egrep -v '^;' | grep 'IN.*A' | sort
+}
+
+# Dig for PTR record and strip out all but the interesting part
+_ptrrecorddig() {
+  dig -x "$@" | egrep -v '^;' | grep 'IN.*PTR'
+}
+
+# Find internal DNS servers listed on the DNS support page (servers are listed by IP, so we grab them and intdnsservers
+intdnsservers() {
+  for h in $(curl -Ss http://ttsunix/support/dnsdhcpservers.php | egrep 'ary' | awk -F\< '{print $6}' | grep 10 | sed -e 's/td>//' | sort | uniq); do _ptrrecorddig $h @qipprrsa.turner.com ; done | awk '{print $NF}' | sort
+}
+
+# Perform external DNS query against the internal turner DNS servers
+extdig() {
+  for i in 1 3 5; do echo === $i ===; _arecorddig "$@" @ns${i}.timewarner.net; done
+}
+
+# Perform external DNS query against the internal turner DNS servers
+intdig() {
+  for i in a b c d e f g h i j k l m n o p; do echo === $i ===; _arecorddig "$@" @qipprrs${i}; done
+}
+
 sd() {
   svn diff "$@" | colorize blue "^+.*" red "^-.*"
 }
