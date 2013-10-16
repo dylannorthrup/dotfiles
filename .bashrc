@@ -229,9 +229,15 @@ cdo() {
 
 gcb() {
   cd ~/repos
-  git clone git@bitbucket.org:vgtf/cookbook-${1}.git
+  DIR="cookbook-${1}"
+  if [ -d "$DIR" ]; then
+    cd "$DIR"
+    git up
+  else 
+    git clone git@bitbucket.org:vgtf/"${DIR}".git
+  fi
   cd -
-  cd ~/repos/cookbook-${1}
+  cd ~/repos/"$DIR"
 }
 
 gco() {
