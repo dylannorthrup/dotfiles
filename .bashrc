@@ -74,6 +74,7 @@ alias prespace='sed -e "s/^/ /g"'
 alias psu='cd ~/repos/svnrepo/puppet; svn up; cd -'
 alias puppet-master="ssh puppet"
 alias pupup='cd ~/repos/svnrepo/puppet/branches/STAGE; svn up; cd -'
+alias random='echo $(( ( RANDOM % 60 )  + 1 ))'
 alias repos='ls ~/repos'
 alias reset56='cd ~/repos; rm -rf chef-cnn-56m; mkdir chef-cnn-56m; git clone git@bitbucket.org:vgtf/chef-cnn-56m.git'
 alias resetlax='cd ~/repos; rm -rf chef-cnn-lax; mkdir chef-cnn-lax; git clone git@bitbucket.org:vgtf/chef-cnn-lax.git'
