@@ -216,6 +216,11 @@ function countdown {
   echo 0
 }
 
+branch() {
+  git co -b "${1}"
+  git push --set-upstream origin "${1}"
+}
+
 cdr() {
   cd ~/repos/${1}
 }
