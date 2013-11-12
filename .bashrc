@@ -136,15 +136,24 @@ function cblink {
   cd -
 }
 
-cheftag() {
-  METADATAVERSION=$(awk -F\" '/version/ {print $2}' metadata.rb)
-  echo ==== Tagging with version $METADATAVERSION ====
-  git tag $METADATAVERSION
+metaver() {
+  echo $(awk -F\" '/version/ {print $2}' metadata.rb)
+}
+
+gitag() {
+  TAG="$@"
+  git tag "$TAG"
   # If the tag was successful, go ahead and push it out
   if [ $? -eq 0 ]; then
-    echo ==== Pushing tag $METADATAVERSION ====
+    echo ==== Pushing tag "$TAG" ====
     git push --tags
   fi
+}
+
+# Take the previous two functions and combine them to get the metadata version
+# then do git tagging
+cheftag() {
+  gitag $(metaver)
 }
 
 function demonbox {
