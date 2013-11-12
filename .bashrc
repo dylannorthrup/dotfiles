@@ -137,7 +137,14 @@ function cblink {
 }
 
 cheftag() {
-  git tag $(awk -F\" '/version/ {print $2}' metadata.rb)
+  METADATAVERSION=$(awk -F\" '/version/ {print $2}' metadata.rb)
+  echo ==== Tagging with version $METADATAVERSION ====
+  git tag $METADATAVERSION
+  # If the tag was successful, go ahead and push it out
+  if [ $? -eq 0 ]; then
+    echo ==== Pushing tag $METADATAVERSION ====
+    git push --tags
+  fi
 }
 
 function demonbox {
