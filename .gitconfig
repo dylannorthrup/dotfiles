@@ -45,3 +45,5 @@
 	pretty = %C(yellow)%h %C(cyan)%C(ul)%ad%Creset | %s%C(cyan)%d%Creset [%C(white)%an%Creset]
 [log]
 	date = short
+[push]
+  default = simple
