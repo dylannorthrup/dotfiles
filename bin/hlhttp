@@ -1,4 +1,4 @@
 #!/bin/bash
 
-cat - | colorize cyan 'HTTP.*' grey 'Cache-Control.*' blue 'Date:.*' red 'GET.*' pink 'Host:.*' yellow 'X-UA-Profile.*' white 'X-.*:.*' yellow 'Location:.*' yellow 'Access-Control-Allow.*' yellow 'Content-Type:.*' cyan 'Content-Length:.*' #fawn 'Content-Length.*'
+cat - | colorize cyan 'HTTP.*' grey 'Cache-Control.*' blue 'Date:.*' red 'GET.*' pink 'Host:.*' yellow 'X-UA-Profile.*' white 'X-.*:.*' yellow 'Location:.*' yellow 'Access-Control-Allow.*' yellow 'Content-Type:.*' cyan 'Content-Length:.*' red '.*gzip.*' #fawn 'Content-Length.*'
 echo '============================================' | colorize white '=*' 
