@@ -355,6 +355,12 @@ nuke() {
   knife aerosol guest delete "$@" --nuke -y
 }
 
+showcbs() {
+  NODE="$@"
+  echo "Retrieving cookbook list for $@"
+  knife exec -E "puts JSON.pretty_generate(api.get(\"nodes/$NODE/cookbooks\").map { |name,data| {name => data.version} }.reduce :merge)"
+}
+
 showvip() {
   knife ozone vip list | awk "/$*/ "'{print $1}' | xargs -n 1 knife ozone vip show --ozone
 }
