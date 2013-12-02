@@ -138,7 +138,7 @@ function cblink {
 }
 
 metaver() {
-  echo $(awk -F\" '/version/ {print $2}' metadata.rb)
+  echo $(awk '/version/ {print $2}' metadata.rb | tr -d \'\")
 }
 
 gitag() {
