@@ -64,8 +64,7 @@ alias gv='gc -v'
 alias iob='ssh io-build-2.cnn.vgtf.net'
 alias kcs='knife cookbook show'
 alias kcu='knife cookbook upload -o ~/repos/cbs'
-alias ke='bundle exec knife environment'
-#alias knife='bundle exec knife'
+alias ke='knife environment'
 alias knofe='knife'
 alias mon8zen1='ssh mon8zen1'
 alias monp1zendev1='ssh monp1zendev1'
@@ -95,6 +94,7 @@ alias view='vim -R'
 alias watch='watch -d --color'
 alias xwing='ssh xwing.turner.com'
 alias ywing='ssh ywing.cnn.vgtf.net'
+alias zenoss_decom='echo ssh to mon8zen1 as zenoss and run "/home/zenoss/scripts/changeProdState.py hostname -1"'
 
 # Linux specific aliases
 if [ $(uname) == 'Linux' ]; then
