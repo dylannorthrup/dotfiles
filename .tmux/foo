@@ -1,5 +1,5 @@
 # Create new window, split horizontally, then split left pane vertically
-neww -n stuff
+neww -n $(~/bin/random_line.rb ~/.tmux/window_names)
 splitw -h -p 50 -t 0
 splitw -v -p 50 -t 1
 select-pane -t :.+
