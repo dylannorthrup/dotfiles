@@ -14,11 +14,19 @@ begin
   file = File.open(ARGV[0]).read
   #File.foreach(ARGV[0], 'r').each_with_index do |line, number|
   file.each_line do |line|
-    number += 1
-    if rand < 1.0/(number + 1)
-#      puts "Replacing '#{random_line}' with '#{line}'"
+    line.chomp!
+    #puts "Testing line for comments: '#{line}' (number: #{number})"
+    next if line =~ /^#/  # Skip comments
+    #puts "No comments found"
+    random_num = rand
+    #puts "Random number is #{random_num}"
+    if random_num < 1.0/(number + 1)
+      #puts "Replacing '#{random_line}' with '#{line}'"
       random_line = line.chomp
+    else
+      #puts "#{random_num} is supposedly < #{1.0/(number + 1)}"
     end
+    number += 1
   end
 rescue => err
   puts "Exception: #{err}"
