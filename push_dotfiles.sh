@@ -41,9 +41,9 @@ check_and_copy_file() {
     confirm_copy $fname
     if [ $? -gt 0 ]; then
       # Build out dir structure if necessary
-      DIRNAME=$(dirname $fname)
+      DIRNAME="~/$(dirname $fname)"
       if [ ! -d $DIRNAME ]; then
-        mkdir $DIRNAME
+        mkdir -p $DIRNAME
       fi
       copy_file $fname
     fi
