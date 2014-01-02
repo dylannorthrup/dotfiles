@@ -3,7 +3,7 @@
 diff_file() {
   fname=$1
   echo Differences for $fname:;
-  diff $fname ~/$fname
+  diff $fname $HOME/$fname
   if [ $? -lt 1 ]; then
     return 0
   fi
@@ -13,7 +13,7 @@ diff_file() {
 diff_dir() {
   dname=$1
   echo Differences for $dname:;
-  diff $dname ~/$dname | egrep '[<>]'
+  diff $dname $HOME/$dname | egrep '[<>]'
   if [ $? -gt 0 ]; then
     return 1
   fi
@@ -31,7 +31,7 @@ confirm_copy() {
 }
 
 copy_file() {
-  cp -rp $1 ~/$1
+  cp -rp $1 $HOME/$1
 }
 
 check_and_copy_file() {
@@ -41,8 +41,9 @@ check_and_copy_file() {
     confirm_copy $fname
     if [ $? -gt 0 ]; then
       # Build out dir structure if necessary
-      DIRNAME="~/$(dirname $fname)"
+      DIRNAME="$HOME/$(dirname $fname)"
       if [ ! -d $DIRNAME ]; then
+        echo "Creating $DIRNAME"
         mkdir -p $DIRNAME
       fi
       copy_file $fname
