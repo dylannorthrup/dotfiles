@@ -10,13 +10,17 @@ if [ ! -z "$PS1" ]; then
   # Interactive!
   # Check if we have an ssh agent running
   SSH_ENV="$HOME/.ssh/environment"
-  # Source in ssh-agent environment (with some double checking)
+  # See if we have ssh-agent environment set up
+  if [ ! -f $SSH_ENV ]; then
+    echo "Regenerating '$SSH_ENV'"
+    /usr/bin/ssh-agent > $SSH_ENV
+  fi
+  # Make sure the SSH_ENV is there and, if so, source it in 
   if [ -f $SSH_ENV ]; then
     . $SSH_ENV
     /usr/bin/ssh-add
   else
-    echo "Something bad is going on. The file '$SSH_ENV' is not present and it should be"
-    echo "Please investigate!"
+    echo "Was unable to create the file '$SSH_ENV'. Please investigate why"
   fi
 fi
 
