@@ -15,7 +15,9 @@ if [ ! -f $HOME/.s3cfg ]; then
 fi
 
 # Run s3cmd to do stuff
+echo "===== BEGIN S3CMD OUTPUT ====="
 s3cmd "$@"
+echo "===== END S3CMD OUTPUT ====="
 
 # Now that we're done, remove the .s3cfg file so our secret can't be used
 echo "===== REMOVING DECRYPTED S3CFG FILE ====="
