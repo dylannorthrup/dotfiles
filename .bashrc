@@ -89,6 +89,7 @@ alias resetmain='cd ~/repos; rm -rf chef-main; mkdir chef-main; git clone git@bi
 alias resetmaster='cd ~/repos; rm -rf chef-master; mkdir chef-master; git clone git@bitbucket.org:vgtf/chef-main.git chef-master'
 alias rg='rolegrep'
 alias rls='find . | egrep -v "CVS|.svn"'
+alias s3cmd="$HOME/bin/gs3"
 alias ssr='ssh -l root'
 alias ssu='ssh -l ubuntu'
 alias ssz='ssh -i ~/.ssh/id_rsa.zenoss -l zenoss'
