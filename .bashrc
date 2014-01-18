@@ -26,7 +26,7 @@ fi
 
 PROMPT_COMMAND='~/bin/show_git_branch.sh'
 
-PATH=/opt/junkdrawer/bin:/usr/local/opt/ruby/bin:$PATH:/usr/local/bin:~/repos/chef-master/bin:/opt/bin:/opt/local/bin:~/bin
+PATH=/opt/junkdrawer/bin:/usr/local/opt/ruby/bin:/usr/local/bin:$PATH:~/repos/chef-master/bin:/opt/bin:/opt/local/bin:~/bin
 
 # Adding in Android tools path
 if [ -d "/Users/dnorthrup/temp/adt-bundle-mac-x86_64-20130729/sdk/platform-tools" ]; then
