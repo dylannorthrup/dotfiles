@@ -112,6 +112,7 @@ fi
 export CVSROOT='web:/u1/CVS'
 export CVS_RSH='ssh'
 export EDITOR='vim'
+export SUDO_PS1='\e[01;31m[\w] [\t] \h#\[\033[0m\] '
 export PS1='[\w] [\t] \h> '
 
 # Make it so we append history to the history file each time we
