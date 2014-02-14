@@ -67,7 +67,6 @@ alias gr='gc -r'
 alias gv='gc -v'
 alias iob='ssh io-build-2.cnn.vgtf.net'
 alias kcs='knife cookbook show'
-alias kcu='knife cookbook upload -o ~/repos/cbs'
 alias ke='knife environment'
 alias knofe='knife'
 alias mon8zen1='ssh mon8zen1'
@@ -128,6 +127,12 @@ alias functions="typeset -f | egrep '^[a-z]+ \\(\\)' | sed -e 's/()//' | sort"
 
 function emw {
   mwin $(echo $*)
+}
+
+function kcu {
+  foodcritic -B ~/repos/cookbooks/"$@" | grep FC && echo "Foodcritic failed!" && return
+  knife cookbook test "$@" || return
+  knife cookbook upload "$@"
 }
 
 function cblink {
