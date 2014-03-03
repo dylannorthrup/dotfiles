@@ -26,7 +26,7 @@ fi
 
 PROMPT_COMMAND='~/bin/show_git_branch.sh'
 
-PATH=/opt/junkdrawer/bin:/usr/local/opt/ruby/bin:/usr/local/bin:$PATH:~/repos/chef-master/bin:/opt/bin:/opt/local/bin:~/bin
+PATH=/opt/junkdrawer/bin:/usr/local/opt/ruby/bin:/usr/local/bin:$PATH:~/repos/chef-atom/bin:/opt/bin:/opt/local/bin:/opt/chef/embedded/bin:~/bin
 
 # Adding in Android tools path
 if [ -d "/Users/dnorthrup/temp/adt-bundle-mac-x86_64-20130729/sdk/platform-tools" ]; then
@@ -37,24 +37,6 @@ if [ -d "/Users/docx/temp/adt-bundle-mac-x86_64-20130729/sdk/platform-tools" ]; 
 fi
 
 # User specific aliases and functions
-alias 5ng='56nodegrep'
-alias be='bundle exec'
-alias beb='bundle exec berks'
-alias bebr='bundle exec braid'
-alias bek='bundle exec knife'
-alias beke='bundle exec knife environment'
-alias bel='bundle exec librarian-chef'
-alias bev='bundle exec vagrant'
-alias cd56='cd ~/repos/chef-cnn/56m'
-alias cdcnn='cd ~/repos/chef-cnn'
-alias cdgust='cd ~/repos/svnrepo/puppet/branches/STAGE/files/gust'
-alias cdlax='cd ~/repos/chef-cnn/lax'
-alias cdmain='cd ~/repos/chef-main'
-alias cdmaster='cd ~/repos/chef-master'
-alias cdo56='cd ~/repos/chef-cnn-56m'
-alias cdolax='cd ~/repos/chef-cnn-lax'
-alias cdpup='cd ~/repos/svnrepo/puppet/branches/STAGE/'
-alias cdrepo='cd ~/repos'
 alias curl='curl -sS 2>&1'
 alias curlv='curl -sS -o /dev/null -v 2>&1'
 alias curlvt='curl -sS -o /dev/null -v -w "HTTP Code: %{response_code}; Connect time: %{time_connect}; Total time:%{time_total}\n" 2>&1'
@@ -65,40 +47,21 @@ alias gittyup='git tyup'
 alias grep='egrep'
 alias gr='gc -r'
 alias gv='gc -v'
-alias iob='ssh io-build-2.cnn.vgtf.net'
 alias kcs='knife cookbook show'
 alias ke='knife environment'
 alias knofe='knife'
-alias mon8zen1='ssh mon8zen1'
-alias monp1zendev1='ssh monp1zendev1'
 alias more='less -X'
-alias ng='nodegrep'
-alias lng='laxnodegrep'
 alias p2='ssh phalanx2'
 alias pegasus='ssh pegasus'
 alias prespace='sed -e "s/^/ /g"'
-alias psu='cd ~/repos/svnrepo/puppet; svn up; cd -'
-alias puppet-master="ssh puppet"
-alias pupup='cd ~/repos/svnrepo/puppet/branches/STAGE; svn up; cd -'
 alias random='echo $(( ( RANDOM % 60 )  + 1 ))'
 alias repos='ls ~/repos'
-alias reset56='cd ~/repos; rm -rf chef-cnn-56m; mkdir chef-cnn-56m; git clone git@bitbucket.org:vgtf/chef-cnn-56m.git'
-alias resetlax='cd ~/repos; rm -rf chef-cnn-lax; mkdir chef-cnn-lax; git clone git@bitbucket.org:vgtf/chef-cnn-lax.git'
-alias resetmain='cd ~/repos; rm -rf chef-main; mkdir chef-main; git clone git@bitbucket.org:vgtf/chef-main.git chef-main'
-alias resetmaster='cd ~/repos; rm -rf chef-master; mkdir chef-master; git clone git@bitbucket.org:vgtf/chef-main.git chef-master'
-alias rg='rolegrep'
-alias rls='find . | egrep -v "CVS|.svn"'
 alias s3cmd="$HOME/bin/gs3"
 alias ssr='ssh -l root'
-alias ssu='ssh -l ubuntu'
-alias ssz='ssh -i ~/.ssh/id_rsa.zenoss -l zenoss'
 alias sz='say -v Zarvox'
 alias ta='tmux new -t 0'
 alias view='vim -R'
 alias watch='watch -d --color'
-alias xwing='ssh xwing.turner.com'
-alias ywing='ssh ywing.cnn.vgtf.net'
-alias zenoss_decom='echo ssh to mon8zen1 as zenoss and run "/home/zenoss/scripts/changeProdState.py hostname -1"'
 
 # Linux specific aliases
 if [ $(uname) == 'Linux' ]; then
@@ -113,6 +76,7 @@ export CVS_RSH='ssh'
 export EDITOR='vim'
 export SUDO_PS1='\e[01;31m[\w] [\t] \h#\[\033[0m\] '
 export PS1='[\w] [\t] \h> '
+export CHEF_REPODIR="$HOME/repos"
 
 # Make it so we append history to the history file each time we
 # type a command so it doesn't get lost because of disconnections
@@ -133,19 +97,6 @@ function kcu {
   foodcritic -B ~/repos/cookbooks/"$@" | grep FC && echo "Foodcritic failed!" && return
   knife cookbook test "$@" || return
   knife cookbook upload "$@"
-}
-
-function cblink {
-  cdr cbs
-  target="../cookbook-$1"
-  if [ -d $target ]; then
-    ln -s $target $1
-    ls -l $1
-  else
-    echo "Expected directory '${target}' does not exist. Please try again with the "
-    echo "correct parameters"
-  fi
-  cd -
 }
 
 metaver() {
@@ -174,42 +125,6 @@ function demonbox {
 
 function dropbox {
   scp -rp $* docxstudios@johnnyblaze.dreamhost.com:~/dropbox/
-}
-
-function kick_nginx {
-  ssh $* 'sudo /etc/init.d/nginx restart'
-}
-
-function 56nodegrep {
-  egrep "$@" ~/knife/56m-node-list
-}
-
-function laxnodegrep {
-  egrep "$@" ~/knife/lax-node-list
-}
-
-function nodegrep {
-  egrep "$@" ~/knife/node-list
-}
-
-function rolegrep {
-  egrep "$@" ~/knife/role-list
-}
-
-function ppsvn {
-  export SVN_SSH='ssh -l dnorthrup'
-  export SVNROOT='svn+ssh://dnorthrup@puppet.turner.com/svn/puppet/'
-}
-
-function websvn {
-  export SVN_SSH='ssh -l dnorthrup'
-  export SVNROOT='svn+ssh://dnorthrup@web.turner.com/SVN/'
-}
-
-function addsunsshkey {
-  ssh $* 'mkdir .ssh'
-  scp ~/.ssh/id_rsa.pub $*:.ssh/authorized_keys
-  ssh $* hostname
 }
 
 function addsshkey {
@@ -261,7 +176,7 @@ cdr() {
 }
 
 cdc() {
-  cdr cookbook-${1}
+  cdr cookbooks/${1}
 }
 
 cdo() {
@@ -269,8 +184,8 @@ cdo() {
 }
 
 gcb() {
-  cd ~/repos
-  DIR="cookbook-${1}"
+  cd ~/repos/cookbooks
+  DIR="${1}"
   if [ -d "$DIR" ]; then
     cd "$DIR"
     git up
@@ -286,13 +201,6 @@ gco() {
   git clone git@bitbucket.org:vgtf/chef-${1}.git
   cd chef-${1}
   bundle
-}
-
-clink() {
-  cd ~/repos/cbs
-  ln -s ../cookbook-${1} ${1}
-  ls -l ${1}
-  cd -
 }
 
 function gitup {
@@ -333,7 +241,7 @@ espy() {
 # Completion for chef repos (thanks to Mark J Reed)
 _cdc_dirs() {
   local cur=${COMP_WORDS[COMP_CWORD]};
-  COMPREPLY=($(\cd ~/repos; compgen -d "cookbook-$cur" | sed -e 's,^cookbook-,,' -e 's,$,/,'))
+  COMPREPLY=($(\cd ~/repos/cookbooks; compgen -d "$cur" | sed -e 's,$,/,'))
 }
 
 _cdo_dirs() {
@@ -343,7 +251,7 @@ _cdo_dirs() {
 
 _kcu_dirs() {
   local cur=${COMP_WORDS[COMP_CWORD]};
-  COMPREPLY=($(\cd ~/repos/cbs; compgen -d "$cur" | sed -e 's,$,/,'))
+  COMPREPLY=($(\cd ~/repos/cookbooks; compgen -d "$cur" | sed -e 's,$,/,'))
 }
 
 _cdr_dirs() {
@@ -363,62 +271,14 @@ notes() {
   vim notes
 }
 
-nuke() {
-  knife aerosol guest delete "$@" --nuke -y
-}
-
 showcbs() {
   NODE="$@"
   echo "Retrieving cookbook list for $@"
   knife exec -E "puts JSON.pretty_generate(api.get(\"nodes/$NODE/cookbooks\").map { |name,data| {name => data.version} }.reduce :merge)"
 }
 
-showvip() {
-  knife ozone vip list | awk "/$*/ "'{print $1}' | xargs -n 1 knife ozone vip show --ozone
-}
-
-showinfravip() {
-  pushd ~/repos/chef-infrastructure/56m > /dev/null
-  pushd ~/repos/chef-infrastructure/cop > /dev/null
-  echo Searching in $(basename $(pwd))
-  knife search ozone_vips ip:"$@"
-  popd > /dev/null
-  echo Searching in $(basename $(pwd))
-  knife search ozone_vips ip:"$@"
-  popd > /dev/null
-}
-
-showvipsearch() {
-  showinfravip "$@" | egrep '^(Searching in|search:)'
-}
-
-showhostsearch() {
-  for i in $(dig +trace "$@" | awk '/IN.*A.*157\./ {print $NF}'); do echo === IP: $i ===; showvipsearch $i; done
-}
-
-# Dig for A record and strip out all but the interesting part
-_arecorddig() {
-  dig -t A "$@" | egrep -v '^;' | grep 'IN.*A' | sort
-}
-
-# Dig for PTR record and strip out all but the interesting part
-_ptrrecorddig() {
-  dig -x "$@" | egrep -v '^;' | grep 'IN.*PTR'
-}
-
-# Find internal DNS servers listed on the DNS support page (servers are listed by IP, so we grab them and intdnsservers
-intdnsservers() {
-  for h in $(curl -Ss http://ttsunix/support/dnsdhcpservers.php | egrep 'ary' | awk -F\< '{print $6}' | grep 10 | sed -e 's/td>//' | sort | uniq); do _ptrrecorddig $h @qipprrsa.turner.com ; done | awk '{print $NF}' | sort
-}
-
-# Perform external DNS query against the internal turner DNS servers
-extdig() {
-  for i in 1 3 5; do echo === $i ===; _arecorddig "$@" @ns${i}.timewarner.net; done
-}
-
-# Perform external DNS query against the internal turner DNS servers
-intdig() {
-  for i in a b c d e f g h i j k l m n o p; do echo === $i ===; _arecorddig "$@" @qipprrs${i}; done
+cdiff() {
+  diff "$@" | colorize blue "^>.*" red "^<.*"
 }
 
 sd() {
