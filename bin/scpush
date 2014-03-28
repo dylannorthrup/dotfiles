@@ -1,0 +1,6 @@
+#!/bin/sh
+
+FNAME=$1
+THOST=$2
+
+scp -rp ~/$FNAME $THOST:~/$FNAME

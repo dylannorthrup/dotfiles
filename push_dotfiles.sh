@@ -3,7 +3,7 @@
 diff_file() {
   fname=$1
   echo Differences for $fname:;
-  diff $fname ~/$fname
+  diff $fname $HOME/$fname
   if [ $? -lt 1 ]; then
     return 0
   fi
@@ -13,7 +13,7 @@ diff_file() {
 diff_dir() {
   dname=$1
   echo Differences for $dname:;
-  diff $dname ~/$dname | egrep '[<>]'
+  diff $dname $HOME/$dname | egrep '[<>]'
   if [ $? -gt 0 ]; then
     return 1
   fi
@@ -31,7 +31,7 @@ confirm_copy() {
 }
 
 copy_file() {
-  cp -rp $1 ~/$1
+  cp -rp $1 $HOME/$1
 }
 
 check_and_copy_file() {
@@ -71,3 +71,5 @@ for i in $(grep -v '^#' filelist); do
     echo "Not a file or directory. Skipping"
   fi
 done
+
+echo ''

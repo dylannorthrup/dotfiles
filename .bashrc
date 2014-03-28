@@ -10,76 +10,58 @@ if [ ! -z "$PS1" ]; then
   # Interactive!
   # Check if we have an ssh agent running
   SSH_ENV="$HOME/.ssh/environment"
-  # Source in ssh-agent environment (with some double checking)
+  # See if we have ssh-agent environment set up
+  if [ ! -f $SSH_ENV ]; then
+    echo "Regenerating '$SSH_ENV'"
+    /usr/bin/ssh-agent > $SSH_ENV
+  fi
+  # Make sure the SSH_ENV is there and, if so, source it in 
   if [ -f $SSH_ENV ]; then
     . $SSH_ENV
     /usr/bin/ssh-add
   else
-    echo "Something bad is going on. The file '$SSH_ENV' is not present and it should be"
-    echo "Please investigate!"
+    echo "Was unable to create the file '$SSH_ENV'. Please investigate why"
   fi
 fi
 
 PROMPT_COMMAND='~/bin/show_git_branch.sh'
 
-PATH=/opt/junkdrawer/bin:/usr/local/opt/ruby/bin:$PATH:~/repos/chef-master/bin:/opt/bin:/opt/local/bin:~/bin
+PATH=/opt/junkdrawer/bin:/usr/local/opt/ruby/bin:/usr/local/bin:$PATH:~/repos/chef-atom/bin:/opt/bin:/opt/local/bin:/opt/chef/embedded/bin:~/bin
+
+# Adding in Android tools path
+if [ -d "/Users/dnorthrup/temp/adt-bundle-mac-x86_64-20130729/sdk/platform-tools" ]; then
+  PATH=$PATH:/Users/dnorthrup/temp/adt-bundle-mac-x86_64-20130729/sdk/platform-tools
+fi
+if [ -d "/Users/docx/temp/adt-bundle-mac-x86_64-20130729/sdk/platform-tools" ]; then
+  PATH=$PATH:/Users/docx/temp/adt-bundle-mac-x86_64-20130729/sdk/platform-tools
+fi
 
 # User specific aliases and functions
-alias 5ng='56nodegrep'
-alias be='bundle exec'
-alias beb='bundle exec berks'
-alias bebr='bundle exec braid'
-alias bek='bundle exec knife'
-alias beke='bundle exec knife environment'
-alias bel='bundle exec librarian-chef'
-alias bev='bundle exec vagrant'
-alias cd56='cd ~/repos/chef-cnn/56m'
-alias cdcnn='cd ~/repos/chef-cnn'
-alias cdgust='cd ~/repos/svnrepo/puppet/branches/STAGE/files/gust'
-alias cdlax='cd ~/repos/chef-cnn/lax'
-alias cdmain='cd ~/repos/chef-main'
-alias cdmaster='cd ~/repos/chef-master'
-alias cdo56='cd ~/repos/chef-cnn-56m'
-alias cdolax='cd ~/repos/chef-cnn-lax'
-alias cdpup='cd ~/repos/svnrepo/puppet/branches/STAGE/'
-alias cdrepo='cd ~/repos'
 alias curl='curl -sS 2>&1'
 alias curlv='curl -sS -o /dev/null -v 2>&1'
+alias curlvt='curl -sS -o /dev/null -v -w "HTTP Code: %{response_code}; Connect time: %{time_connect}; Total time:%{time_total}\n" 2>&1'
 alias curlhead='curl -sSL -D - -o /dev/null'
 alias dxn='ssh docxstudios@johnnyblaze.dreamhost.com'
 alias gc='egrep --color'
 alias gittyup='git tyup'
+alias grep='egrep'
 alias gr='gc -r'
-alias iob='ssh io-build-2.cnn.vgtf.net'
-alias kcu='knife cookbook upload -o ~/repos/cbs'
-alias ke='bundle exec knife environment'
-#alias knife='bundle exec knife'
+alias gv='gc -v'
+alias kcs='knife cookbook show'
+alias ke='knife environment'
 alias knofe='knife'
-alias mon8zen1='ssh mon8zen1'
-alias monp1zendev1='ssh monp1zendev1'
 alias more='less -X'
-alias ng='nodegrep'
-alias lng='laxnodegrep'
 alias p2='ssh phalanx2'
 alias pegasus='ssh pegasus'
 alias prespace='sed -e "s/^/ /g"'
-alias psu='cd ~/repos/svnrepo/puppet; svn up; cd -'
-alias puppet-master="ssh puppet"
-alias pupup='cd ~/repos/svnrepo/puppet/branches/STAGE; svn up; cd -'
+alias random='echo $(( ( RANDOM % 60 )  + 1 ))'
 alias repos='ls ~/repos'
-alias reset56='cd ~/repos; rm -rf chef-cnn-56m; mkdir chef-cnn-56m; git clone git@bitbucket.org:vgtf/chef-cnn-56m.git'
-alias resetlax='cd ~/repos; rm -rf chef-cnn-lax; mkdir chef-cnn-lax; git clone git@bitbucket.org:vgtf/chef-cnn-lax.git'
-alias resetmain='cd ~/repos; rm -rf chef-main; mkdir chef-main; git clone git@bitbucket.org:vgtf/chef-main.git chef-main'
-alias resetmaster='cd ~/repos; rm -rf chef-master; mkdir chef-master; git clone git@bitbucket.org:vgtf/chef-main.git chef-master'
-alias rg='rolegrep'
-alias rls='find . | egrep -v "CVS|.svn"'
+alias s3cmd="$HOME/bin/gs3"
 alias ssr='ssh -l root'
-alias ssu='ssh -l ubuntu'
-alias ssz='ssh -i ~/.ssh/id_rsa.zenoss -l zenoss'
+alias sz='say -v Zarvox'
 alias ta='tmux new -t 0'
 alias view='vim -R'
-alias xwing='ssh xwing.turner.com'
-alias ywing='ssh ywing.cnn.vgtf.net'
+alias watch='watch -d --color'
 
 # Linux specific aliases
 if [ $(uname) == 'Linux' ]; then
@@ -92,7 +74,9 @@ fi
 export CVSROOT='web:/u1/CVS'
 export CVS_RSH='ssh'
 export EDITOR='vim'
+export SUDO_PS1='\e[01;31m[\w] [\t] \h#\[\033[0m\] '
 export PS1='[\w] [\t] \h> '
+export CHEF_REPODIR="$HOME/repos"
 
 # Make it so we append history to the history file each time we
 # type a command so it doesn't get lost because of disconnections
@@ -109,17 +93,30 @@ function emw {
   mwin $(echo $*)
 }
 
-function cblink {
-  cdr cbs
-  target="../cookbook-$1"
-  if [ -d $target ]; then
-    ln -s $target $1
-    ls -l $1
-  else
-    echo "Expected directory '${target}' does not exist. Please try again with the "
-    echo "correct parameters"
+function kcu {
+  foodcritic -B ~/repos/cookbooks/"$@" | grep FC && echo "Foodcritic failed!" && return
+  knife cookbook test "$@" || return
+  knife cookbook upload "$@"
+}
+
+metaver() {
+  echo $(awk '/version/ {print $2}' metadata.rb | tr -d \'\")
+}
+
+gitag() {
+  TAG="$@"
+  git tag "$TAG"
+  # If the tag was successful, go ahead and push it out
+  if [ $? -eq 0 ]; then
+    echo ==== Pushing tag "$TAG" ====
+    git push --tags
   fi
-  cd -
+}
+
+# Take the previous two functions and combine them to get the metadata version
+# then do git tagging
+cheftag() {
+  gitag $(metaver)
 }
 
 function demonbox {
@@ -128,42 +125,6 @@ function demonbox {
 
 function dropbox {
   scp -rp $* docxstudios@johnnyblaze.dreamhost.com:~/dropbox/
-}
-
-function kick_nginx {
-  ssh $* 'sudo /etc/init.d/nginx restart'
-}
-
-function 56nodegrep {
-  egrep "$@" ~/knife/56m-node-list
-}
-
-function laxnodegrep {
-  egrep "$@" ~/knife/lax-node-list
-}
-
-function nodegrep {
-  egrep "$@" ~/knife/node-list
-}
-
-function rolegrep {
-  egrep "$@" ~/knife/role-list
-}
-
-function ppsvn {
-  export SVN_SSH='ssh -l dnorthrup'
-  export SVNROOT='svn+ssh://dnorthrup@puppet.turner.com/svn/puppet/'
-}
-
-function websvn {
-  export SVN_SSH='ssh -l dnorthrup'
-  export SVNROOT='svn+ssh://dnorthrup@web.turner.com/SVN/'
-}
-
-function addsunsshkey {
-  ssh $* 'mkdir .ssh'
-  scp ~/.ssh/id_rsa.pub $*:.ssh/authorized_keys
-  ssh $* hostname
 }
 
 function addsshkey {
@@ -205,12 +166,17 @@ function countdown {
   echo 0
 }
 
+branch() {
+  git co -b "${1}"
+  git push --set-upstream origin "${1}"
+}
+
 cdr() {
   cd ~/repos/${1}
 }
 
 cdc() {
-  cdr cookbook-${1}
+  cdr cookbooks/${1}
 }
 
 cdo() {
@@ -218,10 +184,16 @@ cdo() {
 }
 
 gcb() {
-  cd ~/repos
-  git clone git@bitbucket.org:vgtf/cookbook-${1}.git
+  cd ~/repos/cookbooks
+  DIR="${1}"
+  if [ -d "$DIR" ]; then
+    cd "$DIR"
+    git up
+  else 
+    git clone git@bitbucket.org:vgtf/"${DIR}".git
+  fi
   cd -
-  cd ~/repos/cookbook-${1}
+  cd ~/repos/"$DIR"
 }
 
 gco() {
@@ -229,13 +201,6 @@ gco() {
   git clone git@bitbucket.org:vgtf/chef-${1}.git
   cd chef-${1}
   bundle
-}
-
-clink() {
-  cd ~/repos/cbs
-  ln -s ../cookbook-${1} ${1}
-  ls -l ${1}
-  cd -
 }
 
 function gitup {
@@ -259,9 +224,10 @@ function which {
   if declare -f "$*" > /dev/null; then
     type $*
   else
-    /usr/bin/which -s $*
+    WHICHOUT=$(/usr/bin/which $* 2>&1)
     if [ $? -eq 0 ]; then
-      /usr/bin/which $*
+      echo $WHICHOUT
+      #/usr/bin/which $*
     else
       echo "Command '${*}' not found"
     fi
@@ -292,7 +258,7 @@ espy() {
 # Completion for chef repos (thanks to Mark J Reed)
 _cdc_dirs() {
   local cur=${COMP_WORDS[COMP_CWORD]};
-  COMPREPLY=($(\cd ~/repos; compgen -d "cookbook-$cur" | sed -e 's,^cookbook-,,' -e 's,$,/,'))
+  COMPREPLY=($(\cd ~/repos/cookbooks; compgen -d "$cur" | sed -e 's,$,/,'))
 }
 
 _cdo_dirs() {
@@ -302,13 +268,39 @@ _cdo_dirs() {
 
 _kcu_dirs() {
   local cur=${COMP_WORDS[COMP_CWORD]};
-  COMPREPLY=($(\cd ~/repos/cbs; compgen -d "$cur" | sed -e 's,$,/,'))
-#  echo $COMPREPLY
+  COMPREPLY=($(\cd ~/repos/cookbooks; compgen -d "$cur" | sed -e 's,$,/,'))
+}
+
+_cdr_dirs() {
+  local cur=${COMP_WORDS[COMP_CWORD]};
+  COMPREPLY=($(\cd ~/repos; compgen -d "$cur" | sed -e 's,$,/,'))
 }
 
 complete -o filenames -o nospace -F _cdc_dirs cdc
 complete -o filenames -o nospace -F _cdo_dirs cdo
 complete -o filenames -o nospace -F _kcu_dirs kcu
+complete -o filenames -o nospace -F _cdr_dirs cdr
+
+notes() {
+  NDIR="~/tickets/$@"
+  mkdir $NDIR
+  cd $NDIR
+  vim notes
+}
+
+showcbs() {
+  NODE="$@"
+  echo "Retrieving cookbook list for $@"
+  knife exec -E "puts JSON.pretty_generate(api.get(\"nodes/$NODE/cookbooks\").map { |name,data| {name => data.version} }.reduce :merge)"
+}
+
+cdiff() {
+  diff "$@" | colorize blue "^>.*" red "^<.*"
+}
+
+sd() {
+  svn diff "$@" | colorize blue "^+.*" red "^-.*"
+}
 
 # User-Agent Strings
 # These are some example UA strings for use in curl strings
@@ -326,3 +318,4 @@ export SAMSUNGU365='SCH-U365/1.0.NetFront/3.0.22.2.23.(GUI).MMP/2.0'
 export WP7='Mozilla/5.0 (compatible; MSIE 9.0; Windows Phone OS 7.5; Trident/5.0; IEMobile/9.0; NOKIA; Lumia 800)'
 export WP8='Mozilla/5.0 (compatible; MSIE 10.0; Windows Phone 8.0; Trident/6.0; IEMobile/10.0; ARM; Touch; NOKIA; Lumia 920'
 export BB9700='BlackBerry9700/5.0.0.862 Profile/MIDP-2.1 Configuration/CLDC-1.1 VendorID/120'
+export NOKIA8310='Mozilla/5.0 (Symbian/3; Series60/5.3 NokiaE7-00/111.040.1511; Profile/MIDP-2.1 Configuration/CLDC-1.1 ) AppleWebKit/535.1 (KHTML, like Gecko) NokiaBrowser/8.3.1.4 Mobile Safari/535.1'

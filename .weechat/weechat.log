@@ -1,0 +1,16 @@
+[2014-01-15 10:22:16] weechat 0.3.7 (compiled on Apr  4 2012 10:34:50)
+[2014-01-15 10:22:16] Reading configuration file weechat.conf
+[2014-01-15 10:22:16] Reading configuration file plugins.conf
+[2014-01-15 10:22:16] Reading configuration file charset.conf
+[2014-01-15 10:22:16] Reading configuration file aspell.conf
+[2014-01-15 10:22:16] Reading configuration file alias.conf
+[2014-01-15 10:22:16] Reading configuration file relay.conf
+[2014-01-15 10:22:16] Reading configuration file logger.conf
+[2014-01-15 10:22:16] Reading configuration file irc.conf
+[2014-01-15 10:22:16] irc: connecting to server chat.freenode.net/6667...
+[2014-01-15 10:22:16] Reading configuration file rmodifier.conf
+[2014-01-15 10:22:16] Reading configuration file xfer.conf
+[2014-01-15 10:49:49] Writing configuration file wg.conf (default options)
+[2014-01-15 10:49:49] Reading configuration file wg.conf
+[2014-01-15 10:49:58] Writing configuration file buffers.conf (default options)
+[2014-01-15 10:49:58] Reading configuration file buffers.conf

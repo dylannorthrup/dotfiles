@@ -2,14 +2,19 @@
 
 if [ -z $1 ]; then
   echo "Need at least a node name for this to work"
-  echo "Usage: new-spin-up <nodename> [size]"
+  echo "Usage: new-spin-up <nodename> [size] [run_list]"
   echo "    Size can be 'small', 'medium', 'large', 'extralarge' and 'medium-storage'"
   echo "    For more details on what each size entails, run 'knife aerosol size list'"
   echo "    The default size is 'small' (1 CPU, 2G RAM, 16G disk)"
+  echo "    Run_list can be a quoted chef run list. '"
+  echo "    NOTE: size is required if you want to pass in a run_list.'"
   exit
 fi
 
+
 ZONE=$(pwd | xargs basename)
 SIZE=${2:-'small'}
+RUNLIST=${3:-'recipe[base]'}
 
-knife aerosol guest create -z $ZONE --size $SIZE --image precise -r 'recipe[base]' --identity-file ~/.ssh/id_rsa.pub -N $1
+knife aerosol guest create -z $ZONE --size $SIZE --image precise -r "${RUNLIST}" --identity-file ~/.ssh/id_rsa.pub -N $1
+

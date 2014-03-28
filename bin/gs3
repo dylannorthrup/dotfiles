@@ -1,0 +1,24 @@
+#!/bin/bash
+#
+# GPG wrapped s3cmd
+# 
+# This is not REALLY secure, but provides an additional level of security for credentials
+# to prevent someone from casually looking at your S3 credentials.
+
+# Set a righteous PATH
+PATH=/usr/bin:/bin
+
+# Decrypt .s3cfg file so we can do stuff
+if [ ! -f $HOME/.s3cfg ]; then
+  echo "===== DECRYPTING S3CFG FILE ====="
+  gpg --no-use-agent -o $HOME/.s3cfg -d $HOME/.s3cfg.gpg
+fi
+
+# Run s3cmd to do stuff
+echo "===== BEGIN S3CMD OUTPUT ====="
+s3cmd "$@"
+echo "===== END S3CMD OUTPUT ====="
+
+# Now that we're done, remove the .s3cfg file so our secret can't be used
+echo "===== REMOVING DECRYPTED S3CFG FILE ====="
+rm $HOME/.s3cfg
