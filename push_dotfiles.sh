@@ -40,11 +40,16 @@ check_and_copy_file() {
   if [ $? -gt 0 ]; then
     confirm_copy $fname
     if [ $? -gt 0 ]; then
+      set -x
       # Build out dir structure if necessary
-      DIRNAME=$(dirname $fname)
+      DIRNAME=$(dirname ~/$fname)
       if [ ! -d $DIRNAME ]; then
+        echo "Directory $DIRNAME does not exist"
         mkdir $DIRNAME
+      else
+        echo "Directory $DIRNAME exists"
       fi
+      set +x
       copy_file $fname
     fi
   else
