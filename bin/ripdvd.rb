@@ -31,11 +31,24 @@ end
 
 puts "DVD Path is '#{dvdpath}' and name is '#{dvdname}'"
 
+# Do a quick sanity check before proceeding
+if dvdpath =~ /UNSET/ or dvdname =~ /UNSET/
+  puts "*** WARNING ***"
+  puts "*** WARNING ***"
+  puts "*** WARNING ***"
+  puts "Either dvd path, dvd name or both are unset. Cannot continue without this information"
+  puts "Exiting"
+  exit
+end
+
+puts "=== Extracting track information ==="
 handbrake_info_cmd = "/usr/local/bin/HandBrakeCLI -t 0 --min-duration 30 --input #{dvdpath}"
 hb_out = Array.new
 Open3.popen3(handbrake_info_cmd) do |stdin, stdout, stderr, wait_thr|
   hb_out = stderr.readlines
 end
+
+puts "=== Parsing extracted track information ==="
 
 # Ok, we've got the stderr output listing tracks along with their subtitles and audio tracks
 # Let's parse that out
@@ -44,7 +57,6 @@ titles['audio'] = Array.new
 titles['subtitle'] = Array.new
 titles['not_set'] = Array.new
 
-#puts "Lines in output: #{hb_out.length}"
 current_title = 0
 in_audio = false
 in_subtitle = false
@@ -97,7 +109,7 @@ titles['audio'].each_index { |index|
   puts "===== Title #{index} with audio tracks of #{titles['audio'][index]} and subtitle tracks of #{titles['subtitle'][index]}"
   # Only ask for subtitles if they're present
   subtitle_bits = ""
-  if titles['subtitle'][index].nil?
+  if titles['subtitle'][index].nil? or titles['subtitle'][index] =~ /^\s*$/
     puts "===== No subtitle bits"
   else
     puts "===== Adding on subtitle bits"
@@ -109,4 +121,4 @@ titles['audio'].each_index { |index|
 }
 
 # And, finally, eject the DVD
-#`drutil eject`
+`drutil eject`
