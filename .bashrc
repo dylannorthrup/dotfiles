@@ -302,6 +302,12 @@ sd() {
   svn diff "$@" | colorize blue "^+.*" red "^-.*"
 }
 
+m4atomp3() {
+  i="$@"
+  o=$(echo "$i" | sed -e 's/m4a$/mp3/')
+  ffmpeg -i "$i" -acodec libmp3lame -ab 128k "$o"
+}
+
 # User-Agent Strings
 # These are some example UA strings for use in curl strings
 export AMIGA='AmigaVoyager/2.95 (compatible; MC680x0; AmigaOS)'
