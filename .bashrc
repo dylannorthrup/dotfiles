@@ -41,7 +41,7 @@ alias curl='curl -sS 2>&1'
 alias curlv='curl -sS -o /dev/null -v 2>&1'
 alias curlvt='curl -sS -o /dev/null -v -w "HTTP Code: %{response_code}; Connect time: %{time_connect}; Total time:%{time_total}\n" 2>&1'
 alias curlhead='curl -sSL -D - -o /dev/null'
-alias dxn='ssh docxstudios@johnnyblaze.dreamhost.com'
+alias dxn='ssh docxstudios@spectator.dreamhost.com'
 alias gc='egrep --color'
 alias gittyup='git tyup'
 alias grep='egrep'
@@ -120,11 +120,11 @@ cheftag() {
 }
 
 function demonbox {
-  scp -rp $* docxstudios@johnnyblaze.dreamhost.com:~/dropbox/demon/
+  scp -rp $* docxstudios@spectator.dreamhost.com:~/dropbox/demon/
 }
 
 function dropbox {
-  scp -rp $* docxstudios@johnnyblaze.dreamhost.com:~/dropbox/
+  scp -rp $* docxstudios@spectator.dreamhost.com:~/dropbox/
 }
 
 function addsshkey {
@@ -300,6 +300,12 @@ cdiff() {
 
 sd() {
   svn diff "$@" | colorize blue "^+.*" red "^-.*"
+}
+
+m4atomp3() {
+  i="$@"
+  o=$(echo "$i" | sed -e 's/m4a$/mp3/')
+  ffmpeg -i "$i" -acodec libmp3lame -ab 128k "$o"
 }
 
 # User-Agent Strings
