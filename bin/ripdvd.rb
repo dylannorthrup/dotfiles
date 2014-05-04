@@ -7,7 +7,9 @@ require 'open3'
 # Some variables we'll be using later
 dvdpath = 'UNSET'
 dvdname = 'UNSET'
-outputdir = "/Volumes/Media/Movies/handbrake"
+outputdir = "/Users/docx/temp/handbrake"
+#outputdir = "/Volumes/Media/Movies/handbrake"
+#outputdir = "/Volumes/Public/Shared_Videos/handbrake"
 
 # Let's figure out what the actual DVD is.  
 drutil_cmd = "drutil status"
@@ -29,6 +31,9 @@ Open3.popen3(drutil_cmd) do |stdin, stdout, stderr, wait_thr|
   end
 end
 
+# Something to "uniqueify" the DVD name
+now = Time.now.strftime("%Y-%m-%d-%H-%M")
+dvdname = "#{dvdname}_#{now}"
 puts "DVD Path is '#{dvdpath}' and name is '#{dvdname}'"
 
 # Do a quick sanity check before proceeding
@@ -102,10 +107,22 @@ hb_out.each do |line|
 #  puts line
 end
 
+# Go ahead and print out what we'll be doing (for information's sake)
+puts "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+puts "=-=-= Parsing Complete. Parsed information is as follows  =-=-=-="
+titles['audio'].each_index { |index|
+  next if titles['audio'][index].nil?
+  puts "===== Title #{index} with audio tracks of #{titles['audio'][index]} and subtitle tracks of #{titles['subtitle'][index]}"
+}
+puts "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+puts "=-=-= Proceeding to extract the noted tracks              =-=-=-="
+puts "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+
 # Now, iterate through the audio titles (since every track of interest should have an audio
 # title) and start extracting
 titles['audio'].each_index { |index|
   next if titles['audio'][index].nil?
+  puts "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
   puts "===== Title #{index} with audio tracks of #{titles['audio'][index]} and subtitle tracks of #{titles['subtitle'][index]}"
   # Only ask for subtitles if they're present
   subtitle_bits = ""
