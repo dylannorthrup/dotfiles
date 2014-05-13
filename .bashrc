@@ -303,6 +303,10 @@ sd() {
   svn diff "$@" | colorize blue "^+.*" red "^-.*"
 }
 
+hextojson() {
+  cat "$@" | sed -e "s/: '/: \"/g; s/' *}/\"}/g"
+}
+
 m4atomp3() {
   i="$@"
   o=$(echo "$i" | sed -e 's/m4a$/mp3/')
