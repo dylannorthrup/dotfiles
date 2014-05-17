@@ -67,6 +67,8 @@ in_audio = false
 in_subtitle = false
 hb_out.each do |line| 
   next if line.nil?
+  # Added to deal with invalid UTF-8 characters that cause an exception in the following regex
+  line.encode!('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
   next unless line =~ /^\s*\+ (.*)/
   match = $1
   if in_audio or in_subtitle
