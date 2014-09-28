@@ -47,7 +47,7 @@ if dvdpath =~ /UNSET/ or dvdname =~ /UNSET/
 end
 
 puts "=== Extracting track information ==="
-handbrake_info_cmd = "/usr/local/bin/HandBrakeCLI -t 0 --min-duration 30 --input #{dvdpath}"
+handbrake_info_cmd = "/usr/local/bin/HandBrakeCLI -t 0 --min-duration 30 --no-dvdnav --input #{dvdpath}"
 hb_out = Array.new
 Open3.popen3(handbrake_info_cmd) do |stdin, stdout, stderr, wait_thr|
   hb_out = stderr.readlines
