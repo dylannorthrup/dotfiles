@@ -26,15 +26,7 @@ fi
 
 PROMPT_COMMAND='~/bin/show_git_branch.sh'
 
-PATH=/opt/junkdrawer/bin:/usr/local/opt/ruby/bin:/usr/local/bin:$PATH:~/repos/chef-atom/bin:/opt/bin:/opt/local/bin:/opt/chef/embedded/bin:~/bin
-
-# Adding in Android tools path
-if [ -d "/Users/dnorthrup/temp/adt-bundle-mac-x86_64-20130729/sdk/platform-tools" ]; then
-  PATH=$PATH:/Users/dnorthrup/temp/adt-bundle-mac-x86_64-20130729/sdk/platform-tools
-fi
-if [ -d "/Users/docx/temp/adt-bundle-mac-x86_64-20130729/sdk/platform-tools" ]; then
-  PATH=$PATH:/Users/docx/temp/adt-bundle-mac-x86_64-20130729/sdk/platform-tools
-fi
+PATH=/usr/local/bin:/usr/local/opt/ruby/bin:$PATH:/opt/bin:/opt/local/bin:/opt/chef/embedded/bin:~/bin:~/repos/chef-atom/bin
 
 # User specific aliases and functions
 alias curl='curl -sS 2>&1'
@@ -59,6 +51,7 @@ alias random='echo $(( ( RANDOM % 60 )  + 1 ))'
 alias repos='ls ~/repos'
 alias s3cmd="$HOME/bin/gs3"
 alias ssr='ssh -l root'
+alias swift='xcrun swift'
 alias sz='say -v Zarvox'
 alias ta='tmux new -t 0'
 alias view='vim -R'
@@ -77,7 +70,6 @@ export CVS_RSH='ssh'
 export EDITOR='vim'
 export SUDO_PS1='\e[01;31m[\w] [\t] \h#\[\033[0m\] '
 export PS1='[\w] [\t] \h> '
-export CHEF_REPODIR="$HOME/repos"
 
 # Make it so we append history to the history file each time we
 # type a command so it doesn't get lost because of disconnections
@@ -90,11 +82,11 @@ HISTFILESIZE=10000
 
 alias functions="typeset -f | egrep '^[a-z]+ \\(\\)' | sed -e 's/()//' | sort"
 
-function emw {
+emw() {
   mwin $(echo $*)
 }
 
-function kcu {
+kcu() {
   foodcritic -B ~/repos/cookbooks/"$@" | grep FC && echo "Foodcritic failed!" && return
   knife cookbook test "$@" || return
   knife cookbook upload "$@"
@@ -120,22 +112,22 @@ cheftag() {
   gitag $(metaver)
 }
 
-function demonbox {
+demonbox() {
   scp -rp $* docxstudios@spectator.dreamhost.com:~/dropbox/demon/
 }
 
-function dropbox {
+dropbox() {
   scp -rp $* docxstudios@spectator.dreamhost.com:~/dropbox/
 }
 
-function addsshkey {
+addsshkey() {
 #  ssh $* 'mkdir ~/.ssh'
 #  scp ~/.ssh/id_rsa.pub $*:~/.ssh/authorized_keys
   ssh-copy-id -i ~/.ssh/id_rsa.pub $*
   ssh $*
 }
 
-function distsshkey {
+distsshkey() {
 #  echo "Trying to login automatically"
   ssh -o PreferredAuthentications=publickey -o KbdInteractiveAuthentication=no -o PasswordAuthentication=no -o StrictHostKeyChecking=no $* 'hostname'
   if [ $? == 255 ]; then
@@ -148,16 +140,16 @@ function distsshkey {
   fi
 }
 
-function distkey {
+distkey() {
   distsshkey $*
 }
 
-function delhostkey {
+delhostkey() {
   grep -v "$*" ~/.ssh/known_hosts > ~/.ssh/known_hosts.new
   mv ~/.ssh/known_hosts.new ~/.ssh/known_hosts
 }
 
-function countdown {
+countdown() {
   NUM=$*
   while [ $NUM -gt 0 ]; do
     echo -n "${NUM} "
@@ -204,7 +196,7 @@ gco() {
   bundle
 }
 
-function gitup {
+gitup() {
   for i in ~/repos/*; do
     if [ -d ${i}/.git ]; then
       echo -e "* Updating ${i}"
@@ -216,12 +208,60 @@ function gitup {
   done
 }
 
-function cab() {
+cab() {
   curlv http://${1}${3} | hlhttp
   curlv http://${2}${3} | hlhttp
 }
 
-function which {
+_good_post_size() {
+  if [ ${#1} -gt 140 ]; then
+    echo "Comment is ${#1} characters long. Please shorten it to 140 or less"
+    return 0
+  fi
+  return 1
+}
+
+post() {
+  if [ -z "${2}" ]; then
+    echo "post MESSAGE"
+    return 1
+  fi
+  # Check the size of our tweet to see how long it is
+  _good_post_size "${1}"
+  if [ $? ]; then
+    echo t update "${1}"
+  fi
+}
+
+dm() {
+  if [ -z "${2}" ]; then
+    echo "dm USER MESSAGE"
+    return 1
+  fi
+  # Check the size of our tweet to see how long it is
+  _good_post_size "${2}"
+  if [ $? ]; then
+    echo t dm ${1} "${2}"
+  fi
+}
+
+reply() {
+  if [ -z "${2}" ]; then
+    echo "reply TWEET_ID MESSAGE"
+    return 1
+  fi
+  # Check the size of our tweet to see how long it is
+  _good_post_size "${2}"
+  if [ $? ]; then
+    echo t reply ${1} "${2}"
+  fi
+}
+
+rt() {
+  t retweet "${1}"
+}
+
+which() {
   if declare -f "$*" > /dev/null; then
     type $*
   else
