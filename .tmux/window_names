@@ -1,6 +1,17 @@
 # Babylon 5 Names
-Babylon 5
+Archimedes
+Arkati
+Asimov
 Babylon 4
+Babylon 5
+Black Star
+Carbo
+Dionysus
+Dogato
+Drala Fi
+Dyson
+Earthforce One
+Earthforce Two
 EAS Archeron
 EAS Achilles
 EAS Aegean
@@ -23,8 +34,6 @@ EAS Curie
 EAS Damocles
 EAS De Soto
 EAS Delphi
-Earthforce One
-Earthforce Two
 EAS Eratosthenes
 EAS Euripides
 EAS Excalibur
@@ -56,60 +65,51 @@ EAS Theseus
 EAS Titans
 EAS Trafalgar
 EAS Vesta
+EAS Victory
 EAS Zeus
+Enfali
+Enfili
+G'Tok
 Icarus
 Ingata
-G'Tok
 Kar'ti
 Khatkhata
 Liandra
-Mollos
-Asimov
-Arkati
-Archimedes
-White Star
-EAS Victory
-Carbo
-USS Copernicus
-Dionysus
-Dogato
-Drala Fi
-Black Star
-Dyson
-Enfali
-Enfili
-Red Star 9
-Qualtham
-Na'Toth
-Na'Tan
 Molios
-Vellurian
-Valerius
-Valen
-Ulysses
+Mollos
+Na'Tan
+Na'Toth
+Qualtham
+Red Star 9
+Skydancer
+Solaris
+Strakath
 Trigati
 Toreador
 Tal'Quith
 Takari
-Strakath
-Solaris
-Skydancer
+Ulysses
+USS Copernicus
+Valen
+Valerius
+Vellurian
+White Star
 # Stargate Names
-USS Apollo
 Atlantis
 Aurora
 Beliskner
-USS Daedalus
 Daniel Jackson
 Destiny
-USS George Hammond
-RFS Korolev
 O'Neill
-USS Odyssey
 Orion
 Prometheus (X-303)
+RFS Korolev
 Sun Tsu
 Tria
+USS Apollo
+USS Daedalus
+USS George Hammond
+USS Odyssey
 Valhalla
 # Star Trek Names
 Atlantis (NX-05)
@@ -394,16 +394,16 @@ USS Zeus (NCC-800542)
 USS Zhukov (NCC-62136)
 USS da Vinci (NCC-81623)
 # Space Station names
-Satellite of Love
-Space Station 5
-Death Star
-Watchtower
 Asteroid M
+Death Star
 Knowhere
 Satellite 5
+Satellite of Love
+Space Station 5
 Starcore One
 Starcore Command
 Starcore Station
+Watchtower
 # Mercury Program
 Freedom 7 [MR-3]
 Liberty Bell 7 [MR-4]
@@ -443,37 +443,46 @@ Explorer (OV-100)
 Independence (OV-100)
 Inspiration (OV-09??)
 # Real Space Stations
-Zarya
 ISS
+Mir
 Skylab
 Spacelab
-Mir
+Zarya
 # Halo names
-UNSC Forward Unto Dawn (FFG-201)
-UNSC Spirit of Fire (CFV-88)
-UNSC Diadochi (AE-380)
-UNSC Infinity (INF-101)
-UNSC Onan (DDA-147)
-UNSC The Heart of Midiothian (DD-366)
-UNSC In Amber Clad (FFG-142)
-UNSC Midsummer Night (FFG-209)
-UNSC Aegis Fate (FFG-307)
-UNSC Grafton (FFG-318)
-UNSC Providence (FFG-334)
-UNSC Savannah (FFG-371)
-Cairo Station (ODA-142)
-Malta Station (ODA-143)
 Athens Station (ODA-144)
-UNSC Pillar of Autumn (C-709)
-UNSC Vociferous
-UNSC Paris
-UNSC Redoubtable
-UNSC Coral Sea
-UNSC Dusk
+Cairo Station (ODA-142)
 CAA Heavy Burden (CFM-88)
+Malta Station (ODA-143)
 Requiem (Shield 0001)
+UNSC Aegis Fate (FFG-307)
+UNSC Coral Sea
+UNSC Diadochi (AE-380)
+UNSC Dusk
+UNSC Forward Unto Dawn (FFG-201)
+UNSC Grafton (FFG-318)
+UNSC In Amber Clad (FFG-142)
+UNSC Infinity (INF-101)
+UNSC Midsummer Night (FFG-209)
+UNSC Onan (DDA-147)
+UNSC Paris
+UNSC Pillar of Autumn (C-709)
+UNSC Providence (FFG-334)
+UNSC Redoubtable
+UNSC Savannah (FFG-371)
+UNSC Spirit of Fire (CFV-88)
+UNSC The Heart of Midiothian (DD-366)
+UNSC Vociferous
 # Battlestar Galactica
+Adrasteia
+Adriatic
+Amduatey
+Aether
+Argo Navis
 Armistice Station
+Astral Queen
+Aurora
+Azimenarius
+Baah pakal
 Battlestar Archeron
 Battlestar Athena
 Battlestar Atlantia
@@ -489,45 +498,24 @@ Battlestar Uned
 Battlestar Universal
 Battlestar Valkyrie
 Battlestar Yashuman
-Colonial One
-Colonial Heavy 798
-Ragnar Anchorage
-Cyclops (FCS-73)
-Astral Queen
-Celestra
-Chrion
-Cloud Nine
-Cybele
-Daru Mozu
-Demetrius
-Gemenon Traveler
-Gemini
-Gideon
-Hitel Kan
-Kimba Huta
-Majahual
-Monarch
-Prometheus
-Rising Star
-Scylla
-Striker
-Thera Sita
-Triton
-Zephyr
-Adrasteia
-Amduatey
-Aether
-Argo Navis
-Aurora
-Azimenarius
-Baah pakal
 Boreas
 Breton
 Carillon Trader
+Carina
 Cassandra
-Coba
 Clymene
+Celestra
+Chrion
+Cloud Nine
+Coba
+Colonial One
+Colonial Heavy 798
+Cybele
+Cyclops (FCS-73)
 Dahshur
+Daru Mozu
+Demetrius
+Diana
 Diomedes
 Embla Brokk
 Enkidu
@@ -535,44 +523,58 @@ Epheme
 Faru Sadin
 Freighter 212
 Galatea
+Gemenon Liner 1701
+Gemenon Traveler
+Gemini
+Gideon
 Greenleaf
 Harrak
 Hexare
+Hitel Kan
 Inchon Velle
 Kara Nixal
+Kimba Huta
 Klya
+Majahual
 McConnell
+Monarch
 Mutem Wia
 Odysseus
+Olympic Carrier
 Persephone
 Picon 36
 Picon Princess
+Prometheus
+Pyxis
+Ragnar Anchorage
 Rhadamanthys
+Rising Star
 Salpica
 Sargon
 Scorpia Traveller
+Scylla
+Striker
 Swordfish
 Tarbadek
 Tauranian Traveller
+Thera Sita
 Tora Bashiri
+Triton
 Vena Capa
 Virga
+Zephyr
 Ziusudra
-Adriatic
-Carina
-Olympic Carrier
-Pyxis
-Diana
-Gemenon Liner 1701
 # Miscellaneous Names
 Andromeda
 Atlantia
 Aurora
+Axiom
 Bebop
 Boise
 Clarke
 Discovery One
 Ebon Hawk
+Explorer
 Fearless
 Fhloston Paradise
 God Phoenix
@@ -586,31 +588,29 @@ Macross
 Manticore
 Millennium Falcon
 Moya
+Normandy
 Nostromo
+NSEA Protector
 USS Sulaco
 USM Auriga
 Orion III
-USS Palomino
-USS Cygnus
 Prometheus
+Ranger 3
 Raven's Claw
+Red Dwarf
 Rene Magritte
 Rocinante
 Searcher
 Serenity
 Slave I
 Spaceball One
+TARDIS
 Talyn
 Tantive IV
+Titan
 Ticonderoga
 Tyderium
+USS Palomino
+USS Cygnus
 White Star
 Yamato
-Normandy
-Explorer
-Red Dwarf
-TARDIS
-Titan
-Axiom
-NSEA Protector
-Ranger 3
