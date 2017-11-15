@@ -112,25 +112,101 @@ USS George Hammond
 USS Odyssey
 Valhalla
 # Star Trek Names
+# Ostensibly Human/Federation ships/stations
 Atlantis (NX-05)
+Ares IV
+Argus Array
+Beta III Orbital Station
+Bonaventure (C1-21)
+Cameron Station
 Challenger (NX-03)
+Cold Station 12
 Columbia (NX-02)
-Deep Space Nine
+Deep Space 3
+Deep Space 4
+Deep Space 5
+Deep Space 7
+Deep Space 9
+Deep Space Station K-7
+DEV Eagle Valley
 Discovery (NX-04)
+ECS Constellation
+ECS Fortunate
+ECS Horizon
+ECS North Star
 Endeavor (NX-06)
 Enterprise (NX-01)
+Elba II Orbital Transit Station
+Empok Nor
+Hubble Deep Space Station
+HMS Lord Nelson
+HMS New Zealand
 ISS Avenger (NX-09)
 ISS Enterprise (NCC-1701)
 ISS Enterprise (NX-01)
 Intrepid (NX-07)
+Jupiter Station
+Kelvas repair facility
+Ligon orbital control station
+Lya Station Alpha
+McKinley Station
+Mutara Interdimensional Deep Space Array System
 NX-Alpha
 NX-Beta
 NX-Delta
 Phoenix
-SS Vico (NAR-18834)
+Pollux IV Orbital Station
+Quadrant 904 Central Station
+Remmler Array
+Repulic
+Sarajevo
+Saratoga
+Science Station Tango Sierra
+Shenandoah
+Shuttlecraft Calypso
+Shuttlecraft Columbus
+Shuttlecraft Copernicus
+Shuttlecraft Cousteau
+Shuttlecraft Curie
+Shuttlecraft Dawkins
+Shuttlecraft Delta Flyer
+Shuttlecraft Einstein
+Shuttlecraft El-Baz
+Shuttlecraft Fermi
+Shuttlecraft Galileo
+Shuttlecraft Galileo II
+Shuttlecraft Gilliam
+Shuttlecraft Goddard
+Shuttlecraft Hawking
+Shuttlecraft Justman
+Shuttlecraft Magellan
+Shuttlecraft Onizuka
+Shuttlecraft Picasso
+Shuttlecraft Pike
+Shuttlecraft Sakharov
+Shuttlecraft SC-4
+Shuttlecraft Waverider
+Shuttlecraft Cochrane
 SS Botany Bay
+SS Conestoga
+SS Emmette
+SS Hatteras
+SS Hokule'a
+SS Mariposa
+SS Seattle
+SS Tomobiki
+SS Urusei Yatsura
+SS Vico (NAR-18834)
+SS Valiant (NCC-S1104)
+Surplus Depot Z15
+Tanuga IV research station
+Tau Ceti Deep Space Station
+Terok Nor
+Ticonderoga
 Timeship Aon
+Ty'Gokor
 U.F.P.F. Challenger (OV91951L)
+UNSS Bonaventure (10281NCC)
 USS Achilles (NCC-77024)
 USS Adelphi (NCC-26849)
 USS Agincourt (NCC-1601)
@@ -187,6 +263,7 @@ USS Crazy Horse (NCC-50446)
 USS Crockett (NCC-38955)
 USS Curie (NCC-81890)
 USS Curry (NCC-42254)
+USS da Vinci (NCC-81623)
 USS Dakota (NCC-63892)
 USS Danube (NX-72003)
 USS Dauntless (NCC-71879)
@@ -229,6 +306,7 @@ USS Farragut (NCC-60597)
 USS Fearless (NCC-14598)
 USS Firebrand (NCC-68723)
 USS Fleming (NCC-20316)
+USS Franklin (NX-326)
 USS Fredrickson (NCC-42111)
 USS Gagarin (NCC-1309)
 USS Galatea (NCC-80112)
@@ -392,7 +470,84 @@ USS Yukon (NCC-74602)
 USS Zapata (NCC-33184)
 USS Zeus (NCC-800542)
 USS Zhukov (NCC-62136)
-USS da Vinci (NCC-81623)
+VK Velikan
+VK Yuri Gagarin
+Yosemite 3
+## Klingon ships
+HMS Bounty
+ISK Amar
+IKS B'Moth
+IKS Bortas
+IKS Buruk
+IKS Ch'Tang
+IKS Devisor
+IKS Drovana
+IKS Fek'lhr
+IKS Gr'oth
+IKS Hegh'ta
+IKS HorCha
+IKS Ki'tang
+IKS Klothos
+IKS K'mpec
+IKS Koraga
+IKS Korinar
+IKS Maht-H'a
+IKS Malpara
+IKS M'Char
+IKS Negh'Var
+IKS Ning'tao
+IKS Orantho
+IKS Pagh
+IKS Par'tok
+IKS P'Rang
+IKS Qu'Vat
+IKS Rotarran
+IKS Slivin
+IKS Somraw
+IKS T'Acog
+IKS Toh'Kaht
+IKS T'Ong
+IKS Vorn
+IKS Vor'nak
+IKS Ya'Vang
+IKS Y'Tem
+Kronos One
+Sarcophagus
+## Romulan ships
+Devoras
+Dividices
+Gasko
+Genorex
+Haakona
+IRW Khazara
+Makar
+Narad
+PWB Aj'rmr
+PWB Koderex
+PWB Preceptor
+PWB Tomal
+PWB T'Tpalok
+Scimitar
+Talvath
+Terix
+T'Met
+Valdore
+## Vulcan ships
+D'kyr
+D'Vahl
+Ni'Var
+Nyran
+Seleya
+Sh'Raan
+T'Plana
+Tal'Kir
+Ti'Mur
+T'Pau
+T'Plana-Hath
+T'Vran
+Vaankara
+Vahklas
+Yarahla
 # Space Station names
 Asteroid M
 Death Star
@@ -564,6 +719,15 @@ Vena Capa
 Virga
 Zephyr
 Ziusudra
+# The Orville
+Dorahl Bioship
+Kakov
+USS Blériot
+USS Chanute
+USS Druyan
+USS Olympia
+USS Orville
+Yakar
 # Miscellaneous Names
 Andromeda
 Atlantia
