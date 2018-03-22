@@ -34,7 +34,9 @@ alias curlv='curl -sS -o /dev/null -v 2>&1'
 alias curlvt='curl -sS -o /dev/null -v -w "HTTP Code: %{response_code}; Connect time: %{time_connect}; Total time:%{time_total}\n" 2>&1'
 alias curlhead='curl -sSL -D - -o /dev/null'
 alias diff='diff -W $(( $(tput cols) - 2 ))'
+alias domesync="rsync -avz -e 'ssh -p 2222' --rsync-path=/sbin/rsync --progress"
 alias dxn='ssh docxstudios@spectator.dreamhost.com'
+alias fl8='flake8-3 --ignore=E111,E114,E129'
 alias gc='egrep --color'
 alias gittyup='git tyup'
 alias grep='egrep'
@@ -46,7 +48,9 @@ alias knofe='knife'
 alias more='less -X'
 alias p2='ssh phalanx2'
 alias pegasus='ssh pegasus'
+alias pip='pip3.6'
 alias prespace='sed -e "s/^/ /g"'
+alias python='python3.6'
 alias random='echo $(( ( RANDOM % 60 )  + 1 ))'
 alias repos='ls ~/repos'
 alias s3cmd="$HOME/bin/gs3"
@@ -70,6 +74,7 @@ export CVS_RSH='ssh'
 export EDITOR='vim'
 export SUDO_PS1='\e[01;31m[\w] [\t] \h#\[\033[0m\] '
 export PS1='[\w] [\t] \h> '
+export PYTHONSTARTUP=$HOME/.pythonrc.py
 
 # Make it so we append history to the history file each time we
 # type a command so it doesn't get lost because of disconnections
@@ -78,6 +83,44 @@ shopt -s histappend
 PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
 HISTFILESIZE=10000
 
+## Golang Stuff
+export GOPATH="$HOME/go"
+export GOBIN="$HOME/go/bin"
+
+vigo () {
+  vim "${GOPATH}/src/$*/$*.go"
+}
+
+newgo () {
+  if [ ! -d "${GOPATH}/src/$*" ]; then
+    mkdir -p "${GOPATH}/src/$*"
+  fi
+  vigo $*
+  go install "${GOPATH}/src/$*/$*.go"
+}
+
+grun () {
+  if [ "${PWD}X" != "${GOPATH}X" ]; then
+    cd $GOPATH
+  fi
+  export GOBIN="$GOPATH/bin"
+  #go install src/$*/$*.go
+  go install src/$*/$*.go
+  if [ $? -eq 0 ]; then
+    $*
+  else
+    echo "Problem doing a go install of src/$*/$*.go"
+  fi
+}
+
+_grun_dirs() {
+  local cur=${COMP_WORDS[COMP_CWORD]};
+  #COMPREPLY=($(\cd $GOPATH/src; compgen -d "$cur" | sed -e 's,$,/,'))
+  COMPREPLY=($(\cd $GOPATH/src; compgen -d "$cur" ))
+}
+
+complete -o filenames -o nospace -F _grun_dirs grun
+complete -o filenames -o nospace -F _grun_dirs vigo
 ### Functions
 
 alias functions="typeset -f | egrep '^[a-z]+ \\(\\)' | sed -e 's/()//' | sort"
