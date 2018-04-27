@@ -1,17 +1,6 @@
 # Babylon 5 Names
-Archimedes
-Arkati
-Asimov
-Babylon 4
 Babylon 5
-Black Star
-Carbo
-Dionysus
-Dogato
-Drala Fi
-Dyson
-Earthforce One
-Earthforce Two
+Babylon 4
 EAS Archeron
 EAS Achilles
 EAS Aegean
@@ -34,6 +23,8 @@ EAS Curie
 EAS Damocles
 EAS De Soto
 EAS Delphi
+Earthforce One
+Earthforce Two
 EAS Eratosthenes
 EAS Euripides
 EAS Excalibur
@@ -65,148 +56,81 @@ EAS Theseus
 EAS Titans
 EAS Trafalgar
 EAS Vesta
-EAS Victory
 EAS Zeus
-Enfali
-Enfili
-G'Tok
 Icarus
 Ingata
+G'Tok
 Kar'ti
 Khatkhata
 Liandra
-Molios
 Mollos
-Na'Tan
-Na'Toth
-Qualtham
+Asimov
+Arkati
+Archimedes
+White Star
+EAS Victory
+Carbo
+USS Copernicus
+Dionysus
+Dogato
+Drala Fi
+Black Star
+Dyson
+Enfali
+Enfili
 Red Star 9
-Skydancer
-Solaris
-Strakath
+Qualtham
+Na'Toth
+Na'Tan
+Molios
+Vellurian
+Valerius
+Valen
+Ulysses
 Trigati
 Toreador
 Tal'Quith
 Takari
-Ulysses
-USS Copernicus
-Valen
-Valerius
-Vellurian
-White Star
+Strakath
+Solaris
+Skydancer
 # Stargate Names
+USS Apollo
 Atlantis
 Aurora
 Beliskner
+USS Daedalus
 Daniel Jackson
 Destiny
+USS George Hammond
+RFS Korolev
 O'Neill
+USS Odyssey
 Orion
 Prometheus (X-303)
-RFS Korolev
 Sun Tsu
 Tria
-USS Apollo
-USS Daedalus
-USS George Hammond
-USS Odyssey
 Valhalla
 # Star Trek Names
-# Ostensibly Human/Federation ships/stations
 Atlantis (NX-05)
-Ares IV
-Argus Array
-Beta III Orbital Station
-Bonaventure (C1-21)
-Cameron Station
 Challenger (NX-03)
-Cold Station 12
 Columbia (NX-02)
-Deep Space 3
-Deep Space 4
-Deep Space 5
-Deep Space 7
-Deep Space 9
-Deep Space Station K-7
-DEV Eagle Valley
+Deep Space Nine
 Discovery (NX-04)
-ECS Constellation
-ECS Fortunate
-ECS Horizon
-ECS North Star
 Endeavor (NX-06)
 Enterprise (NX-01)
-Elba II Orbital Transit Station
-Empok Nor
-Hubble Deep Space Station
-HMS Lord Nelson
-HMS New Zealand
 ISS Avenger (NX-09)
 ISS Enterprise (NCC-1701)
 ISS Enterprise (NX-01)
 Intrepid (NX-07)
-Jupiter Station
-Kelvas repair facility
-Ligon orbital control station
-Lya Station Alpha
-McKinley Station
-Mutara Interdimensional Deep Space Array System
 NX-Alpha
 NX-Beta
 NX-Delta
 Phoenix
-Pollux IV Orbital Station
-Quadrant 904 Central Station
-Remmler Array
-Repulic
-Sarajevo
-Saratoga
-Science Station Tango Sierra
-Shenandoah
-Shuttlecraft Calypso
-Shuttlecraft Columbus
-Shuttlecraft Copernicus
-Shuttlecraft Cousteau
-Shuttlecraft Curie
-Shuttlecraft Dawkins
-Shuttlecraft Delta Flyer
-Shuttlecraft Einstein
-Shuttlecraft El-Baz
-Shuttlecraft Fermi
-Shuttlecraft Galileo
-Shuttlecraft Galileo II
-Shuttlecraft Gilliam
-Shuttlecraft Goddard
-Shuttlecraft Hawking
-Shuttlecraft Justman
-Shuttlecraft Magellan
-Shuttlecraft Onizuka
-Shuttlecraft Picasso
-Shuttlecraft Pike
-Shuttlecraft Sakharov
-Shuttlecraft SC-4
-Shuttlecraft Waverider
-Shuttlecraft Cochrane
-SS Botany Bay
-SS Conestoga
-SS Emmette
-SS Hatteras
-SS Hokule'a
-SS Mariposa
-SS Seattle
-SS Tomobiki
-SS Urusei Yatsura
 SS Vico (NAR-18834)
-SS Valiant (NCC-S1104)
-Surplus Depot Z15
-Tanuga IV research station
-Tau Ceti Deep Space Station
-Terok Nor
-Ticonderoga
+SS Botany Bay
 Timeship Aon
-Ty'Gokor
 U.F.P.F. Challenger (OV91951L)
-UNSS Bonaventure (10281NCC)
 USS Achilles (NCC-77024)
 USS Adelphi (NCC-26849)
 USS Agincourt (NCC-1601)
@@ -263,7 +187,6 @@ USS Crazy Horse (NCC-50446)
 USS Crockett (NCC-38955)
 USS Curie (NCC-81890)
 USS Curry (NCC-42254)
-USS da Vinci (NCC-81623)
 USS Dakota (NCC-63892)
 USS Danube (NX-72003)
 USS Dauntless (NCC-71879)
@@ -306,7 +229,6 @@ USS Farragut (NCC-60597)
 USS Fearless (NCC-14598)
 USS Firebrand (NCC-68723)
 USS Fleming (NCC-20316)
-USS Franklin (NX-326)
 USS Fredrickson (NCC-42111)
 USS Gagarin (NCC-1309)
 USS Galatea (NCC-80112)
@@ -470,95 +392,18 @@ USS Yukon (NCC-74602)
 USS Zapata (NCC-33184)
 USS Zeus (NCC-800542)
 USS Zhukov (NCC-62136)
-VK Velikan
-VK Yuri Gagarin
-Yosemite 3
-## Klingon ships
-HMS Bounty
-ISK Amar
-IKS B'Moth
-IKS Bortas
-IKS Buruk
-IKS Ch'Tang
-IKS Devisor
-IKS Drovana
-IKS Fek'lhr
-IKS Gr'oth
-IKS Hegh'ta
-IKS HorCha
-IKS Ki'tang
-IKS Klothos
-IKS K'mpec
-IKS Koraga
-IKS Korinar
-IKS Maht-H'a
-IKS Malpara
-IKS M'Char
-IKS Negh'Var
-IKS Ning'tao
-IKS Orantho
-IKS Pagh
-IKS Par'tok
-IKS P'Rang
-IKS Qu'Vat
-IKS Rotarran
-IKS Slivin
-IKS Somraw
-IKS T'Acog
-IKS Toh'Kaht
-IKS T'Ong
-IKS Vorn
-IKS Vor'nak
-IKS Ya'Vang
-IKS Y'Tem
-Kronos One
-Sarcophagus
-## Romulan ships
-Devoras
-Dividices
-Gasko
-Genorex
-Haakona
-IRW Khazara
-Makar
-Narad
-PWB Aj'rmr
-PWB Koderex
-PWB Preceptor
-PWB Tomal
-PWB T'Tpalok
-Scimitar
-Talvath
-Terix
-T'Met
-Valdore
-## Vulcan ships
-D'kyr
-D'Vahl
-Ni'Var
-Nyran
-Seleya
-Sh'Raan
-T'Plana
-Tal'Kir
-Ti'Mur
-T'Pau
-T'Plana-Hath
-T'Vran
-Vaankara
-Vahklas
-Yarahla
+USS da Vinci (NCC-81623)
 # Space Station names
-Asteroid M
-Death Star
-Knowhere
-Satellite 5
 Satellite of Love
 Space Station 5
+Death Star
+Watchtower
+Asteroid M
+Knowhere
+Satellite 5
 Starcore One
 Starcore Command
 Starcore Station
-Watchtower
 # Mercury Program
 Freedom 7 [MR-3]
 Liberty Bell 7 [MR-4]
@@ -598,46 +443,37 @@ Explorer (OV-100)
 Independence (OV-100)
 Inspiration (OV-09??)
 # Real Space Stations
+Zarya
 ISS
-Mir
 Skylab
 Spacelab
-Zarya
+Mir
 # Halo names
-Athens Station (ODA-144)
-Cairo Station (ODA-142)
-CAA Heavy Burden (CFM-88)
-Malta Station (ODA-143)
-Requiem (Shield 0001)
-UNSC Aegis Fate (FFG-307)
-UNSC Coral Sea
-UNSC Diadochi (AE-380)
-UNSC Dusk
 UNSC Forward Unto Dawn (FFG-201)
-UNSC Grafton (FFG-318)
-UNSC In Amber Clad (FFG-142)
-UNSC Infinity (INF-101)
-UNSC Midsummer Night (FFG-209)
-UNSC Onan (DDA-147)
-UNSC Paris
-UNSC Pillar of Autumn (C-709)
-UNSC Providence (FFG-334)
-UNSC Redoubtable
-UNSC Savannah (FFG-371)
 UNSC Spirit of Fire (CFV-88)
+UNSC Diadochi (AE-380)
+UNSC Infinity (INF-101)
+UNSC Onan (DDA-147)
 UNSC The Heart of Midiothian (DD-366)
+UNSC In Amber Clad (FFG-142)
+UNSC Midsummer Night (FFG-209)
+UNSC Aegis Fate (FFG-307)
+UNSC Grafton (FFG-318)
+UNSC Providence (FFG-334)
+UNSC Savannah (FFG-371)
+Cairo Station (ODA-142)
+Malta Station (ODA-143)
+Athens Station (ODA-144)
+UNSC Pillar of Autumn (C-709)
 UNSC Vociferous
+UNSC Paris
+UNSC Redoubtable
+UNSC Coral Sea
+UNSC Dusk
+CAA Heavy Burden (CFM-88)
+Requiem (Shield 0001)
 # Battlestar Galactica
-Adrasteia
-Adriatic
-Amduatey
-Aether
-Argo Navis
 Armistice Station
-Astral Queen
-Aurora
-Azimenarius
-Baah pakal
 Battlestar Archeron
 Battlestar Athena
 Battlestar Atlantia
@@ -653,24 +489,45 @@ Battlestar Uned
 Battlestar Universal
 Battlestar Valkyrie
 Battlestar Yashuman
-Boreas
-Breton
-Carillon Trader
-Carina
-Cassandra
-Clymene
+Colonial One
+Colonial Heavy 798
+Ragnar Anchorage
+Cyclops (FCS-73)
+Astral Queen
 Celestra
 Chrion
 Cloud Nine
-Coba
-Colonial One
-Colonial Heavy 798
 Cybele
-Cyclops (FCS-73)
-Dahshur
 Daru Mozu
 Demetrius
-Diana
+Gemenon Traveler
+Gemini
+Gideon
+Hitel Kan
+Kimba Huta
+Majahual
+Monarch
+Prometheus
+Rising Star
+Scylla
+Striker
+Thera Sita
+Triton
+Zephyr
+Adrasteia
+Amduatey
+Aether
+Argo Navis
+Aurora
+Azimenarius
+Baah pakal
+Boreas
+Breton
+Carillon Trader
+Cassandra
+Coba
+Clymene
+Dahshur
 Diomedes
 Embla Brokk
 Enkidu
@@ -678,67 +535,107 @@ Epheme
 Faru Sadin
 Freighter 212
 Galatea
-Gemenon Liner 1701
-Gemenon Traveler
-Gemini
-Gideon
 Greenleaf
 Harrak
 Hexare
-Hitel Kan
 Inchon Velle
 Kara Nixal
-Kimba Huta
 Klya
-Majahual
 McConnell
-Monarch
 Mutem Wia
 Odysseus
-Olympic Carrier
 Persephone
 Picon 36
 Picon Princess
-Prometheus
-Pyxis
-Ragnar Anchorage
 Rhadamanthys
-Rising Star
 Salpica
 Sargon
 Scorpia Traveller
-Scylla
-Striker
 Swordfish
 Tarbadek
 Tauranian Traveller
-Thera Sita
 Tora Bashiri
-Triton
 Vena Capa
 Virga
-Zephyr
 Ziusudra
-# The Orville
-Dorahl Bioship
-Kakov
-USS Blériot
-USS Chanute
-USS Druyan
-USS Olympia
-USS Orville
-Yakar
+Adriatic
+Carina
+Olympic Carrier
+Pyxis
+Diana
+Gemenon Liner 1701
+# Mass Effect Names
+Tempest
+Ark Paarchero
+Ark Leusinia
+Ark Natanus
+Ark Hyperion
+The Citadel
+Sovereign
+UT-47 Kodiak
+A-61 Mantis
+F-61 Trident Fighter
+SSV Aconcagua
+SSV Elbrus
+SSV Everest
+SSV Fuji
+SSV Kilimanjaro
+SSV Logan
+SSV Orizaba
+SSV Shasa
+SSV Tai Shan
+SSV Budapest
+SSV Cairo
+SSV Cape Town
+SSV Emden
+SSV Geneva
+SSV Hyderabad
+SSV Jakarta
+SSV London
+SSV Madrid
+SSV Manila
+SSV Nairobi
+SSV New Delhi
+SSV Perugia
+SSV Seoul
+SSV Shanghai
+SSV Shenyang
+SSV Tokyo
+SSV Warsaw
+SSV Agincourt
+SSV Ain Jalut
+SSV Hastings
+SSV Hong Kong
+SSV Iwo Jima
+SSV Leipzig
+SSV Normandy SR-1
+SSV Normandy SR-2
+SSV Trafalgar
+SSV Benjamin Davis
+SSV Einstein
+SSV Hawking
+Idenna
+Glory of Khar'shan
+Alarei
+Honorata
+Lestiak
+Moreh
+Neema
+Qwib-Qwib
+Rayya
+Shellen
+Tonbay
+Usela
+Yaska
 # Miscellaneous Names
 Andromeda
 Atlantia
 Aurora
-Axiom
 Bebop
 Boise
 Clarke
 Discovery One
 Ebon Hawk
-Explorer
 Fearless
 Fhloston Paradise
 God Phoenix
@@ -752,29 +649,31 @@ Macross
 Manticore
 Millennium Falcon
 Moya
-Normandy
 Nostromo
-NSEA Protector
 USS Sulaco
 USM Auriga
 Orion III
+USS Palomino
+USS Cygnus
 Prometheus
-Ranger 3
 Raven's Claw
-Red Dwarf
 Rene Magritte
 Rocinante
 Searcher
 Serenity
 Slave I
 Spaceball One
-TARDIS
 Talyn
 Tantive IV
-Titan
 Ticonderoga
 Tyderium
-USS Palomino
-USS Cygnus
 White Star
 Yamato
+Normandy
+Explorer
+Red Dwarf
+TARDIS
+Titan
+Axiom
+NSEA Protector
+Ranger 3
