@@ -83,6 +83,15 @@ shopt -s histappend
 PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
 HISTFILESIZE=10000
 
+## tmux stuff
+ta () {
+  tmux has-session -t 0
+  if [ $? != 0 ]; then
+    tmux new-session -s 0 -n "$(~/bin/random_line.rb ~/.tmux/window_names)"
+  fi
+  tmux attach -t 0
+}
+
 ## Golang Stuff
 export GOPATH="$HOME/go"
 export GOBIN="$HOME/go/bin"
