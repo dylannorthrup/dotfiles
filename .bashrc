@@ -5,6 +5,13 @@ if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
 fi
 
+# Source bash_profile definitions
+if [ -z "$BASH_PROFILE_SOURCED" ]; then
+  if [ -f "$HOME/.bash_profile" ]; then
+    . "$HOME/.bash_profile"
+  fi
+fi
+
 # Detect if we're in non-interactive mode
 if [ ! -z "$PS1" ]; then 
   # Interactive!
@@ -22,6 +29,12 @@ if [ ! -z "$PS1" ]; then
   else
     echo "Was unable to create the file '$SSH_ENV'. Please investigate why"
   fi
+fi
+
+# Cloudfoundry-specific stuff
+# Source in cflogin file
+if [ -f "$HOME/.cflogin" ]; then
+  . "$HOME/.cflogin"
 fi
 
 PROMPT_COMMAND='~/bin/show_git_branch.sh'
@@ -48,9 +61,9 @@ alias knofe='knife'
 alias more='less -X'
 alias p2='ssh phalanx2'
 alias pegasus='ssh pegasus'
-alias pip='pip3.6'
+#alias pip='pip3.6'
 alias prespace='sed -e "s/^/ /g"'
-alias python='python3.6'
+#alias python='python3'
 alias random='echo $(( ( RANDOM % 60 )  + 1 ))'
 alias repos='ls ~/repos'
 alias s3cmd="$HOME/bin/gs3"
@@ -74,17 +87,30 @@ export CVS_RSH='ssh'
 export EDITOR='vim'
 export SUDO_PS1='\e[01;31m[\w] [\t] \h#\[\033[0m\] '
 export PS1='[\w] [\t] \h> '
-export PYTHONSTARTUP=$HOME/.pythonrc.py
+#export PYTHONSTARTUP=$HOME/.pythonrc.py
 
+export FZF_TMUX=1
+export FZF_CTRL_R_OPTS='--sort --exact'
+if [ -d /usr/local/Cellar/fzf/0.17.5/shell/ ]; then
+  . /usr/local/Cellar/fzf/0.17.5/shell/key-bindings.bash
+  . /usr/local/Cellar/fzf/0.17.5/shell/completion.bash
+else
+  echo "NO FZF SHELL COMPLETION DIRECTORY! FZF WON'T WORK LIKE YOU THINK IT SHOULD"
+fi
+
+# Avoid duplicates
+export HISTCONTROL=ignoredups:erasedups
 # Make it so we append history to the history file each time we
 # type a command so it doesn't get lost because of disconnections
 # for long-running sessions
 shopt -s histappend
-PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
-HISTFILESIZE=10000
+# After each command, append to the history file and re-read it
+export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; history -c; history -r"
+
+export HISTFILESIZE=100000
 
 ## tmux stuff
-ta () {
+function ta {
   tmux has-session -t 0
   if [ $? != 0 ]; then
     tmux new-session -s 0 -n "$(~/bin/random_line.rb ~/.tmux/window_names)"
