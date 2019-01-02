@@ -395,7 +395,7 @@ USS Zhukov (NCC-62136)
 USS da Vinci (NCC-81623)
 # Space Station names
 Satellite of Love
-Space Station 5
+Space Station V
 Death Star
 Watchtower
 Asteroid M
@@ -404,6 +404,16 @@ Satellite 5
 Starcore One
 Starcore Command
 Starcore Station
+# https://en.wikipedia.org/wiki/List_of_films_featuring_space_stations
+Gateway Station
+Cloverfield Station
+Elysium
+Daylight Space Station
+Cooper Station
+Space Station Liberty
+Daedalus
+Salvage Station TAU 14
+New Bangkok
 # Mercury Program
 Freedom 7 [MR-3]
 Liberty Bell 7 [MR-4]
@@ -448,6 +458,7 @@ ISS
 Skylab
 Spacelab
 Mir
+Tiangong
 # Halo names
 UNSC Forward Unto Dawn (FFG-201)
 UNSC Spirit of Fire (CFV-88)
@@ -570,6 +581,7 @@ Ark Paarchero
 Ark Leusinia
 Ark Natanus
 Ark Hyperion
+Destiny Ascension
 The Citadel
 Sovereign
 UT-47 Kodiak
@@ -627,53 +639,180 @@ Shellen
 Tonbay
 Usela
 Yaska
-# Miscellaneous Names
-Andromeda
-Atlantia
-Aurora
-Bebop
-Boise
-Clarke
-Discovery One
+# Star Wars
 Ebon Hawk
-Fearless
-Fhloston Paradise
-God Phoenix
-Hawkwing
-Heart of Gold
-Helva
-Icarus
-Jupiter II
-Lexx
-Macross
-Manticore
 Millennium Falcon
-Moya
-Nostromo
-USS Sulaco
-USM Auriga
-Orion III
-USS Palomino
-USS Cygnus
-Prometheus
-Raven's Claw
-Rene Magritte
-Rocinante
-Searcher
-Serenity
-Slave I
-Spaceball One
-Talyn
+Slave One
 Tantive IV
-Ticonderoga
 Tyderium
-White Star
-Yamato
-Normandy
-Explorer
-Red Dwarf
-TARDIS
-Titan
+# Alien/Aliens
+Nostromo
+The Derelict
+USM Auriga
+USS Sulaco
+Prometheus
+# 2001/2010
+Discovery One
+Orion III
+Cosmonaut Alexei Leonov
+# The Expanse
+Amun-Ra
+Amunet
+Anderson Station
+Anubis
+Apophis
+Bush Orbital Shipyards
+Callisto's Dream
+Canterbury
+Donnager
+Gathering Storm
+Giambattista
+Guanshiyin
+Guy Molinari
+Hammurabi
+Hathor
+Heart of the Tempest
+Horus
+Jefferson Mays
+LDSS Nauvoo
+Mao Station
+MCRN Avalanche
+MCRN Barkeith
+MCRN Bellaire
+MCRN Callisto Shipyards
+MCRN Cú Chulainn
+MCRN Damascus
+MCRN Firebrand
+MCRN Hamill-Stewart
+MCRN Hotspur
+MCRN Icaria Planum
+MCRN Iceni
+MCRN Scipio Africanus
+MCRN Shandian
+Medina Station
+Nephthys
+Odachi
+Ontario
+OPAS Behemoth
+Osiris
+Razorback
+Ring Station
+Rocinante
+Scopuli
+Severin
+Sobek
+Talbot Leeds
+Talwar
+Thoth Station
+Torngasuk
+Tycho Station
+UNN Agatha King
+UNN Arboghast
+UNN Aristophanes
+UNN August Marchant
+UNN Battle Angel
+UNN Bernadette Koe
+UNN Bethany Thomas
+UNN Campsi
+UNN Cerisier
+UNN Charles Lyell
+UNN Darius
+UNN Dyson
+UNN Edward Carr
+UNN Feodorovna
+UNN Greenville
+UNN Halpenny
+UNN Hodson
+UNN Heisserer
+UNN Jimenez
+UNN Kennedy
+UNN Mograph
+UNN Mokhaylov
+UNN Nathan Hale
+UNN Orinoco
+UNN Okavango
+UNN Ravi
+UNN S.A. Corey
+UNN Seung Un
+UNN Tanaka
+UNN The Victor
+UNN Thomas Prince
+UNN Triton
+UNN Wu Tsao
+UNN Yasijuro
+UNN Zheng Fei
+UNN Zhang Fei
+UNS Arboghast
+Weeping Somnambulist
+Xinglong
+## Miscellaneous Names
+# Andromeda
+Andromeda
+# Wall-E
 Axiom
+# Cowboy Bebop
+Bebop
+# Forbidden Planet
+Bellerophon
+# Gravity
+Explorer
+# Fifth Element
+Fhloston Paradise
+# Gatchaman/Battle of the Planets
+God Phoenix
+# Hitchhiker's Guide
+Heart of Gold
+# Metroid
+Hunter IV
+# Sunshine
+Icarus I
+# Sunshine
+Icaris II
+# Lost in Space
+Jupiter II
+# Planet of the Apes
+ANSA Liberty 1
+# Lexx
+Lexx
+# Airplane II
+Mayflower One
+# Farscape
+Moya
+# Galaxy Quest
 NSEA Protector
+# Black Hole
+USS Palomino
+# Black Hole
+USS Cygnus
+# Rendezvous with Rama
+Rama
+# Buck Rogers
 Ranger 3
+# Red Dwarf
+Red Dwarf
+# Robotech
+SDF-1 Macross
+# Robotech
+SDF-3 Pioneer
+# Buck Rogers
+Searcher
+# Firefly/Serenity
+Serenity
+# Spaceballs
+Spaceball One
+# Farscape
+Talyn
+# Doctor Who
+TARDIS
+# Starship Troopers
+Fleet Battle Station Ticonderoga
+# Titan AE
+Titan
+# Titan AE
+Valkyrie
+# Silent Running
+Valley Forge
+# Avatar
+Venture Star
+# Space Battleship Yamato
+Yamato
