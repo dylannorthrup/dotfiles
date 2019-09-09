@@ -1,0 +1,11 @@
+compctl -W $GOPATH/src -/ grun
+compctl -W $GOPATH/src -/ vigo
+
+cdr() { cd /Users/dxn4hci/repos/$1; }
+compctl -W /Users/dxn4hci/repos/ -/ cdr
+
+cdf() { cd /Users/dxn4hci/repos/$1; }
+compctl -W /Users/dxn4hci/repos/ -/ cdf
+
+cdfr() { cd /Users/dxn4hci/repos/$1; }
+compctl -W /Users/dxn4hci/repos/ -/ cdfr
