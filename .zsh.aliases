@@ -1,60 +1,143 @@
-# Cloudfoundry-specific stuff
 
-PROMPT='$(git_prompt_info)[%*] [%{$fg[cyan]%}${PWD/#$HOME/~}%{$reset_color%}] security_mandated_hostname ${ret_status}%{$reset_color%} '
+PROMPT='$(git_prompt_info)[%*] [%{$fg[cyan]%}${PWD/#$HOME/~}%{$reset_color%}] watchtower${ret_status}%{$reset_color%}> '
 
-# Source in cflogin file
-if [ -f "$HOME/.cflogin" ]; then
-  source "$HOME/.cflogin"
-fi
+export PATH=${PATH}:${HOME}/bin:${HOME}/google-cloud-sdk/bin:${HOME}/repos/nightly/utility_scripts/users/dylan/mariadb:${HOME}/pip/bin
+export LOCATE_PATH="$LOCATE_PATH:$HOME/.repos.mlocatedb"
 
-export PATH=${PATH}:${HOME}/google-cloud-sdk/bin
-PATH=${PATH}:/Applications/Wine\ Staging.app/Contents/Resources/wine/bin
+export GREP_COLORS='ms=01;33:mc=01;33:sl=:cx=:fn=35;107:ln=32:bn=32:se=35;47'
+# zsh behavior modifications
+bindkey \^U backward-kill-line
+
+# Java BS
+export JAVA_HOME="/usr/lib/jvm/java-14-openjdk-amd64"
+export PATH=${PATH}:${JAVA_HOME}/bin
+
+
+# rbenv
+eval "$(rbenv init -)"
+
+# Example of a 1, few, many alias setup in zsh
+# Assumes a setup with hosts named 'server-ENVIRONMENT-NUMBER'
+__base_cmd() {
+  NODE=$(echo "${funcstack[3]}" | sed -e 's/^...//')
+  if [[ "${NODE}X" == "X" ]]; then # This is to be run against all servers
+    example_cmd -h server-${CMDENV}-0:8989,server-${CMDENV}-1:8989,server-${CMDENV}-2:8989 $*
+  else
+    example_cmd -h server-${CMDENV}-${NODE}:8989 $*
+  fi
+}
+
+_base_cmd_prod() {
+  CMDENV='prod'
+  __base_cmd $*
+}
+bcp0() { _base_cmd_prod $* }
+bcp1() { _base_cmd_prod $* }
+bcp2() { _base_cmd_prod $* }
+bcp() { _base_cmd_prod $* }
+
+_base_cmd_test() {
+  CMDENV='test'
+  __base_cmd $*
+}
+bct0() { _base_cmd_test $* }
+bct1() { _base_cmd_test $* }
+bct2() { _base_cmd_test $* }
+bct() { _base_cmd_test $* }
 
 # User specific aliases and functions
 alias curl='curl -sSL'
 alias curlv='curl -sSL -o /dev/null -v'
 alias curlvt='curl -sSL -o /dev/null -v -w "HTTP Code: %{response_code}; Connect time: %{time_connect}; Total time:%{time_total}\n"'
 alias curlhead='curl -sSL -D - -o /dev/null'
+alias dh='dirs -v'
 alias diff='diff -W $(( $(tput cols) - 2 ))'
-alias dxn='ssh docxstudios@spectator.dreamhost.com'
+alias editalias="vi $HOME/.zsh.aliases"
+alias egrep='_grep -E --color=always'
 alias fl8='flake8-3 --ignore=E111,E114,E129'
-alias gc='egrep --color'
 alias gittyup='git tyup'
-alias grep='egrep'
-alias gr='gc -r'
-alias gv='gc -v'
-alias mc='mc --no-color'
-alias more='less -X'
+alias grep='_grep --color'
+alias localdb='mysql -h 127.0.0.1 -P 3306 -u root'
+alias more='\less -X'
+alias nceg='egrep --color=never'
+alias pgrep='_grep -P --color=always'
 alias prespace='sed -e "s/^/ /g"'
 alias random='echo $(( ( RANDOM % 60 )  + 1 ))'
 alias repos='ls ~/repos'
+alias rf='resetfile'
 alias s3cmd="$HOME/bin/gs3"
 alias ta='tmux new -t 0'
-alias view='nvim -R'
+alias tf='terraform'
+alias tfd='terraform fmt -diff'
+alias tfay='terraform apply -auto-approve'
+alias tfp='terraform plan -lock=false'
+alias tfpd='terraform plan -lock=false -no-color | egrep --color=never "^[^a-z]*[\~\+\-]+|# module|# google" | colorize white "^  *# google.*" redonwht "- .*=" cyan "+ .*=" yellow "~ .*=" yellow "~ .* {" redonwht "- .* {}"'
+alias dtfay='TF_LOG=DEBUG terraform apply -auto-approve'
+alias tps='terraform plan -lock=false | grep -v "Refreshing" | pgrep "#"'
+alias _tps='tf plan -lock=false | grep -v "Refreshing" | egrep "module.*google_|Plan|No changes.*"'
+alias view='vim -R'
+alias watch="watch -c "
+alias view='vim -R'
 alias watch='watch -d --color'
 
 # Environment variables
 export CVSROOT='web:/u1/CVS'
 export CVS_RSH='ssh'
-export EDITOR='nvim'
+export EDITOR='vim'
 export LSCOLORS=hxgxcxdxCxegedabagacad
 export LESS='-REX'
 
-export FZF_TMUX=1
-export FZF_CTRL_R_OPTS='--sort --exact'
-if [ -d /usr/local/Cellar/fzf/*/shell/ ]; then
-  . /usr/local/Cellar/fzf/*/shell/key-bindings.zsh
-  . /usr/local/Cellar/fzf/*/shell/completion.zsh
-else
-  echo "NO FZF SHELL COMPLETION DIRECTORY! FZF WON'T WORK LIKE YOU THINK IT SHOULD"
-fi
+setopt extended_glob
+unsetopt beep
+setopt prompt_bang
 
 export CACHE_AGE=6000
 
 # History stuff
-SAVEHIST=100000
-setopt histignorealldups
-setopt incappendhistory
+export SAVEHIST=100000
+export HIST_STAMPS="%F %T"
+# Turns out having all of my command history available helps in post mortems
+unsetopt histignorealldups
+setopt appendhistory
+unsetopt sharehistory
+
+function wa {
+  W_CMD=$(alias "$@" | cut -d\' -f2)
+  if [[ "${W_CMD}X" == "X" ]]; then
+    W_CMD="$@"
+  fi
+  watch ${=W_CMD}
+  if [ $? != 0 ]; then
+    echo "error running watch. Full command was"
+    echo "  watch \"${W_CMD}\""
+  fi
+}
+
+function wad {
+  wa -d "$@"
+}
+
+## Docker stuff
+# Lets you get a container ID based on grepping `docker ps` output
+function docker_id {
+  # For mjr, this is simpler than shoving the value into an awk variable
+  # then testing that. Been there, done that, chose this way instead.
+  docker ps | grep "$*" | awk '{print $1}'
+}
+
+function db_bash {
+  docker exec -it $(_docker_id) /bin/bash
+}
+
+function db_stop {
+  docker stop $(_docker_id) 
+}
+
+# If you're only running a single container, this works
+function dbash {
+  docker exec -it $(docker ps -q) /bin/bash
+}
+
 
 ## tmux stuff
 function ta {
@@ -68,6 +151,10 @@ function ta {
 if [ ! -z "${TMUX_PANE}" ]; then
   export PANE_NUM=$(tmux list-panes -a | grep $TMUX_PANE 2>/dev/null | awk -F: '{print $2}' | awk -F. '{print $2}' | uniq)
 fi
+
+regen_pane_num() {
+  export PANE_NUM=$(tmux list-panes -a | grep $TMUX_PANE 2>/dev/null | awk -F: '{print $2}' | awk -F. '{print $2}' | uniq)
+}
 
 spinner() {
 #  update "Entering into spinner with spinner state of '${SPINNER_STATE}'"
@@ -108,9 +195,10 @@ update() {
 ## Golang Stuff
 export GOPATH="$HOME/go"
 export GOBIN="$HOME/go/bin"
+export PATH="${PATH}:${GOBIN}"
 
 vigo () {
-  nvim "${GOPATH}/src/$*/$*.go"
+  vim "${GOPATH}/src/$*/$*.go"
 }
 
 newgo () {
@@ -140,6 +228,14 @@ alias functions="typeset -f | egrep '^[a-z]+ \\(\\)' | sed -e 's/()//' | sort"
 
 emw() {
   mwin $(echo $*)
+}
+
+ctdir() {
+  PANE=$(echo "${TMUX_PANE}" | sed -e 's/^%//')
+  DIRS=$(find  -maxdepth 1 -type d | egrep -v '^.$')
+  DIR_NUM=$(echo "${DIRS}" | wc -l)
+  TARGET=$(( ${PANE} % ${DIR_NUM} + 1 ))
+  cd $(echo "${DIRS}" | head -${TARGET} | tail -1)
 }
 
 kcu() {
@@ -195,8 +291,15 @@ distkey() {
 }
 
 delhostkey() {
-  grep -v "$*" ~/.ssh/known_hosts > ~/.ssh/known_hosts.new
-  mv ~/.ssh/known_hosts.new ~/.ssh/known_hosts
+  ssh-keygen -f ~/.ssh/known_hosts -R "$*"
+}
+
+clock() {
+  DELAY="$*"
+  if [ -z $DELAY ]; then
+    DELAY="5"
+  fi
+  while true; do date | tr '\r\n' ' '; sleep ${DELAY}; echo -ne "\r"; done
 }
 
 countdown() {
@@ -279,18 +382,6 @@ rt() {
   t retweet "${1}"
 }
 
-which() {
-  if declare -f "$*" > /dev/null; then
-    type $*
-  else
-    WHICHOUT=$(/usr/bin/which $* 2>&1)
-    if [ $? -eq 0 ]; then
-      echo $WHICHOUT
-    else
-      echo "Command '${*}' not found"
-    fi
-  fi
-}
 
 encrypt() {
   if [ -f "${@}.gpg" ]; then
@@ -317,7 +408,7 @@ notes() {
   NDIR="~/tickets/$@"
   mkdir $NDIR
   cd $NDIR
-  nvim notes
+  vim notes
 }
 
 showcbs() {
@@ -336,20 +427,24 @@ m4atomp3() {
   ffmpeg -i "$i" -acodec libmp3lame -ab 128k "$o"
 }
 
+zstyle :completion::::: completer _complete _files
+
 # User-Agent Strings
 # These are some example UA strings for use in curl strings
-export AMIGA='AmigaVoyager/2.95 (compatible; MC680x0; AmigaOS)'
-export AND4='Mozilla/5.0 (Linux; U; Android 4.0.3; de-ch; HTC Sensation Build/IML74K) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30'
-export AND23='Mozilla/5.0 (Linux; U; Android 2.3.5; en-us; HTC Vision Build/GRI40) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1'
-export BB='Mozilla/5.0 (BlackBerry; U; BlackBerry 9860; en-US) AppleWebKit/534.11+ (KHTML, like Gecko) Version/7.0.0.254 Mobile Safari/534.11+'
-export CHROME='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.60 Safari/537.17'
-export FIREFOX='Mozilla/5.0 (Windows NT 6.2; Win64; x64; rv:16.0.1) Gecko/20121011 Firefox/16.0.1'
-export IEMOBILE='Mozilla/5.0 (compatible; MSIE 9.0; Windows Phone OS 7.5; Trident/5.0; IEMobile/9.0)'
-export IPHONE='Mozilla/5.0 (iPod; U; CPU iPhone OS 4_3_3 like Mac OS X; ja-jp) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8J2 Safari/6533.18.5'
-export IPAD='Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5355d Safari/8536.25'
-export SAFARI='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/537.13+ (KHTML, like Gecko) Version/5.1.7 Safari/534.57.2'
-export SAMSUNGU365='SCH-U365/1.0.NetFront/3.0.22.2.23.(GUI).MMP/2.0'
-export WP7='Mozilla/5.0 (compatible; MSIE 9.0; Windows Phone OS 7.5; Trident/5.0; IEMobile/9.0; NOKIA; Lumia 800)'
-export WP8='Mozilla/5.0 (compatible; MSIE 10.0; Windows Phone 8.0; Trident/6.0; IEMobile/10.0; ARM; Touch; NOKIA; Lumia 920'
-export BB9700='BlackBerry9700/5.0.0.862 Profile/MIDP-2.1 Configuration/CLDC-1.1 VendorID/120'
-export NOKIA8310='Mozilla/5.0 (Symbian/3; Series60/5.3 NokiaE7-00/111.040.1511; Profile/MIDP-2.1 Configuration/CLDC-1.1 ) AppleWebKit/535.1 (KHTML, like Gecko) NokiaBrowser/8.3.1.4 Mobile Safari/535.1'
+# Don't really need these nearly as much, so commenting them out, but leaving if I ever
+# care to uncomment for a specific purpose
+##export AMIGA='AmigaVoyager/2.95 (compatible; MC680x0; AmigaOS)'
+##export AND4='Mozilla/5.0 (Linux; U; Android 4.0.3; de-ch; HTC Sensation Build/IML74K) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30'
+##export AND23='Mozilla/5.0 (Linux; U; Android 2.3.5; en-us; HTC Vision Build/GRI40) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1'
+##export BB='Mozilla/5.0 (BlackBerry; U; BlackBerry 9860; en-US) AppleWebKit/534.11+ (KHTML, like Gecko) Version/7.0.0.254 Mobile Safari/534.11+'
+##export CHROME='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.60 Safari/537.17'
+##export FIREFOX='Mozilla/5.0 (Windows NT 6.2; Win64; x64; rv:16.0.1) Gecko/20121011 Firefox/16.0.1'
+##export IEMOBILE='Mozilla/5.0 (compatible; MSIE 9.0; Windows Phone OS 7.5; Trident/5.0; IEMobile/9.0)'
+##export IPHONE='Mozilla/5.0 (iPod; U; CPU iPhone OS 4_3_3 like Mac OS X; ja-jp) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8J2 Safari/6533.18.5'
+##export IPAD='Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5355d Safari/8536.25'
+##export SAFARI='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/537.13+ (KHTML, like Gecko) Version/5.1.7 Safari/534.57.2'
+##export SAMSUNGU365='SCH-U365/1.0.NetFront/3.0.22.2.23.(GUI).MMP/2.0'
+##export WP7='Mozilla/5.0 (compatible; MSIE 9.0; Windows Phone OS 7.5; Trident/5.0; IEMobile/9.0; NOKIA; Lumia 800)'
+##export WP8='Mozilla/5.0 (compatible; MSIE 10.0; Windows Phone 8.0; Trident/6.0; IEMobile/10.0; ARM; Touch; NOKIA; Lumia 920'
+##export BB9700='BlackBerry9700/5.0.0.862 Profile/MIDP-2.1 Configuration/CLDC-1.1 VendorID/120'
+##export NOKIA8310='Mozilla/5.0 (Symbian/3; Series60/5.3 NokiaE7-00/111.040.1511; Profile/MIDP-2.1 Configuration/CLDC-1.1 ) AppleWebKit/535.1 (KHTML, like Gecko) NokiaBrowser/8.3.1.4 Mobile Safari/535.1'
