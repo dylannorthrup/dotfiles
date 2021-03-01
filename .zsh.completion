@@ -1,11 +1,25 @@
 compctl -W $GOPATH/src -/ grun
 compctl -W $GOPATH/src -/ vigo
 
-cdr() { cd /Users/dxn4hci/repos/$1; }
-compctl -W /Users/dxn4hci/repos/ -/ cdr
+function cdr() { cd $HOME/repos/$1; }
+compctl -W $HOME/repos/ -/ cdr
+function cds() { cd $HOME/repos/$1; }
+compctl -W $HOME/repos/ -/ cds
+function cdu() { cd $HOME/repos/pristine/utility_scripts/users/dylan/$1; }
+compctl -W $HOME/repos/pristine/utility_scripts/users/dylan/ -/ cdu
 
-cdf() { cd /Users/dxn4hci/repos/$1; }
-compctl -W /Users/dxn4hci/repos/ -/ cdf
 
-cdfr() { cd /Users/dxn4hci/repos/$1; }
-compctl -W /Users/dxn4hci/repos/ -/ cdfr
+bindkey "^[OA" up-history
+bindkey "^[OB" down-history
+autoload -U +X bashcompinit && bashcompinit
+
+
+_adr() {
+  # Autocomplete only when entering the last term
+  if [ ${COMP_CWORD} -eq $((${#COMP_WORDS[@]} - 1)) ]
+  then
+    COMPREPLY=( $(_adr_autocomplete ${COMP_WORDS[*]} ) )
+  fi
+}
+
+complete -F _adr -o default adr

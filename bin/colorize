@@ -17,6 +17,8 @@
 
 # For the colors see tput(1) and terminfo(5)
 red=$(tput bold;tput setaf 1)            # bright red text
+redonwht=$(tput bold;tput setaf 7; tput setab 9)      # bright white text
+ltred=$(tput setaf 211)            # light red text
 green=$(tput setaf 2)                    # dim green text
 yellow=$(tput bold;tput setaf 3)         # bright yellow text
 fawn=$(tput setaf 3) ; beige=$fawn       # dark yellow text
@@ -27,6 +29,7 @@ cyan=$(tput bold;tput setaf 6)           # bright cyan text
 gray=$(tput setaf 7)                     # dim white text
 grey=$(tput setaf 7)                     # dim white text
 white=$(tput bold;tput setaf 7)          # bright white text
+blkonwht=$(tput setaf 0; tput setab 15)      # bright white text
 normal=$(tput sgr0)                      # normal text
 
 bell=$(tput bel)                         # bell/beep
