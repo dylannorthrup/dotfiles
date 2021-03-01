@@ -1,0 +1,11 @@
+#!/bin/bash
+#
+# Ever wanted to encrypt a mysql password? Now you can
+
+if [ ! -z $1 ]; then
+  PW="$1"
+else
+  read PW
+fi
+
+echo -n "$PW" | sha1sum | xxd -r -p | sha1sum | tr '[a-z]' '[A-Z]' | awk '{printf "*%s", $1}'

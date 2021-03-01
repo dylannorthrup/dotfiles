@@ -1,0 +1,7 @@
+#!/bin/bash
+
+while true; do 
+  date
+  ssh $1 -oStrictHostKeyChecking=no -o ConnectTimeout=10 'uptime'
+  sleep 5
+done

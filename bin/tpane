@@ -1,0 +1,17 @@
+#!/bin/bash
+#
+# Gives you the result of your TMUX_PANE mod'd by the number you provide
+
+if [ -z $1 ] || [ $1 -lt 1 ]; then
+  echo "You either didn't give a number as an argument or it was not positive."
+  echo "Either way, we are exiting."
+  exit 1
+fi
+
+if [ -z ${TMUX_PANE} ]; then
+  echo "You do not have a TMUX_PANE variable defined. This doesn't work without that."
+  exit 2
+fi
+
+PANE_NUM=$(( $(echo ${TMUX_PANE} | sed -e 's/^%//') % $1 ))
+echo ${PANE_NUM}
