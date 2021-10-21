@@ -1,7 +1,7 @@
 
-PROMPT='$(git_prompt_info)[%*] [%{$fg[cyan]%}${PWD/#$HOME/~}%{$reset_color%}] watchtower${ret_status}%{$reset_color%}> '
+PROMPT='$(git_prompt_info)[%*] [%{$fg[cyan]%}${PWD/#$HOME/~}%{$reset_color%}] %m${ret_status}%{$reset_color%}> '
 
-export PATH=${PATH}:${HOME}/bin:${HOME}/google-cloud-sdk/bin:${HOME}/repos/nightly/utility_scripts/users/dylan/mariadb:${HOME}/pip/bin
+export PATH=${PATH}:${HOME}/bin:${HOME}/google-cloud-sdk/bin:${HOME}/repos/nightly/utility_scripts/users/dylan/mariadb:${HOME}/repos/nightly/utility_scripts/users/dylan/maxscale:${HOME}/pip/bin
 export LOCATE_PATH="$LOCATE_PATH:$HOME/.repos.mlocatedb"
 
 export GREP_COLORS='ms=01;33:mc=01;33:sl=:cx=:fn=35;107:ln=32:bn=32:se=35;47'
@@ -12,9 +12,13 @@ bindkey \^U backward-kill-line
 export JAVA_HOME="/usr/lib/jvm/java-14-openjdk-amd64"
 export PATH=${PATH}:${JAVA_HOME}/bin
 
-
 # rbenv
 eval "$(rbenv init -)"
+
+# Adding aliases to correct common typos
+eval "$(thefuck --alias)"
+# So I can have a more public-friendly alias for this
+alias poop='fuck'
 
 # Example of a 1, few, many alias setup in zsh
 # Assumes a setup with hosts named 'server-ENVIRONMENT-NUMBER'
@@ -45,6 +49,99 @@ bct1() { _base_cmd_test $* }
 bct2() { _base_cmd_test $* }
 bct() { _base_cmd_test $* }
 
+danger_delete_index() {
+  if [[ ! -z "${1}" ]]; then
+    2>&1 echo "Sending delete to ${ES_URL} for index ${1}"
+    curl -X DELETE "${ES_URL}/${1}"
+  fi
+}
+
+function not-watch() {
+  export COLOR_SETTING='ALWAYS'
+  while true; do
+    echo "Running command"
+    output=$(eval "$*" 2>&1)
+    clear
+    uptime | colorize blue '.*'
+    echo -e "COMMAND: '$*'"
+    echo -e "=="
+    echo -e "${output}"
+    echo -e "=="
+    countdown ${NW_DELAY:-5}
+  done
+}
+
+alias nw='not-watch'
+alias nw20='NW_DELAY=20 not-watch'
+
+function quiet_on_success() {
+  set +e
+  output="$($*)"
+  retval=$?
+  set -e
+  if [[ $retval -gt 0 ]]; then
+    echo "${output}"
+    exit $retval
+  fi
+}
+
+# gcloud aliases
+alias gcomp='gcloud compute'
+alias ginst='gcomp instances'
+alias gdisk='gcomp disks'
+
+alias gssh='ssh -i ~/.ssh/google_compute_engine'
+alias gcssh='gcloud compute ssh'
+
+export KUBECONFIG=${HOME}/.kube/config
+source <(kubectl completion zsh)
+alias kc='kubectl'
+function kcshell() {
+  args=$(echo "$@" | sed -e 's/describe pod //')
+  kubectl exec --stdin --tty ${=args} -- /bin/bash
+}
+complete -F __start_kubectl kc
+complete -F __start_kubectl kcshell
+complete -F __start_kubectl show-cluster-pods
+complete -F __start_kubectl show-cluster-nodes
+
+# Ansible shortcuts
+alias amwin='ansible --list-hosts all | egrep -v host | xargs mwin'
+alias ap='ansible-playbook'
+alias aptest='ansible-playbook -CD'
+alias lsah='ansible --list-hosts all | egrep -v "hosts"'
+alias taglist='ap *.yml --list-tags'
+
+# Terraform shortcuts
+
+alias tf='terraform'
+alias tfd='terraform fmt -diff'
+alias tfay='terraform apply -auto-approve'
+alias tfp='terraform plan -lock=false'
+alias tfpd='terraform plan -lock=false -no-color | egrep --color=never "^[^a-z]*[\~\+\-]+|# module|# google" | colorize white "^  *# google.*" whtonred "- .*=" cyan "\+ .*=" yellow "~ .*=" yellow "~ .* \{" whtonred "- .* \{\}"'
+alias dtfay='TF_LOG=DEBUG terraform apply -auto-approve'
+alias tps='terraform plan -lock=false | grep -v "Refreshing" | pgrep "#"'
+alias _tps='tf plan -lock=false | grep -v "Refreshing" | egrep "module.*google_|Plan|No changes.*"'
+
+tfayt() {
+  terraform apply -auto-approve --target="$1"
+}
+
+# Curator/Elasticsearch shortcuts
+alias ccurs="curator --config ${HOME}/.curator/staging.yml"
+alias ccursd="curator --config ${HOME}/.curator/staging.yml.debug"
+alias ccurd="curator --config ${HOME}/.curator/demo.yml"
+alias ccurdd="curator --config ${HOME}/.curator/demo.yml.debug"
+alias ccurp="curator --config ${HOME}/.curator/prod.yml"
+alias ccurpd="curator --config ${HOME}/.curator/prod.yml.debug"
+alias ccurl="curator --config ${HOME}/.curator/logs.yml"
+alias ccurld="curator --config ${HOME}/.curator/logs.yml.debug"
+
+# Something to use to get to regular 'grep'
+_grep() {
+  /usr/bin/grep "$@"
+}
+
 # User specific aliases and functions
 alias curl='curl -sSL'
 alias curlv='curl -sSL -o /dev/null -v'
@@ -52,14 +149,12 @@ alias curlvt='curl -sSL -o /dev/null -v -w "HTTP Code: %{response_code}; Connect
 alias curlhead='curl -sSL -D - -o /dev/null'
 alias dh='dirs -v'
 alias diff='diff -W $(( $(tput cols) - 2 ))'
-alias editalias="vi $HOME/.zsh.aliases"
 alias egrep='_grep -E --color=always'
-alias fl8='flake8-3 --ignore=E111,E114,E129'
-alias gittyup='git tyup'
 alias grep='_grep --color'
 alias localdb='mysql -h 127.0.0.1 -P 3306 -u root'
-alias more='\less -X'
-alias nceg='egrep --color=never'
+alias more='\less -REX'
+alias nceg='_grep -E --color=never'
+alias ncpg='_grep -P --color=never'
 alias pgrep='_grep -P --color=always'
 alias prespace='sed -e "s/^/ /g"'
 alias random='echo $(( ( RANDOM % 60 )  + 1 ))'
@@ -67,16 +162,6 @@ alias repos='ls ~/repos'
 alias rf='resetfile'
 alias s3cmd="$HOME/bin/gs3"
 alias ta='tmux new -t 0'
-alias tf='terraform'
-alias tfd='terraform fmt -diff'
-alias tfay='terraform apply -auto-approve'
-alias tfp='terraform plan -lock=false'
-alias tfpd='terraform plan -lock=false -no-color | egrep --color=never "^[^a-z]*[\~\+\-]+|# module|# google" | colorize white "^  *# google.*" redonwht "- .*=" cyan "+ .*=" yellow "~ .*=" yellow "~ .* {" redonwht "- .* {}"'
-alias dtfay='TF_LOG=DEBUG terraform apply -auto-approve'
-alias tps='terraform plan -lock=false | grep -v "Refreshing" | pgrep "#"'
-alias _tps='tf plan -lock=false | grep -v "Refreshing" | egrep "module.*google_|Plan|No changes.*"'
-alias view='vim -R'
-alias watch="watch -c "
 alias view='vim -R'
 alias watch='watch -d --color'
 
@@ -100,6 +185,11 @@ export HIST_STAMPS="%F %T"
 unsetopt histignorealldups
 setopt appendhistory
 unsetopt sharehistory
+
+function ckssh() {
+  ssh-keygen -f "$HOME/.ssh/known_hosts" -R $*
+  ssh $*
+}
 
 function wa {
   W_CMD=$(alias "$@" | cut -d\' -f2)
@@ -125,12 +215,21 @@ function docker_id {
   docker ps | grep "$*" | awk '{print $1}'
 }
 
+function _maria_id {
+  docker ps | awk '/mariadb/ {print $1}'
+}
+
+function db_start {
+  cd ~/repos/admin/server/local_dev/mariadb
+  docker run -d -v ~/mariadb/datadir:/var/lib/mysql -p 3306:3306 tock_mariadb:latest
+}
+
 function db_bash {
-  docker exec -it $(_docker_id) /bin/bash
+  docker exec -it $(_maria_id) /bin/bash
 }
 
 function db_stop {
-  docker stop $(_docker_id) 
+  docker stop $(_maria_id)
 }
 
 # If you're only running a single container, this works
@@ -138,6 +237,26 @@ function dbash {
   docker exec -it $(docker ps -q) /bin/bash
 }
 
+function syncbranch {
+  # Prune local branches that are not on the remote origin
+  git fetch -p
+  # Now, prune local dana
+  # List remote branches and put them into a string
+  REMOTE_BRANCHES=$(git branch -r --no-color | awk '{print $1}')
+  # Get list of local branches (ignoring 'master') that are tracking origin.
+  for b in $(git branch -vv --no-color | grep -v '^\* master' | \grep --color=never origin | awk '{print $1}'); do
+    # Compare each local branch against the list of remote branches
+    echo "${b}" | \grep --color=never "${REMOTE_BRANCHES}" > /dev/null
+    # If the local branch that is supposedly tracking an origin branch does not have
+    # a remote partner, go ahead and delete it
+    if [[ $? -eq 1 ]]; then   # Local branch NOT on remote
+      echo "Deleting branch '${b}'"
+      git branch -D "${b}"
+    fi
+  done
+  # And show the remaining branches
+  git branch
+}
 
 ## tmux stuff
 function ta {
