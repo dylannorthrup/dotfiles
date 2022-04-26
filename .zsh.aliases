@@ -1,7 +1,8 @@
 
-PROMPT='$(git_prompt_info)[%*] [%{$fg[cyan]%}${PWD/#$HOME/~}%{$reset_color%}] %m${ret_status}%{$reset_color%}> '
+PROMPT='$(git_prompt_info)[%*] [%{$fg[cyan]%}${PWD/#$HOME/~}%{$reset_color%}]${ret_status}watchtower> %{$reset_color%}'
+precmd() { eval "NOW=$( date '+%F_%H:%M:%S' )"; ret_status="%(?:%{$fg_bold[green]%} :%{$fg_bold[red]%} %s)"; }
 
-export PATH=${PATH}:${HOME}/bin:${HOME}/google-cloud-sdk/bin:${HOME}/repos/nightly/utility_scripts/users/dylan/mariadb:${HOME}/repos/nightly/utility_scripts/users/dylan/maxscale:${HOME}/pip/bin
+export PATH=${PATH}:${HOME}/bin:${HOME}/google-cloud-sdk/bin:${HOME}/repos/nightly/utility_scripts/users/dylan/mariadb:${HOME}/repos/nightly/utility_scripts/users/dylan/maxscale:${HOME}/repos/nightly/utility_scripts/users/dylan/kubernetes:${HOME}/pip/bin
 export LOCATE_PATH="$LOCATE_PATH:$HOME/.repos.mlocatedb"
 
 export GREP_COLORS='ms=01;33:mc=01;33:sl=:cx=:fn=35;107:ln=32:bn=32:se=35;47'
@@ -12,13 +13,23 @@ bindkey \^U backward-kill-line
 export JAVA_HOME="/usr/lib/jvm/java-14-openjdk-amd64"
 export PATH=${PATH}:${JAVA_HOME}/bin
 
+# Rust path addition and tool aliases
+export PATH=${PATH}:${HOME}/.cargo/bin
+alias ls='exa --git'
+alias tree='ls --tree'
+
 # rbenv
-eval "$(rbenv init -)"
+eval "$(rbenv init - zsh)"
 
 # Adding aliases to correct common typos
 eval "$(thefuck --alias)"
 # So I can have a more public-friendly alias for this
 alias poop='fuck'
+
+# Something to give some additional color to the maxctrl status output
+_mccolorize() {
+  colorize yellow '^maxscale.*' cyan '(Server|Address|Port|Connections|State|GTID)' orange 'Maintenance,[\s\w]+' springgreen 'Master,[\s\w]+' seagreen 'Slave,[\s\w]+' orange '[^,] Running' red ' Down '
+}
 
 # Example of a 1, few, many alias setup in zsh
 # Assumes a setup with hosts named 'server-ENVIRONMENT-NUMBER'
@@ -48,6 +59,19 @@ bct0() { _base_cmd_test $* }
 bct1() { _base_cmd_test $* }
 bct2() { _base_cmd_test $* }
 bct() { _base_cmd_test $* }
+
+escurl() {
+  curl -sSL "${ES_URL}${1}"
+}
+
+espost() {
+  curl -sSL -XPOST "${ES_URL}${1}"
+}
+
+esput() {
+  endpoint="$1"; shift
+  curl -sSL -XPUT -H 'Content-type: application/json' "${ES_URL}${endpoint}" "$@"
+}
 
 danger_delete_index() {
   if [[ ! -z "${1}" ]]; then
@@ -111,6 +135,14 @@ alias ap='ansible-playbook'
 alias aptest='ansible-playbook -CD'
 alias lsah='ansible --list-hosts all | egrep -v "hosts"'
 alias taglist='ap *.yml --list-tags'
+plsah() {
+  PROJ=$(basename $(pwd) | sed -e 's/^ORG-//')
+  ansible --list-hosts all | egrep -v host | sed -e "s/$/.${PROJ}.ORG/"
+}
+pamwin() {
+  PROJ=$(basename $(pwd) | sed -e 's/^ORG-//')
+  ansible --list-hosts all | egrep -v host | sed -e "s/$/.${PROJ}.ORG/" | xargs mwin
+}
 
 # Terraform shortcuts
 
@@ -161,7 +193,7 @@ alias random='echo $(( ( RANDOM % 60 )  + 1 ))'
 alias repos='ls ~/repos'
 alias rf='resetfile'
 alias s3cmd="$HOME/bin/gs3"
-alias ta='tmux new -t 0'
+alias ta='tmux -u new -t 0'
 alias view='vim -R'
 alias watch='watch -d --color'
 
@@ -180,11 +212,14 @@ export CACHE_AGE=6000
 
 # History stuff
 export SAVEHIST=100000
+export HISTSIZE=200000
 export HIST_STAMPS="%F %T"
 # Turns out having all of my command history available helps in post mortems
 unsetopt histignorealldups
 setopt appendhistory
 unsetopt sharehistory
+setopt histnofunctions
+setopt histnostore
 
 function ckssh() {
   ssh-keygen -f "$HOME/.ssh/known_hosts" -R $*
@@ -213,6 +248,13 @@ function docker_id {
   # For mjr, this is simpler than shoving the value into an awk variable
   # then testing that. Been there, done that, chose this way instead.
   docker ps | grep "$*" | awk '{print $1}'
+}
+
+function debug_docker_build {
+  IMG_ID="${1}"
+  docker commit ${1} tmpdebug
+  docker run -ti --rm tmpdebug bash
+  docker image rm tmpdebug
 }
 
 function _maria_id {

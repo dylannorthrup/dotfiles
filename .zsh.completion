@@ -1,3 +1,9 @@
+autoload -Uz bracketed-paste-magic
+zle -N bracketed-paste bracketed-paste-magic
+
+autoload -Uz url-quote-magic
+zle -N self-insert url-quote-magic
+
 compctl -W $GOPATH/src -/ grun
 compctl -W $GOPATH/src -/ vigo
 
@@ -5,21 +11,10 @@ function cdr() { cd $HOME/repos/$1; }
 compctl -W $HOME/repos/ -/ cdr
 function cds() { cd $HOME/repos/$1; }
 compctl -W $HOME/repos/ -/ cds
-function cdu() { cd $HOME/repos/pristine/utility_scripts/users/dylan/$1; }
-compctl -W $HOME/repos/pristine/utility_scripts/users/dylan/ -/ cdu
+function cdu() { cd $HOME/repos/nightly/utility_scripts/users/dylan/$1; }
+compctl -W $HOME/repos/nightly/utility_scripts/users/dylan/ -/ cdu
 
 
 bindkey "^[OA" up-history
 bindkey "^[OB" down-history
 autoload -U +X bashcompinit && bashcompinit
-
-
-_adr() {
-  # Autocomplete only when entering the last term
-  if [ ${COMP_CWORD} -eq $((${#COMP_WORDS[@]} - 1)) ]
-  then
-    COMPREPLY=( $(_adr_autocomplete ${COMP_WORDS[*]} ) )
-  fi
-}
-
-complete -F _adr -o default adr

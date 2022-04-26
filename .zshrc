@@ -68,7 +68,7 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git ssh-agent gcloud)
+plugins=(git ssh-agent gcloud thefuck)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -77,7 +77,7 @@ source $ZSH/oh-my-zsh.sh
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
-# export LANG=en_US.UTF-8
+export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
 # if [[ -n $SSH_CONNECTION ]]; then
@@ -105,5 +105,3 @@ fi
 if [ -f "$HOME/.zsh.completion" ]; then
   source "$HOME/.zsh.completion"
 fi
-autoload -U +X bashcompinit && bashcompinit
-
