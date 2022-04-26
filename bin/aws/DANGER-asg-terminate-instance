@@ -1,0 +1,28 @@
+#!/bin/bash
+
+if [ -z ${AWS_REGION} ]; then
+  AWS_REGION='us-east-1'
+fi
+
+INSTANCE=$1
+
+if [ -z $INSTANCE ]; then
+  echo "Usage: $0 <instance-id>"
+  exit 1
+fi
+
+echo -n "Are you sure you want to terminate this instance? Type 'yes' to continue: "
+read REPLY
+
+if [[ $REPLY == "yes" ]]; then
+  echo Beginning termination of instance ${INSTANCE}
+  aws ec2 terminate-instances --instance-ids ${INSTANCE} --region ${AWS_REGION}
+  STATE="CHECKING"
+  while [ ${STATE} == '"terminated"' ]; do
+    sleep 2
+    STATE= $(instance-state ${INSTANCE})
+    echo Instance state is now $(instance-state ${INSTANCE})
+  done
+else
+  echo Exiting without performing termination.
+fi

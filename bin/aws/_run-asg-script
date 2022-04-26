@@ -1,0 +1,47 @@
+#!/usr/bin/ruby
+
+require 'open3'
+
+class String
+  def colorize(code)
+    return if code.nil?
+    "\e[#{code}m#{self}\e[0m"
+  end
+  
+  def colorize_green
+    colorize(32)
+  end
+end
+
+def run_cmd_on_host(host=nil, cmd=nil)
+  return if cmd.nil?
+  return if host.nil?
+  print `ssh -oStrictHostKeyChecking=no -o ConnectTimeout=10 #{host} "#{cmd}"`
+end
+
+
+puts "PWD: #{Dir.pwd}"
+#puts "Running this command: '#{ARGV}'"
+
+if ENV['AWS_REGION'].nil? then
+  region='us-east-1'
+else
+  region=ENV['AWS_REGION']
+end
+
+stdout,stderr,status = Open3.capture3("AWS_REGION=#{region} get-aws-ips -y | awk '/ip:/ {print $NF, $1}'")
+unless stderr == ""
+  STDERR.puts "STDERR OUTPUT: #{stderr}"
+end
+
+if status.success?
+  stdout.each_line do |host|
+    ip = host.dup.chomp!
+    ip.gsub!(/ i-.*/, '')
+    print "== Working on #{host}".colorize_green
+    run_cmd_on_host(ip, ARGV.join(' '))
+  end
+else
+  STDERR.puts "Command ran into issues. DOH!"
+end
+puts "All hosts complete".colorize_green

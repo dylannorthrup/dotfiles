@@ -1,0 +1,80 @@
+#!/bin/bash
+#
+# Get status of elastic search instances
+# Source in the correct libs based on if this is a symlink or not.
+if [[ -L "${BASH_SOURCE[0]}" ]]; then
+  symlink_loc=$(dirname "${BASH_SOURCE[0]}")
+  link_offset=$(readlink "${BASH_SOURCE[0]}")
+  # If the symlink is an absolute path, use that directly
+  if [[ "${link_offset:0:1}" == "/" ]]; then
+    script_dir=$(cd "$(dirname "${link_offset}")" &>/dev/null && pwd -P)
+  else
+  # and if it's a relative path, append that to the symlink_loc to
+  # get to the original's location
+    script_dir=$(cd "$(dirname "${symlink_loc}/${link_offset}")" &>/dev/null && pwd -P)
+  fi
+else
+# And if this is not a symlink, just source it in normally
+  script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
+fi
+
+. ${script_dir}/_elasticsearch_common.sh
+
+[ ${1-} ] && ES_HOST=${1-}
+
+if [ -z ${ES_HOST} ] && [ -z ${ES_URL} ]; then
+  echo "No ES_HOST or ES_URL env variable defined and no host provided on command line. Exiting."
+  exit 1
+fi
+
+if [ -z ${ES_URL} ]; then
+  ES_URL="http://${ES_HOST}:9200"
+fi
+
+#echo "Querying ${ES_HOST} for status"
+
+STATUS_JSON=$(curl -sSL ${ES_URL}/_cluster/health)
+RECOVERY_TEXT=$(curl -sSL ${ES_URL}/_cat/recovery?active_only=true | sort -k 14rn -k 18rn -k 1)
+INDEX_INFO=$(curl -sSL ${ES_URL}/_cat/indices | awk '{print $1, $2}')
+TOTAL=$(echo "${INDEX_INFO}" | wc -l)
+RED=$(echo "${INDEX_INFO}" | grep '^red' | wc -l || true)
+YELLOW=$(echo "${INDEX_INFO}" | grep '^yellow' | wc -l || true)
+GREEN=$(echo "${INDEX_INFO}" | grep '^green' | wc -l || true)
+OPEN=$(echo "${INDEX_INFO}" | grep 'open$' | wc -l || true)
+CLOSE=$(echo "${INDEX_INFO}" | grep 'close$' | wc -l || true)
+echo "${STATUS_JSON}" | jq -rc '"Cluster status for " + .cluster_name + " cluster: ==" + .status + "==     Total Nodes: " + (.number_of_nodes|tostring)' | colorize white '==' yellow 'yellow' redonwht 'red' lawngreen 'green' silver '\d+$'
+echo " - ${TOTAL} total indices in the cluster."
+echo "   - Health counts: ${GREEN} green :: ${YELLOW} yellow :: ${RED} red" | colorize lawngreen '\d+ green' yellow '\d+ yellow' red ' 0 red' redonwht '(?:\d+\d| [1-9]) red'
+echo "   - Status counts: ${OPEN} open :: ${CLOSE} closed" | colorize cyan '\d+ open' orange '\d+ closed'
+echo "${STATUS_JSON}" | jq -rc '" - " + (.relocating_shards|tostring) + " shards being relocated"'
+echo "${STATUS_JSON}" | jq -rc '" - " + (.initializing_shards|tostring) + " shards being initialized"'
+echo "${STATUS_JSON}" | jq -rc '" - " + (.unassigned_shards|tostring) + " unassigned shards"'
+echo "${STATUS_JSON}" | jq -rc '" - " + (.active_shards_percent_as_number|tostring) + "% of " + (.active_shards|tostring) + " total shards are active"' | perl -pe 's/(\d+\.\d\d).*\%/$1\%/'
+echo "${STATUS_JSON}" | jq -rc '" - " + (.number_of_pending_tasks|tostring) + " pending tasks"'
+#echo "${STATUS_JSON}" | jq -rc '" - " + (.|tostring)'
+#echo "${STATUS_JSON}" | jq '.'
+if [[ "${RECOVERY_TEXT}" != "" ]]; then
+  echo "== Ongoing recoveries =="
+  if [[ -z ${REPO_ROOT} ]]; then
+    echo "${RECOVERY_TEXT}"
+  else
+    echo "${RECOVERY_TEXT}" | colorize orange '[\d\.]+%' cyan '^[^\s]+' royalblue 'elastic[\w-]+\d+'
+  fi
+fi
+#MERGE_INFO=$(curl -sSL ${ES_URL}/_stats?pretty | jq '._all | .total | .merges')
+#MERGE_TEXT=$(echo "${MERGE_INFO}" |\
+#  jq -rc '. | select(((.current>0) and .total_docs>0) and .total>0) |
+#    "Currently " + (.current|tostring) + " ongoing merges.
+#  Docs  " +
+#    ((((.current_docs/.total_docs)*100)|tostring)|split("."))[0] + "% " +
+#    "actively merging: " + (.current_docs|tostring) + " of " +
+#    (.total_docs|tostring) + " docs total
+#  Bytes " +
+#    ((((.current_size_in_bytes/.total_size_in_bytes)*100)|tostring)|split("."))[0] + "% " +
+#    "actively merging: " + (.current_size_in_bytes|tostring) + " of " +
+#    (.total_size_in_bytes|tostring) + " bytes total"
+#  ';)
+#if [[ "${MERGE_TEXT}" != "" ]]; then
+#  echo "== Ongoing merges =="
+#  echo "${MERGE_TEXT}" | colorize royalblue '\d+%' yellow '\d+' cyan '\d+' orange '\d+ ongoing'
+#fi

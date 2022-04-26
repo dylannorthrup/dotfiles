@@ -1,0 +1,31 @@
+#!/bin/bash
+#
+# Monitor console output of a system.  Get the last 20 lines of output
+
+# Use this as the default
+PROJECT="${DEFAULT_GCP_PROJECT}"
+INSTANCE=$1
+
+echo "$1 - $2" 
+if [ "$2" != "" ]; then
+  PROJECT="$2"
+fi
+echo "Project is ${PROJECT}"
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+. ${DIR}/_gcommon.sh
+
+>&2 echo -n "Getting zone info for instance '${INSTANCE}'.."
+ZONE=$(zone_for_instance ${INSTANCE})
+
+if [ "${ZONE}X" == "X" ]; then
+  echo " Could not determine ZONE for ${INSTANCE}. Exiting"
+else
+  >&2 echo " retrieved zone of '${ZONE}."
+fi
+
+echo "== Retrieving console output for instance '${INSTANCE}' in zone '${ZONE}' and project '${PROJECT}' =="
+OUTPUT=$(gcloud compute instances get-serial-port-output --zone="${ZONE}" --project="${PROJECT}" ${INSTANCE} 2>&1 | egrep -v 'in the next get-serial-port-output' | tail -40)
+
+echo "== Console output below =="
+echo "${OUTPUT}"

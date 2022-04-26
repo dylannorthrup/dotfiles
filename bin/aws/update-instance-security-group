@@ -1,0 +1,32 @@
+#!/bin/bash
+
+if [ -z ${AWS_REGION} ]; then
+  AWS_REGION='us-east-1'
+fi
+
+INSTANCE=$1
+GROUP=$2
+REGION=$3
+
+function usage {
+  echo "Usage: $0: <instance-id> <security_group_id>"
+  echo "       security-group should match the regex 'sg-[0-9a-f]+'"
+  echo "       instance-id should match the regex 'i-[0-9a=f]+'"
+  exit 1  
+}
+
+if [ -z $GROUP ]; then
+  echo "No security group provided."
+  usage
+fi
+
+echo "${GROUP}" | grep '^sg-[0-9a-f]*$' > /dev/null
+if [ $? -ne 0 ]; then
+  echo "Security group does not match regex"
+  usage
+fi
+
+# Get ENIs from instance
+ENI_ID=$(aws ec2 describe-network-interfaces --filters Name="attachment.instance-id",Values="[${INSTANCE}]" | jq -rc '.[] | .[] | .NetworkInterfaceId')
+aws ec2 modify-network-interface-attribute --network-interface-id $ENI_ID --groups $GROUP
+

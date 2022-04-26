@@ -11,7 +11,7 @@ PATH=/usr/bin:/bin
 # Decrypt .s3cfg file so we can do stuff
 if [ ! -f $HOME/.s3cfg ]; then
   echo "===== DECRYPTING S3CFG FILE ====="
-  gpg --no-use-agent -o $HOME/.s3cfg -d $HOME/.s3cfg.gpg
+  gpg -o $HOME/.s3cfg -d $HOME/.s3cfg.gpg
 fi
 
 # Run s3cmd to do stuff

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [ -z ${AWS_REGION} ]; then
+  AWS_REGION='us-east-1'
+fi
+
+while true; do
+  OUTPUT=$(show-asg-scaling-activity $* | head -20 | sed -e 's/[\",]/ /g; s/Launching a new.*We currently do not have sufficient.*Launching EC2 instance failed/Launch failed due to insufficient capacity/;' | colorize green 'i-[^ ]* ' blue ' 100 ' red ' 50 ')
+  clear
+  uptime
+  echo "$OUTPUT"
+  sleep 10
+done

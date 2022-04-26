@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if [ -z ${AWS_REGION} ]; then
+  AWS_REGION='us-east-1'
+fi
+
+aws ec2 describe-instances --instance-ids $* --region ${AWS_REGION} | jq '.[] | .[] | .Instances[].State.Name'

@@ -1,0 +1,33 @@
+#!/bin/bash
+#
+# Reset a GCP vm
+
+INSTANCE=$1
+if [ -z $2 ]; then
+  PROJECT=$2
+fi
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+. ${DIR}/_gcommon.sh
+
+>&2 echo -n "Getting zone info for instance '${INSTANCE}'.."
+ZONE=$(zone_for_instance ${INSTANCE})
+
+if [ "${ZONE}X" == "X" ]; then
+  echo " Could not determine ZONE for ${INSTANCE}. Exiting"
+else
+  >&2 echo " retrieved zone of '${ZONE}."
+fi
+
+echo "== About to reset instance '${INSTANCE}' in zone '${ZONE}' and project '${PROJECT}' =="
+echo -n "== THIS IS A DISRUPTIVE ACTION!!! ARE YOU SURE YOU WANT TO CONTINUE? Type anything other than 'yes' to exit: "
+read FOO
+if [ "${FOO}X" != "yesX" ]; then
+  echo "Did not get 'yes' so we're exiting."
+  exit 0
+fi
+echo "== Resetting ${INSTANCE}"
+
+set -x
+gcloud compute instances reset --zone="${ZONE}" --project="${PROJECT}" ${INSTANCE} 
+

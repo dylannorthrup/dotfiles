@@ -1,0 +1,8 @@
+#!/bin/bash
+#
+# Source in utility functions for AWS_REGION and results caching
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+. $DIR/common.sh
+
+aws autoscaling describe-scaling-activities --region ${AWS_REGION} --auto-scaling-group-name $* |\
+  jq -rc '.[] | .[] | [.Description, .Progress, .StartTime]'

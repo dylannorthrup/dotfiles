@@ -1,0 +1,17 @@
+#!/bin/bash
+
+if [ -z ${AWS_REGION} ]; then
+  AWS_REGION='us-east-1'
+fi
+
+INSTANCE=$1
+ASG=$2
+REGION=$3
+
+if [ -z $ASG ]; then
+  echo "Usage: $0: <instance-id> <asg_name>"
+  exit 1
+fi
+
+set -x
+aws autoscaling detach-instances --instance-ids ${INSTANCE} --auto-scaling-group-name ${ASG} --should-decrement-desired-capacity --region ${AWS_REGION}

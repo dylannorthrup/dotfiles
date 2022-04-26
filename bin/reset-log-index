@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if [[ -z ${1} ]]; then
+  echo "No argument given. You need to pass in the name of the index you want to reset."
+  exit
+fi
+
+echo "Resetting shrink-imposed settings for ${1}"
+
+curl -sSL -XPUT "${ES_URL}/${1}/_settings" -H 'Content-Type: application/json' -d'{ "settings": { "index.routing.allocation.require._name": null, "index.blocks.write": null }}'

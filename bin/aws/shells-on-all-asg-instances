@@ -1,0 +1,3 @@
+#!/bin/bash
+
+get-aws-ips -y | awk '/ip: / {print $NF}' | xargs mwin

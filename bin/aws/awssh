@@ -1,0 +1,4 @@
+#!/bin/bash
+
+echo == Doing ssh to $*
+ssh -oStrictHostKeyChecking=no -o ConnectTimeout=10 -o BatchMode=yes $*

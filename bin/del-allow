@@ -1,0 +1,90 @@
+#!/bin/bash
+
+script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
+cd $script_dir
+
+. ${script_dir}/_gcommon.sh
+
+setup_colors
+
+usage() {
+  exit_value=0
+  [[ -z "${1-}" ]] || exit_value=${1}
+  cat <<EOF
+Usage: $(basename "${BASH_SOURCE[0]}") <-i instance_name> <-p project_name>
+
+Remove the deletion protection flag from instance.
+
+Relevant options:
+
+-i, --instance '<instance_name>' Remove deletion protection flag from this instance
+-p, --project '<gcp_project>'    Name of project.
+                                 if appropriate
+-h, --help                       Print this help and exit
+-v, --verbose                    Print script debug info
+EOF
+  exit ${exit_value}
+}
+
+parse_params() {
+  if [[ ! -z ${1-} ]]; then
+    while [[ $# -ge 1 ]]; do
+      case "${1-}" in
+      -h | --help) usage ;;
+      -i | --instance)
+        INSTANCE=(${2-})
+        shift
+        ;;
+      -p | --project)
+        PROJECT=${2-}
+        shift
+        ;;
+      --no-color) NO_COLOR=1 ;;
+      -v | --verbose) set -x ;;
+      -?*)
+        # If we indicate we die on unknown options, than do so
+        if [[ ${NO_UNKNOWN_OPTIONS} -eq 1 ]]; then
+          msg "Received unknown option: '${RED}${1-}${NOFMT}'."
+          exit 1
+        fi
+        ;;
+      *)
+        msg "Received Unknown argument: '${RED}${1-}${NOFMT}'"
+        ;;
+      esac
+      shift
+    done
+  fi
+
+  args=("$@")
+}
+
+parse_params "$@"
+
+FMT_INSTANCE="${PURPLE}${INSTANCE}${NOFMT}"
+if [ -z $1 ]; then
+  msg "ERROR: No instance name provided. Exiting"
+  exit 1
+fi
+
+msg_n  "Getting zone info for instance '${FMT_INSTANCE}'.."
+if [ -z $ZONE ]; then
+  ZONE=$(node_location "${INSTANCE}")
+fi
+
+if [[ -z "${ZONE}" ]]; then
+  die " Could not determine ZONE for ${FMT_INSTANCE}. Exiting"
+else
+  msg " retrieved zone of '${YELLOW}${ZONE}${NOFMT}'."
+fi
+
+msg "Attempting to remove deletion protection from ${FMT_INSTANCE}"
+_ginst update ${INSTANCE} --zone ${ZONE} --no-deletion-protection
+if [ $? == 0 ]; then
+  msg "Deletion protection removed from ${FMT_INSTANCE}!"
+else
+  msg "ERROR: Got a non-zero return code when trying to remove deletion protection set from ${FMT_INSTANCE}!"
+  msg "       You will likely need to figure out what happened, resolve the issue, and try again."
+  exit 2
+fi
+

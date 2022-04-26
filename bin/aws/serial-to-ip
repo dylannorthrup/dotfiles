@@ -1,0 +1,7 @@
+#!/bin/bash
+#
+# Source in utility functions for AWS_REGION and results caching
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+. $DIR/common.sh
+
+aws ec2 describe-instances --region ${AWS_REGION} --instance-ids $* | jq -rc '.[] | .[] | .Instances[].NetworkInterfaces[].PrivateIpAddress'

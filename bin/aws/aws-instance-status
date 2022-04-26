@@ -1,0 +1,10 @@
+#!/bin/bash
+#
+# Shortcut to get the status of an aws instance and getting pretty output via 'jq'
+
+# Source in utility functions for AWS_REGION and results caching
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+. $DIR/common.sh
+
+#read_cache_or_query_aws $* | jq -rc '.InstanceStatuses[] | [.InstanceId, .InstanceState.Name] | @csv'
+_aws-instance-info $* | jq -rc '.InstanceStatuses[] | [.InstanceId, .InstanceState.Name, .AvailabilityZone] | @csv'

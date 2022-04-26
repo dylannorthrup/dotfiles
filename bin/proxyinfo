@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Note: This has the port statically configured. Don't know if that's valid (likely not) for all
+# cases, but it works for now.
+# Also, no usage! yay!
+IP=$2
+PORT=$1
+
+if [ -z $PORT ]; then
+  echo "No port provided. Try again."
+  exit 1
+fi
+
+echo "Stats URL: http://${2}:${1}/_haproxy_stats"
+
+RAW_CURL=$(curl -sSL --max-time 5 http://${IP}:${PORT}/_haproxy_stats)
+POST_GREP=$(echo "${RAW_CURL}" | grep '<tr class=' | egrep -v '"(frontend|titre|backend)"')
+
+if [[ ${POST_GREP} == *"active3"* ]]; then
+  echo "${POST_GREP}" |\
+    sed -e 's/<\/div>/@/g; s/<div class=tips>/@/g; s/@[^@]*@//g; s/^<\/tr>//; s/<\/tr><tr>.*//; s/<[^>]*>/|/g; s/||*/|/g; s/  */ /g; s/Failed.*//;' |\
+    awk -F\| '/ip-.*internal/ {print " [32m" $2 "[0m  == " $6 " reqs/sec, status [36m" $37 $38 "[0m\n     active: [33m" $40 "[0m, backup: [35m" $41 "[0m, downtime: " $44}'
+elif [[ ${POST_GREP} == *"active_up"* ]] || [[ ${POST_GREP} == *"backup_up"* ]]; then
+  # This is to weed out tooltips that mess up the columns for awk parsing
+  POST_SED1=$(echo "${POST_GREP}" | sed -e 's/<\/span>/@/g; s/<\/div>/@/g; s/<span class="rls">/@/g; s/<div class=tips>/@/g; s/@[^@]*@//g;')
+  echo "${POST_SED1}" |\
+    sed -e 's/^<\/tr>//; s/<\/tr><tr>.*//; s/<[^>]*>/|/g; s/||*/|/g; s/  */ /g; s/Failed.*//;' |\
+    awk -F\| '/ip-.*internal/ {print " [32m" $2 "[0m == " $6 " reqs/sec, status [36m" $21 $22 "[0m\n     active: [33m" $24 "[0m, backup: [35m" $25 "[0m, downtime: " $28}' # "\n" $_}'
+fi

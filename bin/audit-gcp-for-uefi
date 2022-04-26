@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+# Okay, let's see how big this issue is... *sigh*
+
+gcloud compute instances list | grep -v 'MACHINE_TYPE' | while read inst; do
+  instance=$(echo "$inst" | awk '{print $1}')
+  zone=$(echo "$inst" | awk '{print $2}')
+  uefi_lines=$(gcloud compute instances describe $instance --zone $zone | grep '^shieldedInstanceConfig:' | wc -l | sed -e 's/ //g')
+  if [ "${uefi_lines}X" != "1X" ]; then
+    echo "${zone}:${instance}:BIOS"
+  else
+    echo "${zone}:${instance}:UEFI"
+  fi
+done

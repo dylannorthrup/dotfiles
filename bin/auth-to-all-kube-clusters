@@ -1,0 +1,10 @@
+#!/bin/bash
+cp /dev/null ~/.kube/config
+set -x
+for proj in $(gcloud projects list | awk '{print $1}'); do
+  for line in $(gcloud container clusters list --project="${proj}" --format="value[separator=;](name,zone)")
+  do
+    IFS=';' read CLUSTER ZONE <<< "$line"
+  gcloud container clusters get-credentials ${CLUSTER} --zone ${ZONE} --project="${proj}"
+  done
+done

@@ -1,0 +1,22 @@
+#!/bin/bash
+#
+# Provides status of OS versions in an AWS ASG. Uses the convention of having an 'old' file
+# which contains the output of a previous run of 'get-aws-ips -y' to do comparisons between
+# the prior state and current state.
+
+echo "PWD: ${PWD}"
+
+RAW_IPS=$(get-aws-ips -y | awk '/ip:/ {print $NF, $1}')
+IPS=$(echo "$RAW_IPS" | sed -e 's/i-[^ ]*//')
+
+#for i in $(get-aws-ips -y | awk '/ip:/ {print $NF}'); do 
+for i in $(echo "$IPS" | sed -e 's/i-[^ ]*//' | xargs); do 
+  echo "== Checking $i"
+  ssh -oStrictHostKeyChecking=no $i 'grep PRETTY_NAME /etc/*ease' | colorize red '14.*LTS' blue '16.*LTS'
+done
+raw_old_ips=$(awk '/ip:/ {print $NF, $1}' old)
+old_ips=$(echo "$raw_old_ips" | sed -e 's/i-[^ ]*//')
+grep 'ASG:' old
+echo Current IPS: $RAW_IPS
+echo Old IPS: . . $raw_old_ips
+diff  <(echo "$IPS" ) <(echo "$old_ips")

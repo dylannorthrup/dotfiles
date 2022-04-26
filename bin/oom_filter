@@ -1,0 +1,21 @@
+#!/bin/bash
+#
+# A script to modify the OOM scores for various programs
+
+# Adjust the PID to make it less likely the OOM killer
+# will target this process
+oom_shield() {
+  echo -1000 > /proc/${1}/oom_score_adj
+}
+
+# For tmux, only modify the initial tmux session....
+# Filter for 'tmux' and for the PPID being = 1
+TMUX_PID=$(ps -fade | awk '/tmux/ && $3 == 1 {print $2}')
+oom_shield ${TMUX_PID}
+
+# Go through and oom_shield all of our mosh connections
+for PID in $(/usr/bin/pgrep mosh-server); do
+  oom_shield ${PID}
+done
+
+# Others to be defined later....

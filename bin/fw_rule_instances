@@ -1,0 +1,27 @@
+#!/bin/bash
+
+RULE="$1"
+
+JSON=$(gcloud compute firewall-rules describe "${RULE}" --format=json)
+TAG=$( echo "$JSON" | jq -rc 'if has("targetTags") then .targetTags[] else "NULL" end') 
+
+if [ "${TAG}X" == "NULLX" ]; then
+  # echo "!!! No Target Tags specified. Applies to all hosts in network"
+  exit
+fi
+
+echo "${TAG}" | while read i; do 
+  # echo "== Hosts with tag of '${i}'"
+  HOSTS_WITH_TAG=$(gcloud compute instances list --format='table(name,status,tags.list())' --filter="tags.items ~ ^${i}$" | egrep -v 'NAME.*STATUS.*TAGS')
+  if [ "${HOSTS_WITH_TAG}X" == "X" ]; then
+    echo "^_^ NO HOSTS FOR RULE ${RULE}"
+    exit
+  fi
+  NUM_HOSTS=$(echo "$HOSTS_WITH_TAG" | wc -l)
+  if [ $NUM_HOSTS > 0 ]; then
+    echo "## Rule '${RULE}' applies to multiple hosts:"
+    echo "${HOSTS_WITH_TAG}" | sed -e 's/^/   -- /g'
+  else
+    echo "OwO NO HOSTS FOR RULE ${RULE}"
+  fi
+done

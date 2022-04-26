@@ -1,5 +1,5 @@
 #!/bin/bash
-CURL='curl -sS -o /dev/null -v'
+#
+# Do a curl to get the headers, then pass it to 'hlhttp' for highlighting
 
- 
 curl -sS -o /dev/null -v -L $* 2>&1 | hlhttp

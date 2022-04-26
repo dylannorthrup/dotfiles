@@ -1,0 +1,15 @@
+#!/bin/bash
+
+INSTANCE=$1
+PROJECT=$2
+
+# Source in caching utilities
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+. $DIR/_gcommon.sh
+
+if [ -z ${INSTANCE} ]; then
+  echo "No instance provided. Exiting"
+  exit 1
+fi
+
+node_location "${INSTANCE}" 

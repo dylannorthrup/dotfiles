@@ -1,0 +1,33 @@
+#!/bin/bash
+
+if [ -z $ES_URL ]; then
+  echo "No ES_URL set. Exiting"
+  exit
+fi
+SHARD=$1
+if [ -z $SHARD ]; then
+  echo "No SHARD argument given. Exiting"
+  exit
+fi
+
+countdown() {
+  NUM=$*
+  while [ $NUM -gt 0 ]; do
+    echo -ne "\r${NUM} "
+    NUM=$(expr $NUM - 1)
+    sleep 1
+  done
+  echo -e "\r0 . . . done!"
+}
+
+echo -n "Disabling replicas for $SHARD. Press ENTER to continue: "
+read FOO
+curl -XPUT ${ES_URL}/${SHARD}/_settings -H 'Content-Type: application/json' -d '{"index" : {"number_of_replicas":0}}'
+echo ""
+echo "Pausing for 30 seconds to let the cluster recognize and clear this as an 'unassigned_shard'"
+countdown 30
+echo -n "Re-enabling replicas for $SHARD. Press ENTER to continue: "
+read FOO
+curl -XPUT ${ES_URL}/${SHARD}/_settings -H 'Content-Type: application/json' -d '{"index" : {"number_of_replicas":1}}'
+echo ""
+echo "Program run complete"

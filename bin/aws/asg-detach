@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -x
+INSTANCE=$1
+ASG=$2
+REGION=$3
+
+if [ -z $ASG ]; then
+  echo "Usage: $0: <instance-id> <asg_name>"
+  exit 1
+fi
+
+CMD="aws autoscaling detach-instances --instance-ids ${INSTANCE} --auto-scaling-group-name ${ASG} --no-should-decrement-desired-capacity"
+if [ "${REGION}X" != "X" ]; then
+  CMD="${CMD} --region ${REGION}"
+fi
+
+${CMD}

@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [ -z ${AWS_REGION} ]; then
+  AWS_REGION='us-east-1'
+fi
+
+SG=$1
+REGION=$2
+
+if [ -z $SG ]; then
+  echo "Usage: $0: <security-group>"
+  exit 1
+fi
+
+aws ec2 describe-network-interfaces --filters Name="group-id",Values="[${SG}]" --region ${AWS_REGION}

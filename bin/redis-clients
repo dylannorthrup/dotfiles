@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+# pass host on command line.
+
+HOST=$1
+
+if [ -z ${HOST} ]; then
+  echo "Need a redis host to point at. Exiting"
+  exit 1
+fi
+
+echo "The following hosts are connecting to ${HOST}:"
+redis-cli -h ${HOST} CLIENT LIST | sed -e 's/.*addr=//; s/:.*//;' | sort | uniq

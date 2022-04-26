@@ -1,0 +1,10 @@
+#!/bin/bash
+#
+# Something to use in combination with tmux. If you have multiple panes up, this will
+# change into different sub-directories for each pane. Handy when you have keystroke
+# synchronization on.
+
+PANE=$(tmux list-panes -a | grep $TMUX_PANE | awk -F: '{print $2}' | awk -F. '{print $2}' | uniq | head -1)
+DIR_NUM=$(ls | wc -l)
+TARGET=$(( ${PANE} % ${DIR_NUM} + 1 ))
+echo cd $(ls | head -${TARGET} | tail -1)

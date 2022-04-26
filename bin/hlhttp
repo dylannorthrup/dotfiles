@@ -1,4 +1,6 @@
 #!/bin/bash
+#
+# Highlight specific HTTP headers for easier monitoring of changes and/or identification of absence/presence
 
 cat - | colorize cyan 'HTTP.*' grey 'Cache-Control.*' blue 'Date:.*' red 'GET.*' pink 'Host:.*' yellow 'X-UA-Profile.*' white 'X-.*:.*' yellow 'Location:.*' yellow 'Access-Control-Allow.*' yellow 'Content-Type:.*' cyan 'Content-Length:.*' red '.*gzip.*' #fawn 'Content-Length.*'
 echo '============================================' | colorize white '=*' 
