@@ -11,23 +11,15 @@
 
 [alias]
   a = !git add . && git status
-  au = !git add -u . && git status
-  aa = !git add . && git add -u . && git status
   br = branch
   co = checkout
   ci = commit
-  cm = commit -m
-  d = diff --color-words
-  dh = diff --color-words head
-  dump = cat-file -p
   hist = log --pretty=format:'%C(yellow)%h %C(cyan)%C(ul)%ad%Creset | %s%C(cyan)%d%Creset [%C(white)%an%Creset]' --graph --date=iso-local
   l = log --graph --all --pretty=format:'%C(yellow)%h%C(cyan)%d%Creset %s - %C(white)- %an, %ar%Creset'
   ll = log --stat --abbrev-commit
   lol = log --oneline --graph --decorate
   plush = !sh -c \"git pull --rebase && git push\"
-  s = status -s
   st = status
-  type = cat-file -t
   tyup = !sh -c \"git up && git push\"
 
 [color]
@@ -35,30 +27,61 @@
   status = auto
   diff = always
   branch = always
+
 [color "branch"]
   current = yellow reverse
   local = yellow
   remote = green
+
 [color "diff"]
   meta = yellow bold
   frag = magenta bold
   old = red bold
   new = green bold
+
 [color "status"]
   added = yellow
   changed = green
   untracked = cyan
+
 [core]
   autocrlf = input
   safecrlf = true
-  pager = less
-[format]
-  pretty = %C(yellow)%h %C(cyan)%C(ul)%ad%Creset | %s%C(cyan)%d%Creset [%C(white)%an%Creset]
-[log]
-  date = iso-local
-[push]
-  default = current
-[pull]
-  rebase = true
+  pager = delta
+
+[delta]
+  side-by-side = true
+  navigate = true  # use n and N to move between diff sections
+
+[diff]
+  colorMoved = default
+
 [diff "sopsdiffer"]
   textconv = sops -d
+
+[filter "lfs"]
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+  required = true
+
+[format]
+  pretty = %C(yellow)%h %C(cyan)%C(ul)%ad%Creset | %s%C(cyan)%d%Creset [%C(white)%an%Creset]
+
+[interactive]
+  diffFilter = delta --color-only
+
+[log]
+  date = iso-local
+
+[merge]
+  conflictstyle = diff3
+
+[pull]
+  rebase = true
+
+[push]
+  default = current
+
+[rebase]
+  autoStash = true
