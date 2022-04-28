@@ -15,11 +15,20 @@ export PATH=${PATH}:${JAVA_HOME}/bin
 
 # Rust path addition and tool aliases
 export PATH=${PATH}:${HOME}/.cargo/bin
+
+# Replacements for older tools from https://jvns.ca/blog/2022/04/12/a-list-of-new-ish--command-line-tools/
+# Installed 15 Apr
 alias ls='exa --git'
 alias tree='ls --tree'
+# Installed 28 Apr
+alias cat='bat'
+# Also installed `/usr/local/bin/delta` and configured it as the git pager
 
 # rbenv
 eval "$(rbenv init - zsh)"
+
+# Python BS
+export PATH=${PATH}:/home/dylan/.local/bin
 
 # Adding aliases to correct common typos
 eval "$(thefuck --alias)"
