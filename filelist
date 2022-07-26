@@ -1,5 +1,8 @@
 # Files
 .bashrc
+.zshrc
+.zsh.aliases
+.zsh.completion
 .gitconfig
 .irbrc
 .profile
@@ -8,5 +11,7 @@
 # Directories
 .tmux
 .ssh
-bin
 .weechat
+.zsh
+bin
+lib
