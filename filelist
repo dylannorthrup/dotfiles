@@ -1,13 +1,14 @@
 # Files
 .bashrc
-.zshrc
-.zsh.aliases
-.zsh.completion
 .gitconfig
 .irbrc
 .profile
+.ripgreprc
 .tmux.conf
 .vimrc
+.zsh.aliases
+.zsh.completion
+.zshrc
 # Directories
 .tmux
 .ssh
