@@ -2,8 +2,28 @@
 PROMPT='$(git_prompt_info)[%*] [%{$fg[cyan]%}${PWD/#$HOME/~}%{$reset_color%}]${ret_status}watchtower> %{$reset_color%}'
 precmd() { eval "NOW=$( date '+%F_%H:%M:%S' )"; ret_status="%(?:%{$fg_bold[green]%} :%{$fg_bold[red]%} %s)"; }
 
-export PATH=${PATH}:${HOME}/bin:${HOME}/google-cloud-sdk/bin:${HOME}/repos/nightly/utility_scripts/users/dylan/mariadb:${HOME}/repos/nightly/utility_scripts/users/dylan/maxscale:${HOME}/repos/nightly/utility_scripts/users/dylan/kubernetes:${HOME}/pip/bin
-export LOCATE_PATH="$LOCATE_PATH:$HOME/.repos.mlocatedb"
+source_dot_d_files() {
+  dot_d_dir="${1}"
+  if [[ -z "${dot_d_dir}" ]]; then
+    echo "No file provided to source_dot_d_files() function"
+    return
+  fi
+  if [[ ! -d "${dot_d_dir}" ]]; then
+    echo "Could not find directory '${dot_d_dir}' to source files from"
+    return
+  fi
+  local conf_files=("${dot_d_dir}"/*.{sh,zsh}(N))
+  local f=''
+  for f in ${(o)conf_files}; do
+    # ignore files that begin with a tilde
+    case ${f:t} in '~'*) continue;; esac
+    source "$f"
+  done
+}
+
+source_dot_d_files "${HOME}/.zsh/local.d"
+
+export PATH=${PATH}:${HOME}/repos/nightly/utility_scripts/users/dylan/mariadb:${HOME}/repos/nightly/utility_scripts/users/dylan/maxscale:${HOME}/repos/nightly/utility_scripts/users/dylan/kubernetes:${HOME}/pip/bin
 
 export GREP_COLORS='ms=01;33:mc=01;33:sl=:cx=:fn=35;107:ln=32:bn=32:se=35;47'
 # zsh behavior modifications
@@ -16,14 +36,6 @@ export PATH=${PATH}:${JAVA_HOME}/bin
 # Rust path addition and tool aliases
 export PATH=${PATH}:${HOME}/.cargo/bin
 
-# Replacements for older tools from https://jvns.ca/blog/2022/04/12/a-list-of-new-ish--command-line-tools/
-# Installed 15 Apr
-alias ls='exa --git'
-alias tree='ls --tree'
-# Installed 28 Apr
-alias cat='bat'
-# Also installed `/usr/local/bin/delta` and configured it as the git pager
-
 # rbenv
 eval "$(rbenv init - zsh)"
 
@@ -35,39 +47,6 @@ eval "$(thefuck --alias)"
 # So I can have a more public-friendly alias for this
 alias poop='fuck'
 
-# Something to give some additional color to the maxctrl status output
-_mccolorize() {
-  colorize yellow '^maxscale.*' cyan '(Server|Address|Port|Connections|State|GTID)' orange 'Maintenance,[\s\w]+' springgreen 'Master,[\s\w]+' seagreen 'Slave,[\s\w]+' orange '[^,] Running' red ' Down '
-}
-
-# Example of a 1, few, many alias setup in zsh
-# Assumes a setup with hosts named 'server-ENVIRONMENT-NUMBER'
-__base_cmd() {
-  NODE=$(echo "${funcstack[3]}" | sed -e 's/^...//')
-  if [[ "${NODE}X" == "X" ]]; then # This is to be run against all servers
-    example_cmd -h server-${CMDENV}-0:8989,server-${CMDENV}-1:8989,server-${CMDENV}-2:8989 $*
-  else
-    example_cmd -h server-${CMDENV}-${NODE}:8989 $*
-  fi
-}
-
-_base_cmd_prod() {
-  CMDENV='prod'
-  __base_cmd $*
-}
-bcp0() { _base_cmd_prod $* }
-bcp1() { _base_cmd_prod $* }
-bcp2() { _base_cmd_prod $* }
-bcp() { _base_cmd_prod $* }
-
-_base_cmd_test() {
-  CMDENV='test'
-  __base_cmd $*
-}
-bct0() { _base_cmd_test $* }
-bct1() { _base_cmd_test $* }
-bct2() { _base_cmd_test $* }
-bct() { _base_cmd_test $* }
 
 escurl() {
   curl -sSL "${ES_URL}${1}"
@@ -118,109 +97,6 @@ function quiet_on_success() {
   fi
 }
 
-# gcloud aliases and ENV vars
-. /usr/lib/google-cloud-sdk/path.zsh.inc
-. /usr/lib/google-cloud-sdk/completion.zsh.inc
-export DEFAULT_GCP_PROJECT='wouldnt-you-like-to-know'
-alias gcomp='gcloud compute'
-alias ginst='gcomp instances'
-alias gdisk='gcomp disks'
-
-alias gssh='ssh -i ~/.ssh/google_compute_engine'
-alias gcssh='gcloud compute ssh'
-
-export KUBECONFIG=${HOME}/.kube/config
-# Generating the kubectl completion is an expensive operation. So, I do it once a day.
-# But, I also want to make sure that only one shell is doing this at a time (in case
-# I'm spawning multiple shells at a time when the completion should be regenerated).
-KC_COMPLETION_FILE="$HOME/.zsh/kubectl.completion"
-zmodload zsh/system
-function generate_kc_completion_if_needed() {
-  echo "${*} Regenerating. Patience, please"
-  (
-    local lockvar
-    local lockvar_tmp
-    if [[ ! -f ${KC_COMPLETION_FILE} ]]; then
-      touch ${KC_COMPLETION_FILE}
-    fi
-    if [[ ! -f ${KC_COMPLETION_FILE}_tmp ]]; then
-      touch ${KC_COMPLETION_FILE}_tmp
-    fi
-    # with a timeout of 0, this throws an error message. So we redirect stderr to
-    # /dev/null. And we prepend the redirection because zsystem interprets it as
-    # an argument if we try to do it at the end of the command, prior to the ||.
-    # The exit is the sub-shell exiting
-    2>/dev/null zsystem flock -f lockvar -t 0 ${KC_COMPLETION_FILE} || exit 1
-    2>/dev/null zsystem flock -f lockvar -t 0 ${KC_COMPLETION_FILE}_tmp || exit 1
-    kubectl completion zsh > ${KC_COMPLETION_FILE}_tmp
-    cp ${KC_COMPLETION_FILE}_tmp ${KC_COMPLETION_FILE}
-    zsystem flock -u $lockvar
-    rm ${KC_COMPLETION_FILE}_tmp
-  )
-  if [[ $? -ne 0 ]]; then
-    echo "Completion file was locked by another process. We'll wait for that to complete"
-    echo "and source in the results."
-  fi
-}
-if [[ ! -f ${KC_COMPLETION_FILE} ]]; then
-  generate_kc_completion_if_needed "The kubectl completion file is missing."
-elif [[ $(( $(date +%s) - $(date -r ${KC_COMPLETION_FILE} +%s) )) -gt 86400 ]]; then
-  generate_kc_completion_if_needed "The kubectl completion file is old."
-fi
-
-# Put in a test here for if the file is locked and loop until a) it unlocks or
-# b) we timeout after 20 seconds.
-if [[ -f "${KC_COMPLETION_FILE}" ]]; then
-  2>/dev/null zsystem flock -f lockvar -t 20 ${KC_COMPLETION_FILE} && \
-    source ${KC_COMPLETION_FILE} && \
-    zsystem flock -u $lockvar
-  export KC_EXPANDED="True"
-else
-  echo "Could not source in the kubectl completion file '${KC_COMPLETION_FILE}'"
-  echo "You'll likely want to figure out why and correct the issue."
-  export KC_EXPANDED="False"
-fi
-
-alias kc='kubectl'
-function kcshell() {
-  args=$(echo "$@" | sed -e 's/describe pod //')
-  kubectl exec --stdin --tty ${=args} -- /bin/bash
-}
-complete -F __start_kubectl kc
-complete -F __start_kubectl kcshell
-complete -F __start_kubectl show-cluster-pods
-complete -F __start_kubectl show-cluster-nodes
-
-# Ansible shortcuts
-alias amwin='ansible --list-hosts all | egrep -v host | xargs mwin'
-alias ap='ansible-playbook'
-alias aptest='ansible-playbook -CD'
-alias lsah='ansible --list-hosts all | egrep -v "hosts"'
-alias taglist='ap *.yml --list-tags'
-plsah() {
-  PROJ=$(basename $(pwd) | sed -e 's/^ORG-//')
-  ansible --list-hosts all | egrep -v host | sed -e "s/$/.${PROJ}.ORG/"
-}
-pamwin() {
-  PROJ=$(basename $(pwd) | sed -e 's/^ORG-//')
-  ansible --list-hosts all | egrep -v host | sed -e "s/$/.${PROJ}.ORG/" | xargs mwin
-}
-
-# Terraform shortcuts
-
-alias tf='terraform'
-alias tfd='terraform fmt -diff'
-alias tfay='terraform apply -auto-approve'
-alias tfp='terraform plan -lock=false'
-alias tfpd='terraform plan -lock=false -no-color | egrep --color=never "^[^a-z]*[\~\+\-]+|# module|# google" | colorize white "^  *# google.*" whtonred "- .*=" cyan "\+ .*=" yellow "~ .*=" yellow "~ .* \{" whtonred "- .* \{\}"'
-alias dtfay='TF_LOG=DEBUG terraform apply -auto-approve'
-alias tps='terraform plan -lock=false | grep -v "Refreshing" | pgrep "#"'
-alias _tps='tf plan -lock=false | grep -v "Refreshing" | egrep "module.*google_|Plan|No changes.*"'
-
-tfayt() {
-  terraform apply -auto-approve --target="$1"
-}
-
 # Curator/Elasticsearch shortcuts
 alias ccurs="curator --config ${HOME}/.curator/staging.yml"
 alias ccursd="curator --config ${HOME}/.curator/staging.yml.debug"
@@ -231,11 +107,6 @@ alias ccurpd="curator --config ${HOME}/.curator/prod.yml.debug"
 alias ccurl="curator --config ${HOME}/.curator/logs.yml"
 alias ccurld="curator --config ${HOME}/.curator/logs.yml.debug"
 
-# Something to use to get to regular 'grep'
-_grep() {
-  /usr/bin/grep "$@"
-}
-
 # User specific aliases and functions
 alias curl='curl -sSL'
 alias curlv='curl -sSL -o /dev/null -v'
@@ -243,13 +114,8 @@ alias curlvt='curl -sSL -o /dev/null -v -w "HTTP Code: %{response_code}; Connect
 alias curlhead='curl -sSL -D - -o /dev/null'
 alias dh='dirs -v'
 alias diff='diff -W $(( $(tput cols) - 2 ))'
-alias egrep='_grep -E --color=always'
-alias grep='_grep --color'
 alias localdb='mysql -h 127.0.0.1 -P 3306 -u root'
 alias more='\less -REX'
-alias nceg='_grep -E --color=never'
-alias ncpg='_grep -P --color=never'
-alias pgrep='_grep -P --color=always'
 alias prespace='sed -e "s/^/ /g"'
 alias random='echo $(( ( RANDOM % 60 )  + 1 ))'
 alias repos='ls ~/repos'
@@ -257,7 +123,6 @@ alias rf='resetfile'
 alias s3cmd="$HOME/bin/gs3"
 alias ta='tmux -u new -t 0'
 alias view='vim -R'
-alias watch='watch -d --color'
 
 # Environment variables
 export CVSROOT='web:/u1/CVS'
@@ -286,59 +151,6 @@ setopt histnostore
 function ckssh() {
   ssh-keygen -f "$HOME/.ssh/known_hosts" -R $*
   ssh $*
-}
-
-function wa {
-  W_CMD=$(alias "$@" | cut -d\' -f2)
-  if [[ "${W_CMD}X" == "X" ]]; then
-    W_CMD="$@"
-  fi
-  watch ${=W_CMD}
-  if [ $? != 0 ]; then
-    echo "error running watch. Full command was"
-    echo "  watch \"${W_CMD}\""
-  fi
-}
-
-function wad {
-  wa -d "$@"
-}
-
-## Docker stuff
-# Lets you get a container ID based on grepping `docker ps` output
-function docker_id {
-  # For mjr, this is simpler than shoving the value into an awk variable
-  # then testing that. Been there, done that, chose this way instead.
-  docker ps | grep "$*" | awk '{print $1}'
-}
-
-function debug_docker_build {
-  IMG_ID="${1}"
-  docker commit ${1} tmpdebug
-  docker run -ti --rm tmpdebug bash
-  docker image rm tmpdebug
-}
-
-function _maria_id {
-  docker ps | awk '/mariadb/ {print $1}'
-}
-
-function db_start {
-  cd ~/repos/admin/server/local_dev/mariadb
-  docker run -d -v ~/mariadb/datadir:/var/lib/mysql -p 3306:3306 tock_mariadb:latest
-}
-
-function db_bash {
-  docker exec -it $(_maria_id) /bin/bash
-}
-
-function db_stop {
-  docker stop $(_maria_id)
-}
-
-# If you're only running a single container, this works
-function dbash {
-  docker exec -it $(docker ps -q) /bin/bash
 }
 
 function syncbranch {
@@ -415,36 +227,6 @@ update() {
   update_n "$*\n"
 }
 
-## Golang Stuff
-export GOPATH="$HOME/go"
-export GOBIN="$HOME/go/bin"
-export PATH="${PATH}:${GOBIN}"
-
-vigo () {
-  vim "${GOPATH}/src/$*/$*.go"
-}
-
-newgo () {
-  if [ ! -d "${GOPATH}/src/$*" ]; then
-    mkdir -p "${GOPATH}/src/$*"
-  fi
-  vigo $*
-  go install "${GOPATH}/src/$*/$*.go"
-}
-
-grun () {
-  if [ "${PWD}X" != "${GOPATH}X" ]; then
-    cd $GOPATH
-  fi
-  export GOBIN="$GOPATH/bin"
-  go install src/$*/$*.go
-  if [ $? -eq 0 ]; then
-    $*
-  else
-    echo "Problem doing a go install of src/$*/$*.go"
-  fi
-}
-
 ### Functions
 
 alias functions="typeset -f | egrep '^[a-z]+ \\(\\)' | sed -e 's/()//' | sort"
@@ -455,20 +237,10 @@ emw() {
 
 ctdir() {
   PANE=$(echo "${TMUX_PANE}" | sed -e 's/^%//')
-  DIRS=$(find  -maxdepth 1 -type d | egrep -v '^.$')
+  DIRS=$(find  -maxdepth 1 -type d | grep -v '^.$' | \grep -E "./$*")
   DIR_NUM=$(echo "${DIRS}" | wc -l)
   TARGET=$(( ${PANE} % ${DIR_NUM} + 1 ))
   cd $(echo "${DIRS}" | head -${TARGET} | tail -1)
-}
-
-kcu() {
-  foodcritic -B ~/repos/cookbooks/"$@" | grep FC && echo "Foodcritic failed!" && return
-  knife cookbook test "$@" || return
-  knife cookbook upload "$@"
-}
-
-metaver() {
-  echo $(awk '/version/ {print $2}' metadata.rb | tr -d \'\")
 }
 
 gitag() {
@@ -479,20 +251,6 @@ gitag() {
     echo ==== Pushing tag "$TAG" ====
     git push --tags
   fi
-}
-
-# Take the previous two functions and combine them to get the metadata version
-# then do git tagging
-cheftag() {
-  gitag $(metaver)
-}
-
-demonbox() {
-  scp -rp $* docxstudios@spectator.dreamhost.com:~/dropbox/demon/
-}
-
-dropbox() {
-  scp -rp $* docxstudios@spectator.dreamhost.com:~/dropbox/
 }
 
 addsshkey() {
