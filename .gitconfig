@@ -1,9 +1,3 @@
-[filter "lfs"]
-  clean = git-lfs clean -- %f
-  smudge = git-lfs smudge -- %f
-  process = git-lfs filter-process
-  required = true
-
 [user]
   name = Dylan Northrup
   email = github@doc-x.net
@@ -15,6 +9,7 @@
   ci = commit
   hist = log --pretty=format:'%C(yellow)%h %C(cyan)%C(ul)%ad%Creset | %s%C(cyan)%d%Creset [%C(white)%an%Creset]' --graph --date=iso-local
   l = log --graph --all --pretty=format:'%C(yellow)%h%C(cyan)%d%Creset %s - %C(white)- %an, %ar%Creset'
+  la = log --all --decorate --oneline --graph
   ll = log --stat --abbrev-commit
   lol = log --oneline --graph --decorate
   lg = lg1
