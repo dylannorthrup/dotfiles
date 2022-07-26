@@ -27,6 +27,7 @@ alias gping='gping -s'
 ## ripgrep
 # Set config path for `rg`
 export RIPGREP_CONFIG_PATH="${HOME}/.ripgreprc"
+alias crg='clear; rg'
 alias egrep='rg --color always'
 alias grep='rg'
 alias nceg='rg --color=never'
