@@ -1,6 +1,7 @@
-
-PROMPT='$(git_prompt_info)[%*] [%{$fg[cyan]%}${PWD/#$HOME/~}%{$reset_color%}]${ret_status}watchtower> %{$reset_color%}'
+PROMPT='$(git_prompt_info)[%*] [%{$fg[cyan]%}${PWD/#$HOME/~}%{$reset_color%}]${ret_status}%m> %{$reset_color%}'
 precmd() { eval "NOW=$( date '+%F_%H:%M:%S' )"; ret_status="%(?:%{$fg_bold[green]%} :%{$fg_bold[red]%} %s)"; }
+
+source .zsh/dependency_vars.sh
 
 source_dot_d_files() {
   dot_d_dir="${1}"
@@ -23,15 +24,13 @@ source_dot_d_files() {
 
 source_dot_d_files "${HOME}/.zsh/local.d"
 
-export PATH=${PATH}:${HOME}/repos/nightly/utility_scripts/users/dylan/mariadb:${HOME}/repos/nightly/utility_scripts/users/dylan/maxscale:${HOME}/repos/nightly/utility_scripts/users/dylan/kubernetes:${HOME}/pip/bin
+export PATH=${PATH}:${HOME}/bin:/usr/local/sbin:${HOME}/repos/nightly/utility_scripts/users/dylan/mariadb:${HOME}/repos/nightly/utility_scripts/users/dylan/maxscale:${HOME}/pip/bin:/usr/local/opt/mysql-client/bin
+
 
 export GREP_COLORS='ms=01;33:mc=01;33:sl=:cx=:fn=35;107:ln=32:bn=32:se=35;47'
 # zsh behavior modifications
 bindkey \^U backward-kill-line
 
-# Java BS
-export JAVA_HOME="/usr/lib/jvm/java-14-openjdk-amd64"
-export PATH=${PATH}:${JAVA_HOME}/bin
 
 # Rust path addition and tool aliases
 export PATH=${PATH}:${HOME}/.cargo/bin
@@ -114,6 +113,8 @@ alias curlvt='curl -sSL -o /dev/null -v -w "HTTP Code: %{response_code}; Connect
 alias curlhead='curl -sSL -D - -o /dev/null'
 alias dh='dirs -v'
 alias diff='diff -W $(( $(tput cols) - 2 ))'
+alias fl8='flake8-3 --ignore=E111,E114,E129'
+alias gla="git la"
 alias localdb='mysql -h 127.0.0.1 -P 3306 -u root'
 alias more='\less -REX'
 alias prespace='sed -e "s/^/ /g"'
