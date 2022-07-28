@@ -1,0 +1,10 @@
+gh cp	mislav/gh-cp	
+gh dash	dlvhdr/gh-dash	
+gh fire	maximousblk/gh-fire	
+gh install	redraw/gh-install	
+gh notify	meiji163/gh-notify	
+gh poi	seachicken/gh-poi	
+gh pulls	AaronMoat/gh-pulls	
+gh resto	abdfnx/gh-resto	
+gh screensaver	vilmibm/gh-screensaver	
+gh tidy	HaywardMorihara/gh-tidy	
