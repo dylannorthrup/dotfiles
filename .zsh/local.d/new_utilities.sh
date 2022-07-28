@@ -1,6 +1,3 @@
-# I'm using this later in the file to remind myself of new utilities.
-alias _red='colorize red ".*"'
-
 # Replacements for older tools from https://jvns.ca/blog/2022/04/12/a-list-of-new-ish--command-line-tools/
 # Installed 15 Apr
 alias ls='exa --git'
@@ -12,7 +9,8 @@ cat() {
   if [[ ${1} == "-p" ]]; then
     bat ${bat_options} "$@"
   else
-  cat="echo 'Use \"cat -p\" for plain output.' | _red; bat ${bat_options} $@"
+    msg "${RED}Use \"cat -p\" for plain output.${NOFMT}"
+    bat ${bat_options} "$@"
   fi
 }
 
@@ -21,7 +19,7 @@ cat() {
 alias hf='hyperfine'
 
 ## gping : github.com/orf/gping
-alias ping='echo "=== You could be using gping ===" | _red; echo ""; \ping'
+alias ping="echo '${RED}=== You could be using gping ===${NOFMT}'; echo ''; \ping"
 alias gping='gping -s'
 
 ## ripgrep
@@ -40,3 +38,11 @@ alias pgrep='_grep -P --color=always'
 
 # A golang replacement for watch
 alias watch='viddy -d -color'
+
+# Installed 28 Jul (after seeing in gh extension)
+# Reminder to try using `resto`
+_curl() {
+    msg "${RED}You could be using 'resto' for this HTTP call.${NOFMT}"
+  curl "$@"
+}
+alias curl='_curl'
