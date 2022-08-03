@@ -3,22 +3,23 @@
 # also guarantee that this runs before they do.
 export UNAME_KERNEL=$(uname -s)
 
+GLOBAL_DEBUG=$(false)
+
 # Helper functions I use elsewhere
 # Like `echo -n`, but outputs to STDERR
-msg_n() {
-  [[ ${QUIET-} -eq 1 ]] || echo >&2 -n -e "${1-}"
+function msg_n() {
+  [[ ${_SILENCE_MSG-} -eq 1 ]] || echo >&2 -n -e "${1-}"
 }
 
 # Like `echo`, but outputs to STDERR
-msg() {
-  [[ ${QUIET-} -eq 1 ]] || msg_n "${1-}\n"
+function msg() {
+  [[ ${_SILENCE_MSG-} -eq 1 ]] || msg_n "${1-}\n"
 }
 # If we want to turn off msg output, set this var
-#QUIET=1
-
+#_SILENCE_MSG=1
 
 # Allow for colorful output
-setup_colors() {
+function setup_colors() {
   if [[ -t 2 ]] && [[ ! -z "${NO_COLOR-}" ]] && [[ "${TERM-}" != "dumb" ]]; then
     export PROD_COLORS="$(tput setaf 0; tput setab 9; tput smul)" \
     CLEAR_LINE=$(tput cr; tput el) \
@@ -54,8 +55,10 @@ setup_colors() {
 NO_COLOR=0
 setup_colors
 
+DEBUG=${GLOBAL_DEBUG:-$(false)}
+
 pdebug() {
-  if [[ ${DEBUG-} ]]; then
+  if [[ ${DEBUG:-} ]]; then
     msg "${YELLOW}DEBUG${NOFMT}: $*"
   fi
 }
