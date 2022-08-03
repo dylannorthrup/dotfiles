@@ -45,7 +45,7 @@ DISABLE_AUTO_TITLE="true"
 # ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
-# COMPLETION_WAITING_DOTS="true"
+COMPLETION_WAITING_DOTS="true"
 
 # Uncomment the following line if you want to disable marking untracked files
 # under VCS as dirty. This makes repository status check for large repositories
@@ -70,7 +70,7 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # Add wisely, as too many plugins slow down shell startup.
 source $ZSH/oh-my-zsh.sh
 
-plugins=(git fd ssh-agent gcloud ripgrep fzf-tab)
+plugins=(git fd gcloud ripgrep fzf-tab)
 
 # User configuration
 
@@ -105,3 +105,5 @@ fi
 if [ -f "$HOME/.zsh.completion" ]; then
   source "$HOME/.zsh.completion"
 fi
+
+WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
