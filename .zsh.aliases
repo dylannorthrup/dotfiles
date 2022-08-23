@@ -148,6 +148,10 @@ unsetopt sharehistory
 setopt histnofunctions
 setopt histnostore
 
+function vd() {
+  vimdiff ~/${1} ~/dotfiles/${1}
+}
+
 function ckssh() {
   ssh-keygen -f "$HOME/.ssh/known_hosts" -R $*
   ssh $*
@@ -283,14 +287,39 @@ clock() {
   while true; do date | tr '\r\n' ' '; sleep ${DELAY}; echo -ne "\r"; done
 }
 
+# A more verbose way to sleep
 countdown() {
   NUM=$*
   while [ $NUM -gt 0 ]; do
-    echo -ne "\r${NUM} "
-    NUM=$(expr $NUM - 1)
+    # Clear from the cursor to the end of the line
+    tput el
+    echo -n "${NUM} "
+    # Move the cursor back the number of digits in NUM.
+    for i in $(seq 0 "${#NUM}"); do echo -ne '\b'; done
+    # Had to add the '|| true' bit in the subshell because it was causing a false positive for 'set -e'
+    NUM=$(expr $NUM - 1 || true)
     sleep 1
   done
-  echo -e "\r0 . . . done!"
+  tput cr
+  echo -n "0 . . . done! "
+}
+
+# A less distracting way to countdown
+dot_countdown() {
+  NUM=$*
+  while [ $NUM -gt 0 ]; do
+    # Print spaces to clear previous line
+    printf %${NUM}s
+    # Move cursor to beginning of line
+    echo -ne "\r"
+    # Had to add the '|| true' bit in the subshell because it was causing a false positive for 'set -e'
+    NUM=$(expr $NUM - 1 || true)
+    # Print new number of dots
+    printf %${NUM}s |tr " " "."
+    # Move cursor to beginning of line
+    echo -ne "\r"
+    sleep 1
+  done
 }
 
 branch() {
@@ -396,10 +425,6 @@ showcbs() {
   NODE="$@"
   echo "Retrieving cookbook list for $@"
   knife exec -E "puts JSON.pretty_generate(api.get(\"nodes/$NODE/cookbooks\").map { |name,data| {name => data.version} }.reduce :merge)"
-}
-
-cdiff() {
-  diff "$@" | colorize blue "^>.*" red "^<.*"
 }
 
 m4atomp3() {
