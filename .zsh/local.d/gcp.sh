@@ -1,7 +1,7 @@
 # gcloud aliases and ENV vars
 . /usr/lib/google-cloud-sdk/path.zsh.inc
 . /usr/lib/google-cloud-sdk/completion.zsh.inc
-export DEFAULT_GCP_PROJECT='wouldnt-you-like-to-know'
+export DEFAULT_GCP_PROJECT='wouldnt-you-like-to-know'     # dotdiffignore
 export PATH=${PATH}:${HOME}/bin:${HOME}/google-cloud-sdk/bin
 alias gcomp='gcloud compute'
 alias ginst='gcomp instances'
