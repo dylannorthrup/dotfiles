@@ -152,3 +152,16 @@ highlight DiffAdd    cterm=bold ctermfg=195 ctermbg=22
 highlight DiffDelete cterm=bold ctermfg=0 ctermbg=172
 highlight DiffChange ctermfg=46 ctermbg=240
 highlight DiffText   ctermfg=195 ctermbg=52
+highlight Folded     ctermfg=15 ctermbg=17
+
+" For folding yaml files. Based on https://www.arthurkoziel.com/setting-up-vim-for-yaml/
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab fo-=c fo-=r fo-=o
+autocmd FileType helm setlocal ts=2 sts=2 sw=2 expandtab fo-=c fo-=r fo-=o
+
+set foldlevelstart=20
+
+"let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+"let g:ale_sign_error = '✘'
+"let g:ale_sign_warning = '⚠'
+"let g:ale_lint_on_text_changed = 'never'
+
