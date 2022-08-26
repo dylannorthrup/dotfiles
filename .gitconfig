@@ -1,6 +1,6 @@
 [user]
   name = Dylan Northrup
-  email = github@doc-x.net
+  email = github@doc-x.net      # dotdiffignore
 
 [alias]
   a = !git add . && git status
