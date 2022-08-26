@@ -13,6 +13,7 @@ cat() {
     bat ${bat_options} "$@"
   fi
 }
+alias cap='cat -p'
 
 # On 28 Apr, also installed `delta`, but removed it since I didn't like it that much
 # Installed hyperfine benchmarking tool on 29 Apr
@@ -46,3 +47,14 @@ _curl() {
   curl "$@"
 }
 alias curl='_curl'
+
+# Installed difftastic on 23 Aug 2022
+_diff() {
+  msg "${RED}Using difftastic. To use plain diff, run 'odiff'"
+  difft "$@"
+}
+alias odiff="/usr/bin/diff -W $(( $(tput cols) - 2 ))"
+alias diff="_diff"
+
+# Convenience fd function to turn off color
+alias ncfd='fd --color never'

@@ -1,3 +1,4 @@
+# Handy shell snippets
 
 commafy_num() {
   echo "$*" | sed ':a;s/\B[0-9]\{3\}\>/,&/;ta'
@@ -15,3 +16,4 @@ displaytime() {
   (( $D > 0 || $H > 0 || $M > 0 )) && printf 'and '
   printf '%d seconds\n' $S
 }
+

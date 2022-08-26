@@ -112,6 +112,7 @@ alias curlvt='curl -sSL -o /dev/null -v -w "HTTP Code: %{response_code}; Connect
 alias curlhead='curl -sSL -D - -o /dev/null'
 alias dh='dirs -v'
 alias diff='diff -W $(( $(tput cols) - 2 ))'
+alias egrep='_grep -E --color=always'
 alias fl8='flake8-3 --ignore=E111,E114,E129'
 alias gla="git la"
 alias localdb='mysql -h 127.0.0.1 -P 3306 -u root'
@@ -301,7 +302,7 @@ countdown() {
     sleep 1
   done
   tput cr
-  echo -n "0 . . . done! "
+  echo -n "0 . . . done!"
 }
 
 # A less distracting way to countdown
