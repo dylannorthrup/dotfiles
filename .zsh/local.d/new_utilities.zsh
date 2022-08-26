@@ -5,7 +5,7 @@ alias tree='ls --tree'
 
 # Installed 28 Apr
 local bat_options='--theme zenburn --tabs 2'
-cat() {
+function cat() {
   if [[ ${1} == "-p" ]]; then
     bat ${bat_options} "$@"
   else
@@ -13,7 +13,7 @@ cat() {
     bat ${bat_options} "$@"
   fi
 }
-alias cap='cat -p'
+alias cap='bat -p'
 
 # On 28 Apr, also installed `delta`, but removed it since I didn't like it that much
 # Installed hyperfine benchmarking tool on 29 Apr
@@ -31,7 +31,7 @@ alias egrep='rg --color always'
 alias grep='rg'
 alias nceg='rg --color=never'
 # Something to use to get to regular 'grep'
-_grep() {
+function _grep() {
   /usr/bin/grep "$@"
 }
 alias ncpg='_grep -P --color=never'
@@ -42,8 +42,8 @@ alias watch='viddy -d -color'
 
 # Installed 28 Jul (after seeing in gh extension)
 # Reminder to try using `resto`
-_curl() {
-    msg "${RED}You could be using 'resto' for this HTTP call.${NOFMT}"
+function _curl() {
+  msg "${RED}You could be using 'resto' for this HTTP call.${NOFMT}"
   curl "$@"
 }
 alias curl='_curl'
@@ -57,4 +57,4 @@ alias odiff="/usr/bin/diff -W $(( $(tput cols) - 2 ))"
 alias diff="_diff"
 
 # Convenience fd function to turn off color
-alias ncfd='fd --color never'
+alias ncfd='fd --color=never'
