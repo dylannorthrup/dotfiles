@@ -1,0 +1,19 @@
+# Files
+.gitconfig
+.irbrc
+.profile
+.ripgreprc
+.tmux.conf
+.vimrc
+.zsh.aliases
+.zsh.completion
+.zshrc
+# Directories
+.tmux
+.zsh
+# Commenting these because they aren't guaranteed to be similar ever
+# and I'd like to skip the noise.
+#.ssh
+#.weechat
+#bin
+#lib
