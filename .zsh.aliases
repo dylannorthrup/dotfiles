@@ -1,7 +1,7 @@
-PROMPT='$(git_prompt_info)[%*] [%{$fg[cyan]%}${PWD/#$HOME/~}%{$reset_color%}]${ret_status}%m> %{$reset_color%}'
+PROMPT='$(git_prompt_info)[%*] [%{$fg[cyan]%}${PWD/#$HOME/~}%{$reset_color%}]${ret_status}%m> %{$reset_color%}'     # dotdiffignore
 precmd() { eval "NOW=$( date '+%F_%H:%M:%S' )"; ret_status="%(?:%{$fg_bold[green]%} :%{$fg_bold[red]%} %s)"; }
 
-source .zsh/dependency_vars.sh
+source ${HOME}/.zsh/dependency_vars.sh
 
 source_dot_d_files() {
   dot_d_dir="${1}"
@@ -111,8 +111,6 @@ alias curlv='curl -sSL -o /dev/null -v'
 alias curlvt='curl -sSL -o /dev/null -v -w "HTTP Code: %{response_code}; Connect time: %{time_connect}; Total time:%{time_total}\n"'
 alias curlhead='curl -sSL -D - -o /dev/null'
 alias dh='dirs -v'
-alias diff='diff -W $(( $(tput cols) - 2 ))'
-alias egrep='_grep -E --color=always'
 alias fl8='flake8-3 --ignore=E111,E114,E129'
 alias gla="git la"
 alias localdb='mysql -h 127.0.0.1 -P 3306 -u root'
