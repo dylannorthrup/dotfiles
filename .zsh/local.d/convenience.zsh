@@ -1,10 +1,25 @@
 # Handy shell snippets
 
-commafy_num() {
+# Do a diff of what's on the box and what our `dotfiles` directory says
+function dotdiff() {
+  cd ${HOME}
+  for i in $(grep -v '^#' dotfiles/dotdiff.files); do
+    echo "== $i" | colorize cyan '.*'
+    # Use '# dotdiffignore$' to flag sections we know are different
+    # And explicitly exclude ephemeral files that won't be in git
+    /usr/bin/diff -I '# dotdiffignore$' \
+      -x "kubectl.completion"           \
+      -x "maxscale.sh"                  \
+      -x ".*.swp"                  \
+      -qr $i dotfiles/$i
+  done
+}
+
+function commafy_num() {
   echo "$*" | sed ':a;s/\B[0-9]\{3\}\>/,&/;ta'
 }
 
-displaytime() {
+function displaytime() {
   local T=$(printf -v int %.0f "$1")
   local D=$((T/60/60/24))
   local H=$((T/60/60%24))
