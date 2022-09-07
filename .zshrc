@@ -106,4 +106,4 @@ if [ -f "$HOME/.zsh.completion" ]; then
   source "$HOME/.zsh.completion"
 fi
 
-WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
+WORDCHARS='_~'
