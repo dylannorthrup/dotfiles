@@ -1,10 +1,11 @@
 # Files
+.config/gh/config.yml
+.config/nvim/init.vim
 .gitconfig
 .irbrc
 .profile
 .ripgreprc
 .tmux.conf
-.vimrc
 .zsh.aliases
 .zsh.completion
 .zshrc
