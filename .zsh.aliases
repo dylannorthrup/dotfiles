@@ -38,7 +38,7 @@ export PATH=${PATH}:${HOME}/.cargo/bin
 
 # rbenv
 eval "$(rbenv init - zsh)"
-PATH=${PATH}:${HOME}/.gem/ruby/$(/usr/bin/cat ${HOME}/.rbenv/version)/bin
+PATH=${PATH}:${HOME}/.gem/ruby/$(realcat ${HOME}/.rbenv/version)/bin
 
 # Python BS
 export PATH=${PATH}:${HOME}/.local/bin
