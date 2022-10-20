@@ -1,5 +1,7 @@
 # Terraform shortcuts
 
+PATH="${PATH}:~/.tfenv/bin"
+
 alias tf='terraform'
 alias tfd='terraform fmt -diff'
 alias tfay='terraform apply -auto-approve'
