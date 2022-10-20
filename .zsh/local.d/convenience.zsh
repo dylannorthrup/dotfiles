@@ -9,8 +9,8 @@ function dotdiff() {
     # And explicitly exclude ephemeral files that won't be in git
     /usr/bin/diff -I '# dotdiffignore$' \
       -x "kubectl.completion"           \
-      -x "maxscale.sh"                  \
-      -x ".*.swp"                  \
+      -x "tock"                         \
+      -x ".*.swp"                       \
       -qr $i dotfiles/$i
   done
 }
