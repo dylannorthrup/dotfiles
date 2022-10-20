@@ -6,6 +6,10 @@ if [[ ${UNAME_KERNEL} != "Darwin" ]]; then
   return
 fi
 
+# Set explicit path since it's different than on Linux and we
+# need to refer to this when we don't want to use 'bat'
+alias realcat='/bin/cat'
+
 # Aliases to binaries inside installed apps
 alias tailscale='/Applications/Tailscale.app/Contents/MacOS/Tailscale'
 alias vlc='/Applications/VLC.app/Contents/MacOS/VLC'
