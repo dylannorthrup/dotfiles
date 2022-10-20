@@ -38,7 +38,7 @@ alias ncpg='_grep -P --color=never'
 alias pgrep='_grep -P --color=always'
 
 # A golang replacement for watch
-alias viddy='/home/dnorthrup_squarespace_com/go/bin/viddy --pty'
+alias viddy='viddy --pty'
 alias watch='viddy -d'
 
 # Installed 28 Jul (after seeing in gh extension)
