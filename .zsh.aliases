@@ -1,5 +1,7 @@
-PROMPT='$(git_prompt_info)[%*] [%{$fg[cyan]%}${PWD/#$HOME/~}%{$reset_color%}]${ret_status}%m> %{$reset_color%}'     # dotdiffignore
+PROMPT='$(git_prompt_info)[%*] [%{$fg[cyan]%}${PWD/#$HOME/~}%{$reset_color%}]${ret_status}%m> %{$reset_color%}'
 precmd() { eval "NOW=$( date '+%F_%H:%M:%S' )"; ret_status="%(?:%{$fg_bold[green]%} :%{$fg_bold[red]%} %s)"; }
+
+export PATH=${PATH}:${HOME}/bin:${HOME}/.local/bin:/usr/local/sbin:${HOME}/pip/bin:/usr/local/opt/mysql-client/bin
 
 source ${HOME}/.zsh/dependency_vars.sh
 
@@ -36,14 +38,10 @@ export PATH=${PATH}:${HOME}/.cargo/bin
 
 # rbenv
 eval "$(rbenv init - zsh)"
+PATH=${PATH}:${HOME}/.gem/ruby/$(/usr/bin/cat ${HOME}/.rbenv/version)/bin
 
 # Python BS
-export PATH=${PATH}:/home/dylan/.local/bin
-
-# Adding aliases to correct common typos
-eval "$(thefuck --alias)"
-# So I can have a more public-friendly alias for this
-alias poop='fuck'
+export PATH=${PATH}:${HOME}/.local/bin
 
 
 escurl() {
@@ -95,17 +93,9 @@ function quiet_on_success() {
   fi
 }
 
-# Curator/Elasticsearch shortcuts
-alias ccurs="curator --config ${HOME}/.curator/staging.yml"
-alias ccursd="curator --config ${HOME}/.curator/staging.yml.debug"
-alias ccurd="curator --config ${HOME}/.curator/demo.yml"
-alias ccurdd="curator --config ${HOME}/.curator/demo.yml.debug"
-alias ccurp="curator --config ${HOME}/.curator/prod.yml"
-alias ccurpd="curator --config ${HOME}/.curator/prod.yml.debug"
-alias ccurl="curator --config ${HOME}/.curator/logs.yml"
-alias ccurld="curator --config ${HOME}/.curator/logs.yml.debug"
-
 # User specific aliases and functions
+alias cls='clear; ls'
+alias cll='clear; ll'
 alias curl='curl -sSL'
 alias curlv='curl -sSL -o /dev/null -v'
 alias curlvt='curl -sSL -o /dev/null -v -w "HTTP Code: %{response_code}; Connect time: %{time_connect}; Total time:%{time_total}\n"'
@@ -124,8 +114,6 @@ alias ta='tmux -u new -t 0'
 alias view='vim -R'
 
 # Environment variables
-export CVSROOT='web:/u1/CVS'
-export CVS_RSH='ssh'
 export EDITOR='vim'
 export LSCOLORS=hxgxcxdxCxegedabagacad
 export LESS='-REX'
@@ -232,7 +220,7 @@ update() {
 
 ### Functions
 
-alias functions="typeset -f | egrep '^[a-z]+ \\(\\)' | sed -e 's/()//' | sort"
+alias functions="typeset -f | rg --color=never '^[a-z]+ \\(\\)' | sed -e 's/ *() *{//' | sort"
 
 emw() {
   mwin $(echo $*)
@@ -343,6 +331,7 @@ cab() {
   curlv http://${2}${3} | hlhttp
 }
 
+# Functions used by command-line twitter client
 _good_post_size() {
   if [ ${#1} -gt 280 ]; then
     echo "Comment is ${#1} characters long. Please shorten it to 280 or less"
@@ -391,7 +380,7 @@ rt() {
   t retweet "${1}"
 }
 
-
+# GPG helper functions
 encrypt() {
   if [ -f "${@}.gpg" ]; then
     rm ${@}.gpg
@@ -409,27 +398,11 @@ decat() {
   gpg --decrypt $@
 }
 
-espy() {
-  knife search node "advertises:${1}" -i
-}
-
 notes() {
   NDIR="~/tickets/$@"
   mkdir $NDIR
   cd $NDIR
   vim notes
-}
-
-showcbs() {
-  NODE="$@"
-  echo "Retrieving cookbook list for $@"
-  knife exec -E "puts JSON.pretty_generate(api.get(\"nodes/$NODE/cookbooks\").map { |name,data| {name => data.version} }.reduce :merge)"
-}
-
-m4atomp3() {
-  i="$@"
-  o=$(echo "$i" | sed -e 's/m4a$/mp3/')
-  ffmpeg -i "$i" -acodec libmp3lame -ab 128k "$o"
 }
 
 zstyle :completion::::: completer _complete _files
