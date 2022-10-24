@@ -124,17 +124,6 @@ setopt prompt_bang
 
 export CACHE_AGE=6000
 
-# History stuff
-export SAVEHIST=100000
-export HISTSIZE=200000
-export HIST_STAMPS="%F %T"
-# Turns out having all of my command history available helps in post mortems
-unsetopt histignorealldups
-setopt appendhistory
-unsetopt sharehistory
-setopt histnofunctions
-setopt histnostore
-
 function vd() {
   vimdiff ~/${1} ~/dotfiles/${1}
 }
