@@ -9,9 +9,9 @@ function dotdiff() {
     # And explicitly exclude ephemeral files that won't be in git
     /usr/bin/diff -I '# dotdiffignore$' \
       -x "kubectl.completion"           \
-      -x "tock"                         \
       -x ".*.swp"                       \
-      -qr $i dotfiles/$i
+      -qr $i dotfiles/$i |\
+    grep -E -v '(tock|dynamic_repo_paths)'
   done
 }
 
