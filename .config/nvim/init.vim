@@ -143,6 +143,9 @@ if !has('nvim') && &ttimeoutlen == -1
   set ttimeoutlen=100
 endif
 
+" Override the cursor setting
+set guicursor=n-v-c-sm-i-ci-r-cr:block,ve:ver25,o:hor20
+
 if &t_Co == 8 && $TERM !~# '^Eterm'
   set t_Co=16           " Allow bright colors without forcing bold
 endif
