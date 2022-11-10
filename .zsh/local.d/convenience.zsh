@@ -32,3 +32,11 @@ function displaytime() {
   printf '%d seconds\n' $S
 }
 
+# Lets you apply grep, sort, etc to the body of a program's output
+# but not modify the first line. Eg. `ps -fade | grep foo` will
+# give you the grep'd lines, but also the header with the column names
+function body() {
+  IFS= read -r header
+  printf '%s\n' "$header"
+  "$@"
+}
