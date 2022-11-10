@@ -40,3 +40,9 @@ function body() {
   printf '%s\n' "$header"
   "$@"
 }
+
+# Some aliases for less typing
+alias bsort="body sort"
+alias bgrep="body grep"
+alias bhead="body head"
+alias btail="body tail"
