@@ -3,6 +3,10 @@
 alias gla='git la'
 alias todo='GH_TODO_REPO=dylannorthrup/todo gh todo'
 
+function gfd() {
+  git diff $(git st | awk '/modified: / {print $2}' | head -1)
+}
+
 function syncbranch {
   # Prune local branches that are not on the remote origin
   git fetch -p
