@@ -21,7 +21,8 @@ alias hf='hyperfine'
 
 ## gping : github.com/orf/gping
 alias ping="echo '${RED}=== You could be using gping ===${NOFMT}'; echo ''; \ping"
-alias gping='gping -s'
+alias gping='gping -4'
+alias gps='gping -s'
 
 ## ripgrep
 # Set config path for `rg`
