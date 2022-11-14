@@ -12,3 +12,4 @@ setopt histnofunctions      # Don't save function definitions
 setopt histnostore          # Don't save `history` commands
 setopt histreduceblanks     # Remove superfluous blnaks from command lines before saving
 setopt histfcntllock        # Use system `fcntl` call to lock HIST file when writing to it
+alias history='history -E'
