@@ -13,38 +13,29 @@ for f in ${(o)conf_files}; do
   source "$f"
 done
 
-_adr() {
-  # Autocomplete only when entering the last term
-  if [ ${COMP_CWORD} -eq $((${#COMP_WORDS[@]} - 1)) ]
-  then
-    COMPREPLY=( $(_adr_autocomplete ${COMP_WORDS[*]} ) )
-  fi
-}
-
-complete -F _adr -o default adr
-
 autoload -Uz compinit && compinit
 autoload -Uz url-quote-magic
 zle -N self-insert url-quote-magic
 
-local conf_files=("$HOME"/.zsh/completions.d/*.{sh,zsh}(N))
-local f=''
-for f in ${(o)conf_files}; do
-  # ignore files that begin with a tilde
-  case ${f:t} in '~'*) continue;; esac
-  source "$f"
-done
-compctl -W $GOPATH/src -/ grun
-compctl -W $GOPATH/src -/ vigo
+# Put in a test here for if the file is locked and loop until a) it unlocks or
+# b) we timeout after 20 seconds.
+if [[ -f "${KC_COMPLETION_FILE}" ]]; then
+  2>/dev/null zsystem flock -f lockvar -t 20 ${KC_COMPLETION_FILE} && \
+    source ${KC_COMPLETION_FILE} && \
+    zsystem flock -u $lockvar
+  export KC_EXPANDED="True"
+else
+  echo "Could not source in the kubectl completion file '${KC_COMPLETION_FILE}'"
+  echo "You'll likely want to figure out why and correct the issue."
+  export KC_EXPANDED="False"
+fi
 
-function cdr() { cd $HOME/repos/$1; }
-compctl -W $HOME/repos/ -/ cdr
-function cds() { cd $HOME/repos/$1; }
-compctl -W $HOME/repos/ -/ cds
-function cdu() { cd $HOME/repos/nightly/utility_scripts/users/dylan/$1; }
-compctl -W $HOME/repos/nightly/utility_scripts/users/dylan/ -/ cdu
-
-
-bindkey "^[OA" up-history
-bindkey "^[OB" down-history
-autoload -U +X bashcompinit && bashcompinit
+alias kc='kubectl'
+kcshell() {
+  args=$(echo "$@" | sed -e 's/describe pod //')
+  kubectl exec --stdin --tty ${=args} -- /bin/bash
+}
+complete -F _kubectl kc
+complete -F _kubectl kcshell
+complete -F _kubectl show-cluster-pods
+complete -F _kubectl show-cluster-nodes
