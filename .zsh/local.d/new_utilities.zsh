@@ -1,4 +1,7 @@
 # Replacements for older tools from https://jvns.ca/blog/2022/04/12/a-list-of-new-ish--command-line-tools/
+
+# Adding my local gobin dir to the path
+PATH=$PATH:${HOME}/go/bin
 # Installed 15 Apr
 alias ls='exa --git'
 alias tree='ls --tree'
