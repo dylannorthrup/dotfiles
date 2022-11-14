@@ -39,6 +39,7 @@ export PATH=${PATH}:${HOME}/.cargo/bin
 # rbenv
 eval "$(rbenv init - zsh)"
 PATH=${PATH}:${HOME}/.gem/ruby/$(realcat ${HOME}/.rbenv/version)/bin
+alias rbupdate="git -C $(rbenv root)/plugins/ruby-build pull"
 
 # Python BS
 export PATH=${PATH}:${HOME}/.local/bin
