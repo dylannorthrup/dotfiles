@@ -85,3 +85,5 @@ spinner() {
   esac
   msg_n "\b${SPINNER_STATE-}"
 }
+
+alias realcat='/bin/cat'
