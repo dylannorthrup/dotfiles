@@ -22,7 +22,7 @@ Plug 'junegunn/fzf', { 'do': './install --all' } | Plug 'junegunn/fzf.vim'
 Plug 'neovim/nvim-lspconfig' | Plug 'hrsh7th/cmp-nvim-lsp' | Plug 'hrsh7th/cmp-buffer' | Plug 'hrsh7th/cmp-path' | Plug 'hrsh7th/cmp-cmdline' | Plug 'hrsh7th/nvim-cmp'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'google/vim-jsonnet'
-Plug 'sjl/vitality.vim'
+"Plug 'sjl/vitality.vim'
 
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
@@ -42,8 +42,8 @@ function ReTab()
 endfunction
 
 " vim:set ft=vim et sw=2:
-autocmd FileType * setlocal ts=2 sts=2 sw=2 expandtab fo-=c fo-=r fo-=o
-autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab fo-=c fo-=r fo-=o
+autocmd FileType * setlocal ts=2 sts=2 sw=2 expandtab fo-=c fo-=r fo-=o ai
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab fo-=c fo-=r fo-=o ai
 command! RT ReTab()
 
 " reset search highlighting
