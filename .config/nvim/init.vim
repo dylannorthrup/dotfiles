@@ -88,11 +88,11 @@ highlight Folded     ctermfg=15 ctermbg=17
 let g:terraform_fmt_on_save=1
 
 " For if I start using vitality again
-let g:vitality_fix_cursor = 1
-let g:vitality_normal_cursor = 2
-let g:vitality_insert_cursor = 2
-let g:vitality_fix_focus = 0
-let g:vitality_always_assume_iterm = 1
+"let g:vitality_fix_cursor = 1
+"let g:vitality_normal_cursor = 2
+"let g:vitality_insert_cursor = 2
+"let g:vitality_fix_focus = 0
+"let g:vitality_always_assume_iterm = 1
 
 " Personal tweaks
 set autoread            " Automatically read in changes to a file if it's been changed outside of vi
@@ -145,6 +145,10 @@ endif
 
 " Override the cursor setting
 set guicursor=n-v-c-sm-i-ci-r-cr:block,ve:ver25,o:hor20
+
+" Override the cursor setting
+set guicursor=n-v-c-sm-i-ci-r-cr:hor20,ve:hor25,o:hor20
+au VimLeave,VimSuspend * set guicursor=a:hor20-blinkon0
 
 if &t_Co == 8 && $TERM !~# '^Eterm'
   set t_Co=16           " Allow bright colors without forcing bold
