@@ -43,7 +43,6 @@ PATH=${PATH}:${HOME}/.gem/ruby/$(realcat ${HOME}/.rbenv/version)/bin
 # Python BS
 export PATH=${PATH}:${HOME}/.local/bin
 
-
 escurl() {
   curl -sSL "${ES_URL}${1}"
 }
@@ -63,24 +62,6 @@ danger_delete_index() {
     curl -X DELETE "${ES_URL}/${1}"
   fi
 }
-
-function not-watch() {
-  export COLOR_SETTING='ALWAYS'
-  while true; do
-    echo "Running command"
-    output=$(eval "$*" 2>&1)
-    clear
-    uptime | colorize blue '.*'
-    echo -e "COMMAND: '$*'"
-    echo -e "=="
-    echo -e "${output}"
-    echo -e "=="
-    countdown ${NW_DELAY:-5}
-  done
-}
-
-alias nw='not-watch'
-alias nw20='NW_DELAY=20 not-watch'
 
 function quiet_on_success() {
   set +e
@@ -111,7 +92,10 @@ alias repos='ls ~/repos'
 alias rf='resetfile'
 alias s3cmd="$HOME/bin/gs3"
 alias ta='tmux -u new -t 0'
-alias view='vim -R'
+alias view='nvim -R'
+alias vi='nvim'
+alias vim='nvim'
+alias vimdiff='nvim -d'
 
 # Environment variables
 export EDITOR='vim'
@@ -131,27 +115,6 @@ function vd() {
 function ckssh() {
   ssh-keygen -f "$HOME/.ssh/known_hosts" -R $*
   ssh $*
-}
-
-function syncbranch {
-  # Prune local branches that are not on the remote origin
-  git fetch -p
-  # Now, prune local dana
-  # List remote branches and put them into a string
-  REMOTE_BRANCHES=$(git branch -r --no-color | awk '{print $1}')
-  # Get list of local branches (ignoring 'master') that are tracking origin.
-  for b in $(git branch -vv --no-color | grep -v '^\* master' | \grep --color=never origin | awk '{print $1}'); do
-    # Compare each local branch against the list of remote branches
-    echo "${b}" | \grep --color=never "${REMOTE_BRANCHES}" > /dev/null
-    # If the local branch that is supposedly tracking an origin branch does not have
-    # a remote partner, go ahead and delete it
-    if [[ $? -eq 1 ]]; then   # Local branch NOT on remote
-      echo "Deleting branch '${b}'"
-      git branch -D "${b}"
-    fi
-  done
-  # And show the remaining branches
-  git branch
 }
 
 ## tmux stuff
@@ -223,16 +186,6 @@ ctdir() {
   cd $(echo "${DIRS}" | head -${TARGET} | tail -1)
 }
 
-gitag() {
-  TAG="$@"
-  git tag "$TAG"
-  # If the tag was successful, go ahead and push it out
-  if [ $? -eq 0 ]; then
-    echo ==== Pushing tag "$TAG" ====
-    git push --tags
-  fi
-}
-
 addsshkey() {
   ssh-copy-id -i ~/.ssh/id_rsa.pub $*
   ssh $*
@@ -253,66 +206,6 @@ distkey() {
 
 delhostkey() {
   ssh-keygen -f ~/.ssh/known_hosts -R "$*"
-}
-
-clock() {
-  DELAY="$*"
-  if [ -z $DELAY ]; then
-    DELAY="5"
-  fi
-  while true; do date | tr '\r\n' ' '; sleep ${DELAY}; echo -ne "\r"; done
-}
-
-# A more verbose way to sleep
-countdown() {
-  NUM=$*
-  while [ $NUM -gt 0 ]; do
-    # Clear from the cursor to the end of the line
-    tput el
-    echo -n "${NUM} "
-    # Move the cursor back the number of digits in NUM.
-    for i in $(seq 0 "${#NUM}"); do echo -ne '\b'; done
-    # Had to add the '|| true' bit in the subshell because it was causing a false positive for 'set -e'
-    NUM=$(expr $NUM - 1 || true)
-    sleep 1
-  done
-  tput cr
-  echo -n "0 . . . done!"
-}
-
-# A less distracting way to countdown
-dot_countdown() {
-  NUM=$*
-  while [ $NUM -gt 0 ]; do
-    # Print spaces to clear previous line
-    printf %${NUM}s
-    # Move cursor to beginning of line
-    echo -ne "\r"
-    # Had to add the '|| true' bit in the subshell because it was causing a false positive for 'set -e'
-    NUM=$(expr $NUM - 1 || true)
-    # Print new number of dots
-    printf %${NUM}s |tr " " "."
-    # Move cursor to beginning of line
-    echo -ne "\r"
-    sleep 1
-  done
-}
-
-branch() {
-  git co -b "${1}"
-  git push --set-upstream origin "${1}"
-}
-
-gitup() {
-  for i in ~/repos/*; do
-    if [ -d ${i}/.git ]; then
-      echo -e "* Updating ${i}"
-      (
-        cd $i
-        git up
-      )
-    fi
-  done
 }
 
 cab() {
