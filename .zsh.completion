@@ -26,7 +26,8 @@ if [[ -f "${KC_COMPLETION_FILE}" ]]; then
   export KC_EXPANDED="True"
 else
   echo "Could not source in the kubectl completion file '${KC_COMPLETION_FILE}'"
-  echo "You'll likely want to figure out why and correct the issue."
+  echo "You'll likely want to run 'generate_kc_completion_if_needed' and restart your shell"
+  echo "If that does not work, you'll want to figure out why and correct the issue."
   export KC_EXPANDED="False"
 fi
 
