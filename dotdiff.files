@@ -5,6 +5,7 @@
 .irbrc
 .profile
 .ripgreprc
+.taskbook.json
 .tmux.conf
 .zsh.aliases
 .zsh.completion
