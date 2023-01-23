@@ -55,6 +55,30 @@ function setup_colors() {
 NO_COLOR=0
 setup_colors
 
+# Something to show us what colors have been defined
+showColors() {
+  local _col
+  for c in PROD_COLORS CLEAR_LINE RED GREEN ORANGE BLUE PURPLE WHITE LTRED CYAN YELLOW; do
+    eval _col=\$${c}
+    echo "${_col}${c}${NOFMT}"
+  done
+}
+
+# Since we have env variables that are escape codes, `env` will have wonky output.
+# We replace `env` with a function that calls the underlying env and de-wonkifies
+# the output.
+function penv() {
+  /usr/bin/env | sort | while read v; do
+    _vVal=$(echo ${v#*=})
+    # echo substr: ${_vVal:0:2} ::
+    if [[ ${_vVal:0:2} == '[' ]]; then
+      echo -e "${v%=*}='${v#*=}${v%=*}${NOFMT}' << (color escape code example)"
+    else
+      echo -e "${v%=*}=${v#*=}"
+    fi
+  done
+}
+
 DEBUG=${GLOBAL_DEBUG:-$(false)}
 
 pdebug() {
