@@ -291,11 +291,7 @@ notes() {
 zstyle :completion::::: completer _complete _files
 
 function _shellExit() {
-  # commands to run here, e.g. if you
-  # always want to run .zlogout:
   echo "Running commands from ${HOME}/.zsh/logout\n"
-  # don't do this in a login shell
-  # because it happens anyway
   . ${HOME}/.zsh/logout
 }
 
