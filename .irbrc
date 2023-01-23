@@ -1,13 +1,3 @@
-# This is to colorize irb
-begin
-  require 'rubygems'
-  require 'wirble'
-  Wirble.init
-  Wirble.colorize
-rescue LoadError => err
-  warn "Couldn't load Wirble: #{err}"
-end
-
 # Pretty print
 require 'pp'
 
