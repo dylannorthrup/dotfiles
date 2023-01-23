@@ -13,19 +13,24 @@ nnoremap <leader>sv :source $MYVIMRC<CR>
 call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
 
 " Declare the list of plugins.
-" Plug 'tpope/vim-sensible'
+" Plug 'tpope/vim-sensible'   " Specifically not installing this one
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-markdown'
+Plug 'neomake/neomake'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'hashivim/vim-terraform'
 Plug 'junegunn/fzf', { 'do': './install --all' } | Plug 'junegunn/fzf.vim'
 Plug 'neovim/nvim-lspconfig' | Plug 'hrsh7th/cmp-nvim-lsp' | Plug 'hrsh7th/cmp-buffer' | Plug 'hrsh7th/cmp-path' | Plug 'hrsh7th/cmp-cmdline' | Plug 'hrsh7th/nvim-cmp'
 Plug 'kyazdani42/nvim-web-devicons'
+Plug 'godlygeek/tabular'
 Plug 'google/vim-jsonnet'
 "Plug 'sjl/vitality.vim'
 
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
+
+" Run neomake when writing a buffer (no delay).
+call neomake#configure#automake('w')
 
 " Fake out any attempts to use vim-sensible
 if exists('g:loaded_sensible') || &compatible
@@ -36,15 +41,9 @@ endif
 
 " Use :help 'option' to see the documentation for the given option.
 
-function ReTab()
-  set expandtab
-  retab
-endfunction
-
 " vim:set ft=vim et sw=2:
 autocmd FileType * setlocal ts=2 sts=2 sw=2 expandtab fo-=c fo-=r fo-=o ai
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab fo-=c fo-=r fo-=o ai
-command! RT ReTab()
 
 " reset search highlighting
 highlight clear search
@@ -86,6 +85,35 @@ highlight Folded     ctermfg=15 ctermbg=17
 """ Module settings
 " vim-terraform
 let g:terraform_fmt_on_save=1
+
+
+" Automatically align ' =' signs
+"inoremap <silent> = =<Esc>:call <SID>ealign()<CR>a
+"function! s:ealign()
+"  let p = '^.*=\s.*$'
+"  if exists(':Tabularize') && getline('.') =~# '^.*=' && (getline(line('.')-1) =~# p || getline(line('.')+1) =~# p)
+"    let column = strlen(substitute(getline('.')[0:col('.')],'[^=]','','g'))
+"    let position = strlen(matchstr(getline('.')[0:col('.')],'.*=\s*\zs.*'))
+"    Tabularize/=/l1
+"    normal! 0
+"    call search(repeat('[^=]*=',column).'\s\{-\}'.repeat('.',position),'ce',line('.'))
+"  endif
+"endfunction
+
+" Advanced Tabularize method to align '|' delimited tables for cucumber
+"inoremap <silent> <Bar>   <Bar><Esc>:call <SID>align()<CR>a
+"
+"function! s:align()
+"  let p = '^\s*|\s.*\s|\s*$'
+"  if exists(':Tabularize') && getline('.') =~# '^\s*|' && (getline(line('.')-1) =~# p || getline(line('.')+1) =~# p)
+"    let column = strlen(substitute(getline('.')[0:col('.')],'[^|]','','g'))
+"    let position = strlen(matchstr(getline('.')[0:col('.')],'.*|\s*\zs.*'))
+"    Tabularize/|/l1
+"    normal! 0
+"    call search(repeat('[^|]*|',column).'\s\{-\}'.repeat('.',position),'ce',line('.'))
+"  endif
+"endfunction
+
 
 " For if I start using vitality again
 "let g:vitality_fix_cursor = 1
@@ -153,3 +181,14 @@ au VimLeave,VimSuspend * set guicursor=a:hor20-blinkon0
 if &t_Co == 8 && $TERM !~# '^Eterm'
   set t_Co=16           " Allow bright colors without forcing bold
 endif
+
+function ReTab()
+  set expandtab
+  retab
+endfunction
+
+" vim:set ft=vim et sw=2:
+autocmd FileType * setlocal ts=2 sts=2 sw=2 expandtab fo-=c fo-=r fo-=o ai
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab fo-=c fo-=r fo-=o ai
+command! RT ReTab()
+
