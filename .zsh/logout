@@ -1,0 +1,9 @@
+echo "Going into history save loop"
+while true; do
+  if zsystem flock -f histlock $HISTFILE; then
+    echo "Got mah zlock on $HISTFILE. Saving history."
+    fc -A
+    break
+  fi
+done
+echo "History saved. Exiting."

@@ -290,6 +290,17 @@ notes() {
 
 zstyle :completion::::: completer _complete _files
 
+function _shellExit() {
+  # commands to run here, e.g. if you
+  # always want to run .zlogout:
+  echo "Running commands from ${HOME}/.zsh/logout\n"
+  # don't do this in a login shell
+  # because it happens anyway
+  . ${HOME}/.zsh/logout
+}
+
+trap _shellExit EXIT
+
 # User-Agent Strings
 # These are some example UA strings for use in curl strings
 # Don't really need these nearly as much, so commenting them out, but leaving if I ever
