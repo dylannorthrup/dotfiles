@@ -12,4 +12,6 @@ setopt histnofunctions      # Don't save function definitions
 setopt histnostore          # Don't save `history` commands
 setopt histreduceblanks     # Remove superfluous blnaks from command lines before saving
 setopt histfcntllock        # Use system `fcntl` call to lock HIST file when writing to it
-alias history='history -E'
+# Make this start history at the first entry. Otherwise, it only goes back 16 commands which is . . . 
+# . . . sub-optimal
+alias history='history -E 1'
