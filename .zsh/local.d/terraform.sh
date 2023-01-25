@@ -1,6 +1,8 @@
+#!/usr/bin/zsh
+# shellcheck shell=bash
 # Terraform shortcuts
 
-PATH="${PATH}:~/.tfenv/bin"
+PATH="${PATH}:${HOME}/.tfenv/bin"
 
 alias tf='terraform'
 alias tfd='terraform fmt -diff'

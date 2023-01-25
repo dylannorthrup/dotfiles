@@ -1,3 +1,5 @@
+#!/usr/bin/zsh
+# shellcheck shell=bash
 ## Golang Stuff
 export GOPATH="$HOME/go"
 export GOBIN="$HOME/go/bin"
@@ -11,18 +13,17 @@ newgo () {
   if [ ! -d "${GOPATH}/src/$*" ]; then
     mkdir -p "${GOPATH}/src/$*"
   fi
-  vigo $*
+  vigo "$@"
   go install "${GOPATH}/src/$*/$*.go"
 }
 
 grun () {
   if [ "${PWD}X" != "${GOPATH}X" ]; then
-    cd $GOPATH
+    cd "${GOPATH}" || (echo "The directory '${GOPATH}' does not exist")
   fi
   export GOBIN="$GOPATH/bin"
-  go install src/$*/$*.go
-  if [ $? -eq 0 ]; then
-    $*
+  if ! go install src/"$*/$*.go"; then
+    "$*"
   else
     echo "Problem doing a go install of src/$*/$*.go"
   fi

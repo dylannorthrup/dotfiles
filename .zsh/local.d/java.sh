@@ -1,3 +1,5 @@
+#!/usr/bin/zsh
+# shellcheck shell=bash
 # Java-specific settings
 if [[ ${UNAME_KERNEL} == "Linux" ]]; then
   export JAVA_HOME="/usr/lib/jvm/java-14-openjdk-amd64"

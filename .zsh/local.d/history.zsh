@@ -1,3 +1,5 @@
+#!/usr/bin/zsh
+# shellcheck shell=bash
 # History stuff
 
 

@@ -1,3 +1,5 @@
+#!/usr/bin/zsh
+# shellcheck shell=bash
 ## Do ssh agent stuff
 
 # Uncomment this if you want to do local debugging

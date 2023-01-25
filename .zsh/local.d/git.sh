@@ -1,10 +1,12 @@
+#!/usr/bin/zsh
+# shellcheck shell=bash
 # Git-related aliases, functions, etc.
 
 alias gla='git la'
 alias todo='GH_TODO_REPO=dylannorthrup/todo gh todo'
 
-function gfd() {
-  git diff $(git st | awk '/modified: / {print $2}' | head -1)
+function gfd {
+  git diff "$(git st | awk '/modified: / {print $2}' | head -1)"
 }
 
 function syncbranch {
@@ -29,10 +31,9 @@ function syncbranch {
 }
 
 function gitag() {
-  TAG="$@"
-  git tag "$TAG"
+  TAG="$*"
   # If the tag was successful, go ahead and push it out
-  if [ $? -eq 0 ]; then
+  if git tag "$TAG"; then
     echo ==== Pushing tag "$TAG" ====
     git push --tags
   fi
@@ -45,13 +46,19 @@ function branch() {
 }
 
 function gitup() {
-  for i in ~/repos/*; do
-    if [ -d ${i}/.git ]; then
+  for i in "${HOME}"/repos/*; do
+    if [ -d "${i}/.git" ]; then
       echo -e "* Updating ${i}"
       (
-        cd $i
+        cd "${i}" || exit
         git pull --rebase --autostash
       )
     fi
   done
+}
+
+function rebase() {
+  git fetch origin && \
+    git rebase origin/master --no-ff && \
+    git push --force
 }

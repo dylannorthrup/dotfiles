@@ -1,3 +1,5 @@
+#!/usr/bin/zsh
+# shellcheck shell=bash
 # Mac/laptop specific aliases/config should go here
 
 # If this isn't a mac, you shouldn't be here (mostly
@@ -19,4 +21,4 @@ export PKG_CONFIG_PATH="/usr/local/opt/openssl@3/lib/pkgconfig"
 # C# DotNet path addition
 export PATH=${PATH}:/Library/Frameworks/Mono.framework/Versions/Current/bin
 
-plugins=(${plugins} brew macos)
+plugins=("${plugins}" brew macos)

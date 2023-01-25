@@ -1,3 +1,5 @@
+#!/usr/bin/zsh
+# shellcheck shell=bash
 # Handy shell snippets
 
 # Do a diff of what's on the box and what our `dotfiles` directory says
