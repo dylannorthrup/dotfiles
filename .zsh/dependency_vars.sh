@@ -13,10 +13,23 @@ function msg_n() {
 
 # Like `echo`, but outputs to STDERR
 function msg() {
-  [[ ${_SILENCE_MSG-} -eq 1 ]] || msg_n "${1-}\n"
+  [[ ${_SILENCE_MSG:-0} -eq 1 ]] || msg_n "${1-}\n"
 }
 # If we want to turn off msg output, set this var
 #_SILENCE_MSG=1
+
+# Prints a line, then moves the cursor back to where it was before the line was printed.
+function msgStatus() {
+  tput sc
+  tput el
+  msg_n "$@"
+  tput rc
+}
+
+# msg, but with a time prepended to it
+function tmsg() {
+  [[ ${_SILENCE_TMSG:-1} -eq 1 ]] || msg_n "$(date): ${1-}\n"
+}
 
 # Allow for colorful output
 function setup_colors() {
@@ -108,6 +121,31 @@ spinner() {
       ;;
   esac
   msg_n "\b${SPINNER_STATE-}"
+}
+
+# Something to recursively source in a directory
+source_dot_d_files() {
+  dot_d_dir="${1}"
+  if [[ -z "${dot_d_dir}" ]]; then
+    echo "No file provided to source_dot_d_files() function"
+    return
+  fi
+  if [[ ! -d "${dot_d_dir}" ]]; then
+    echo "Could not find directory '${dot_d_dir}' to source files from"
+    return
+  fi
+  local conf_files=("${dot_d_dir}"/*.{sh,zsh}(N))
+  local f=''
+  local _loopCount=0
+  for f in ${(o)conf_files}; do
+    # ignore files that begin with a tilde
+    case ${f:t} in '~'*) continue;; esac
+    shortName="${f##${HOME}/}"
+    msgStatus "    sourcing '${shortName}'"
+    source "$f"
+    msgStatus "    sourcing '${shortName}' complete"
+    _loopCount=$(( _loopCount + 1 ))
+  done
 }
 
 alias realcat='/bin/cat'
