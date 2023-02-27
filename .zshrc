@@ -1,6 +1,8 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
+export HISTFILE="${HOME}/.zsh_history"
+
 # Path to your oh-my-zsh installation.
 export ZSH="${HOME}/.oh-my-zsh"
 
@@ -68,9 +70,10 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-source $ZSH/oh-my-zsh.sh
+export DISABLE_AUTO_TITLE=true
+#source $ZSH/oh-my-zsh.sh
 
-plugins=(git fd gcloud ripgrep fzf-tab)
+plugins=(fd gcloud ripgrep fzf-tab)
 
 # User configuration
 
@@ -99,11 +102,15 @@ export LANG=en_US.UTF-8
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 if [ -f "$HOME/.zsh.aliases" ]; then
+  # echo -e "Sourcing in .zsh.aliases .. "
   source "$HOME/.zsh.aliases"
+  # echo -e " .zsh.aliases sourcing complete "
 fi
 
 if [ -f "$HOME/.zsh.completion" ]; then
+  # echo -e "Sourcing in .zsh.completion  .. "
   source "$HOME/.zsh.completion"
+  # echo -e " .zsh.completion sourcing complete "
 fi
 
 WORDCHARS='~'

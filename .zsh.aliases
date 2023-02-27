@@ -1,30 +1,38 @@
-PROMPT='$(git_prompt_info)[%*] [%{$fg[cyan]%}${PWD/#$HOME/~}%{$reset_color%}]${ret_status}%m> %{$reset_color%}'
-precmd() { eval "NOW=$( date '+%F_%H:%M:%S' )"; ret_status="%(?:%{$fg_bold[green]%} :%{$fg_bold[red]%} %s)"; }
+#PROMPT='[%*] [%{$fg[cyan]%}${PWD/#$HOME/~}%{$reset_color%}]${ret_status}%m> %{$reset_color%}'
+autoload -U colors && colors
+autoload -Uz vcs_info
+# Disable all vcs I don't use, enable only the one I do
+zstyle ':vcs_info:*' enable NONE
+zstyle ':vcs_info:*' enable git
+zstyle ':vcs_info:git:*' check-for-changes true
+zstyle ':vcs_info:*' unstagedstr '%F{yellow}✗ '
+zstyle ':vcs_info:git*' formats "%F{62}%s:(%F{9}%b%F{62}) %u%{$reset_color%}%m%{$reset_color%}"
+precmd() { vcs_info }
+setopt PROMPT_SUBST
+PROMPT='${vcs_info_msg_0_}[%*] [%F{cyan}%~%f] %(?.%F{green}.%F{9})%m%f%(!.#.>) '
+
+# Because some fool somewhere is doing 'bindkey -v'
+bindkey -e
 
 export PATH=${PATH}:${HOME}/bin:${HOME}/.local/bin:/usr/local/sbin:${HOME}/pip/bin:/usr/local/opt/mysql-client/bin
 
-source ${HOME}/.zsh/dependency_vars.sh
+# Uncomment this to get more timing details about the progress of sourcing in this file
+#export _SILENCE_TMSG=0
 
-source_dot_d_files() {
-  dot_d_dir="${1}"
-  if [[ -z "${dot_d_dir}" ]]; then
-    echo "No file provided to source_dot_d_files() function"
-    return
-  fi
-  if [[ ! -d "${dot_d_dir}" ]]; then
-    echo "Could not find directory '${dot_d_dir}' to source files from"
-    return
-  fi
-  local conf_files=("${dot_d_dir}"/*.{sh,zsh}(N))
-  local f=''
-  for f in ${(o)conf_files}; do
-    # ignore files that begin with a tilde
-    case ${f:t} in '~'*) continue;; esac
-    source "$f"
-  done
-}
+echo "  Sourcing in .zsh/ files .. "
+# This is defined as msgStatus() in dependency_vars.sh, but since we are want to use it before we source that
+# in, we do this manually this one time.
+tput sc
+tput el
+echo -n "    sourcing .zsh/dependency_vars.sh"
+tput rc
+source ${HOME}/.zsh/dependency_vars.sh
+msgStatus "    .zsh/dependency_vars.sh sourcing complete"
 
 source_dot_d_files "${HOME}/.zsh/local.d"
+source_dot_d_files "${HOME}/.zsh/local.d/tock"
+msg ""
+tmsg "continuing with .zsh.aliases"
 
 export PATH=${PATH}:${HOME}/bin:/usr/local/sbin:${HOME}/repos/nightly/utility_scripts/users/dylan/mariadb:${HOME}/repos/nightly/utility_scripts/users/dylan/maxscale:${HOME}/repos/nightly/utility_scripts/users/dylan/kubernetes:${HOME}/pip/bin:/usr/local/opt/mysql-client/bin
 
@@ -37,6 +45,7 @@ bindkey \^U backward-kill-line
 export PATH=${PATH}:${HOME}/.cargo/bin
 
 # rbenv
+tmsg "Doing eval for rbenv"
 eval "$(rbenv init - zsh)"
 PATH=${PATH}:${HOME}/.gem/ruby/$(realcat ${HOME}/.rbenv/version)/bin
 alias rbupdate="git -C $(rbenv root)/plugins/ruby-build pull"
@@ -75,6 +84,8 @@ function quiet_on_success() {
   fi
 }
 
+tmsg "Setting up aliases"
+
 # User specific aliases and functions
 alias cls='clear; ls'
 alias cll='clear; ll'
@@ -99,6 +110,7 @@ alias vim='nvim'
 alias vimdiff='nvim -d'
 
 # Environment variables
+tmsg "Setting ENV variables"
 export EDITOR='vim'
 export LSCOLORS=hxgxcxdxCxegedabagacad
 export LESS='-REX'
@@ -119,6 +131,7 @@ function ckssh() {
 }
 
 ## tmux stuff
+tmsg "Setting up tmux functions/aliases"
 function ta {
   tmux has-session -t 0
   if [ $? != 0 ]; then
@@ -127,14 +140,32 @@ function ta {
   tmux attach -t 0
 }
 
+function checkForStaleTmuxSessions() {
+  local _staleTmuxPanes=$(tmux list-panes | wc -l)
+  local _staleTmuxSessions=$(tmux list-sessions | grep -v 'attached' | wc -l)
+  if [[ ${_staleTmuxPanes:-0} -gt 1000 && ${_staleTmuxSessions:-0} -gt 10 ]]; then
+    echo "The number of tmux panes and stale sessions is above our thresholds."
+    echo "Proceeding to kill off some sessions to clean up stale items"
+    for i in $(tmux list-sessions | awk -F: '!/attached/ {print $1}'); do
+      echo "Killing tmux session '${i}"
+      tmux kill-session -t ${i}
+      sleep 1
+    done
+  fi
+}
+checkForStaleTmuxSessions
+
+tmsg "Setting TMUX_PANE value"
 if [ ! -z "${TMUX_PANE}" ]; then
   export PANE_NUM=$(tmux list-panes -a | grep $TMUX_PANE 2>/dev/null | awk -F: '{print $2}' | awk -F. '{print $2}' | uniq)
 fi
 
+tmsg "Defining regen_pane_num()"
 regen_pane_num() {
   export PANE_NUM=$(tmux list-panes -a | grep $TMUX_PANE 2>/dev/null | awk -F: '{print $2}' | awk -F. '{print $2}' | uniq)
 }
 
+tmsg "Defining spinner()"
 spinner() {
 #  update "Entering into spinner with spinner state of '${SPINNER_STATE}'"
   # Print the following characters sequentially: | / - \
@@ -155,24 +186,11 @@ spinner() {
       SPINNER_STATE='-'
       ;;
   esac
-#  update "SPinner state: ${SPINNER_STATE}"
-  update_n "\b${SPINNER_STATE}"
-}
-
-# Used to print to STDERR isntead of STDOUT to get information out of functions that
-# pass their information around by printing things
-# We use update_n to be able to echo things without a newline
-update_n() {
-  >&2 echo -ne "$*"
-}
-
-# Adds a newline and hand off to our utility function above
-update() {
-  update_n "$*\n"
+  msg_n "\b${SPINNER_STATE}"
 }
 
 ### Functions
-
+tmsg "adding some functions [line 169]"
 alias functions="typeset -f | rg --color=never '^[a-z]+ \\(\\)' | sed -e 's/ *() *{//' | sort"
 
 emw() {
@@ -214,56 +232,8 @@ cab() {
   curlv http://${2}${3} | hlhttp
 }
 
-# Functions used by command-line twitter client
-_good_post_size() {
-  if [ ${#1} -gt 280 ]; then
-    echo "Comment is ${#1} characters long. Please shorten it to 280 or less"
-    return 0
-  fi
-  return 1
-}
-
-post() {
-  if [ -z "${2}" ]; then
-    echo "post MESSAGE"
-    return 1
-  fi
-  # Check the size of our tweet to see how long it is
-  _good_post_size "${1}"
-  if [ $? ]; then
-    echo t update "${1}"
-  fi
-}
-
-dm() {
-  if [ -z "${2}" ]; then
-    echo "dm USER MESSAGE"
-    return 1
-  fi
-  # Check the size of our tweet to see how long it is
-  _good_post_size "${2}"
-  if [ $? ]; then
-    echo t dm ${1} "${2}"
-  fi
-}
-
-reply() {
-  if [ -z "${2}" ]; then
-    echo "reply TWEET_ID MESSAGE"
-    return 1
-  fi
-  # Check the size of our tweet to see how long it is
-  _good_post_size "${2}"
-  if [ $? ]; then
-    echo t reply ${1} "${2}"
-  fi
-}
-
-rt() {
-  t retweet "${1}"
-}
-
 # GPG helper functions
+tmsg "Defining gpg helper functions"
 encrypt() {
   if [ -f "${@}.gpg" ]; then
     rm ${@}.gpg
@@ -288,14 +258,18 @@ notes() {
   vim notes
 }
 
+tmsg "Setting zstyle completion [285]"
 zstyle :completion::::: completer _complete _files
 
+tmsg "Defining _shellExit() [288]"
 function _shellExit() {
-  echo "Running commands from ${HOME}/.zsh/logout\n"
+  echo "## Running ${HOME}/.zsh/logout\n"
   . ${HOME}/.zsh/logout
 }
 
+tmsg "Trapping _shellExit() [294]"
 trap _shellExit EXIT
+tmsg "Done with .zsh.aliases [296]"
 
 # User-Agent Strings
 # These are some example UA strings for use in curl strings
