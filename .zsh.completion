@@ -5,13 +5,7 @@ set functionzeroarg   # $0 is set to the name of file containing function if fun
 set alwaystoend       # Completion always matches to the end of the match
 set nocompleteinword  # Cursor is set to the end of the word if completion is started
 
-local conf_files=("$HOME"/.zsh/completions.d/*.{sh,zsh}(N))
-local f=''
-for f in ${(o)conf_files}; do
-  # ignore files that begin with a tilde
-  case ${f:t} in '~'*) continue;; esac
-  source "$f"
-done
+source_dot_d_files "${HOME}/.zsh/completions.d"
 
 autoload -Uz compinit && compinit
 autoload -Uz url-quote-magic
