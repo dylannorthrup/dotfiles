@@ -31,6 +31,14 @@ call plug#end()
 
 " Run neomake when writing a buffer (no delay).
 call neomake#configure#automake('w')
+let g:neomake_cpp_gcc_maker = {
+      \ 'exe': 'gcc',
+      \ 'args': ['-fsyntax-only', '-Wall', '-Wextra', '-I./', '-L/usr/include/mariadb/', '-L/usr/lib/x86_64-linux-gnu/', '-lmariadb']
+      \}
+let g:neomake_rubocop_maker = {
+      \ 'exe': 'rubocop',
+      \ 'args': ['--format', 'emacs', '--force-exclusion', '--display-cop-names', '--disable-pending-cops']
+      \}
 
 " Fake out any attempts to use vim-sensible
 if exists('g:loaded_sensible') || &compatible
