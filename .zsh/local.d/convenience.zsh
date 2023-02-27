@@ -14,7 +14,7 @@ function dotdiff() {
       -x "tock"                         \
       -x ".*.swp"                       \
       -qr $i dotfiles/$i |\
-    grep -E -v '(tock|dynamic_repo_paths)'
+    rg -v '(tock|dynamic_repo_paths)'
   done
 }
 
