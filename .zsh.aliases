@@ -19,20 +19,20 @@ export PATH=${PATH}:${HOME}/bin:${HOME}/.local/bin:/usr/local/sbin:${HOME}/pip/b
 # Uncomment this to get more timing details about the progress of sourcing in this file
 #export _SILENCE_TMSG=0
 
-echo "  Sourcing in .zsh/ files .. "
+#echo "  Sourcing in .zsh/ files .. "
 # This is defined as msgStatus() in dependency_vars.sh, but since we are want to use it before we source that
 # in, we do this manually this one time.
-tput sc
-tput el
-echo -n "    sourcing .zsh/dependency_vars.sh"
-tput rc
+#tput sc
+#tput el
+#echo -n "    sourcing .zsh/dependency_vars.sh"
+#tput rc
 source ${HOME}/.zsh/dependency_vars.sh
-msgStatus "    .zsh/dependency_vars.sh sourcing complete"
+#msgStatus "    .zsh/dependency_vars.sh sourcing complete"
 
 source_dot_d_files "${HOME}/.zsh/local.d"
 source_dot_d_files "${HOME}/.zsh/local.d/tock"
-msg ""
-tmsg "continuing with .zsh.aliases"
+#msg ""
+#tmsg "continuing with .zsh.aliases"
 
 export PATH=${PATH}:${HOME}/bin:/usr/local/sbin:${HOME}/repos/nightly/utility_scripts/users/dylan/mariadb:${HOME}/repos/nightly/utility_scripts/users/dylan/maxscale:${HOME}/repos/nightly/utility_scripts/users/dylan/kubernetes:${HOME}/pip/bin:/usr/local/opt/mysql-client/bin
 
