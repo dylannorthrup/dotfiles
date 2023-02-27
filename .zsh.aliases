@@ -93,7 +93,6 @@ alias curl='curl -sSL'
 alias curlv='curl -sSL -o /dev/null -v'
 alias curlvt='curl -sSL -o /dev/null -v -w "HTTP Code: %{response_code}; Connect time: %{time_connect}; Total time:%{time_total}\n"'
 alias curlhead='curl -sSL -D - -o /dev/null'
-alias dh='dirs -v'
 alias fl8='flake8-3 --ignore=E111,E114,E129'
 alias gla="git la"
 alias localdb='mysql -h 127.0.0.1 -P 3306 -u root'
@@ -108,6 +107,11 @@ alias view='nvim -R'
 alias vi='nvim'
 alias vim='nvim'
 alias vimdiff='nvim -d'
+
+# Set up directory history
+export DIRSTACKSIZE=10
+setopt autopushd pushdminus pushdsilent pushdtohome
+alias dh='dirs -v'
 
 # Environment variables
 tmsg "Setting ENV variables"
