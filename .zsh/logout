@@ -1,9 +1,16 @@
-echo "Going into history save loop"
+echo "  Looping until I can get a lock on the history file"
+zmodload -aF zsh/system
+histFile="${HISTFILE:-${HOME}/.zsh_history}"
 while true; do
-  if zsystem flock -f histlock $HISTFILE; then
-    echo "Got mah zlock on $HISTFILE. Saving history."
+  echo "histFile is '${histFile}'"
+  spinner
+  # Timeout after 5 seconds.
+  if zsystem flock -t 5 -f histlock ${histFile}; then
+    echo "  Got zlock for ${histFile}. Saving history."
     fc -A
     break
   fi
+  sleep 0.1
 done
-echo "History saved. Exiting."
+echo "  History saved. Exiting."
+echo ""
