@@ -110,7 +110,7 @@ alias vimdiff='nvim -d'
 
 # Set up directory history
 export DIRSTACKSIZE=10
-setopt autopushd pushdminus pushdsilent pushdtohome
+setopt autopushd pushdminus pushdsilent pushdtohome pushdignoredups
 alias dh='dirs -v'
 
 # Environment variables
