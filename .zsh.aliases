@@ -1,6 +1,8 @@
 #PROMPT='[%*] [%{$fg[cyan]%}${PWD/#$HOME/~}%{$reset_color%}]${ret_status}%m> %{$reset_color%}'
-autoload -U colors && colors
+zmodload zsh/system
+autoload colors && colors
 autoload -Uz vcs_info
+autoload bashcompinit
 # Disable all vcs I don't use, enable only the one I do
 zstyle ':vcs_info:*' enable NONE
 zstyle ':vcs_info:*' enable git
@@ -10,6 +12,9 @@ zstyle ':vcs_info:git*' formats "%F{62}%s:(%F{9}%b%F{62}) %u%{$reset_color%}%m%{
 precmd() { vcs_info }
 setopt PROMPT_SUBST
 PROMPT='${vcs_info_msg_0_}[%*] [%F{cyan}%~%f] %(?.%F{green}.%F{9})%m%f%(!.#.>) '
+
+# Load zsh/system so I can use zsh's builtin flock
+zmodload -aF zsh/system
 
 # Because some fool somewhere is doing 'bindkey -v'
 bindkey -e
@@ -30,7 +35,7 @@ source ${HOME}/.zsh/dependency_vars.sh
 #msgStatus "    .zsh/dependency_vars.sh sourcing complete"
 
 source_dot_d_files "${HOME}/.zsh/local.d"
-source_dot_d_files "${HOME}/.zsh/local.d/tock"
+
 #msg ""
 #tmsg "continuing with .zsh.aliases"
 
@@ -145,8 +150,9 @@ function ta {
 }
 
 function checkForStaleTmuxSessions() {
-  local _staleTmuxPanes=$(tmux list-panes | wc -l)
-  local _staleTmuxSessions=$(tmux list-sessions | grep -v 'attached' | wc -l)
+  ! /usr/bin/pgrep tmux > /dev/null && return
+  local _staleTmuxPanes=$(tmux list-panes | wc -l | awk '{print $1}')
+  local _staleTmuxSessions=$(tmux list-sessions | grep -v 'attached' | wc -l | awk '{print $1}')
   if [[ ${_staleTmuxPanes:-0} -gt 1000 && ${_staleTmuxSessions:-0} -gt 10 ]]; then
     echo "The number of tmux panes and stale sessions is above our thresholds."
     echo "Proceeding to kill off some sessions to clean up stale items"
@@ -167,30 +173,6 @@ fi
 tmsg "Defining regen_pane_num()"
 regen_pane_num() {
   export PANE_NUM=$(tmux list-panes -a | grep $TMUX_PANE 2>/dev/null | awk -F: '{print $2}' | awk -F. '{print $2}' | uniq)
-}
-
-tmsg "Defining spinner()"
-spinner() {
-#  update "Entering into spinner with spinner state of '${SPINNER_STATE}'"
-  # Print the following characters sequentially: | / - \
-  case "${SPINNER_STATE}" in
-    '-')
-      SPINNER_STATE='\'
-      ;;
-    '\')
-      SPINNER_STATE='|'
-      ;;
-    '|')
-      SPINNER_STATE='/'
-      ;;
-    '/')
-      SPINNER_STATE='-'
-      ;;
-    *)
-      SPINNER_STATE='-'
-      ;;
-  esac
-  msg_n "\b${SPINNER_STATE}"
 }
 
 ### Functions
@@ -267,8 +249,29 @@ zstyle :completion::::: completer _complete _files
 
 tmsg "Defining _shellExit() [288]"
 function _shellExit() {
-  echo "## Running ${HOME}/.zsh/logout\n"
-  . ${HOME}/.zsh/logout
+  echo "## Running _shellExit()"
+  _histFile="${HISTFILE:-${HOME}/.zsh_history}"
+  if [[ ! -e "${_histFile}" ]]; then
+    echo "  No histfile found. Exiting."
+    exit
+  fi
+  zsystem supports flock || \
+    echo "  No zsystem command found that supports flock. Exiting." && \
+    exit
+  echo "  Looping until I can get a lock on the history file"
+  while true; do
+    echo "  _histFile is '${_histFile}'"
+    spinner
+    # Timeout after 5 seconds.
+    if zsystem flock -t 5 -f histlock ${_histFile}; then
+      echo "  Got zlock for ${_histFile}. Saving history."
+      fc -A
+      break
+    fi
+    sleep 0.1
+  done
+  echo "  History saved. Exiting."
+  echo ""
 }
 
 tmsg "Trapping _shellExit() [294]"
