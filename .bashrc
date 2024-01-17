@@ -31,15 +31,9 @@ if [ ! -z "$PS1" ]; then
   fi
 fi
 
-# Cloudfoundry-specific stuff
-# Source in cflogin file
-if [ -f "$HOME/.cflogin" ]; then
-  . "$HOME/.cflogin"
-fi
-
 PROMPT_COMMAND='~/bin/show_git_branch.sh'
 
-PATH=/usr/local/bin:/usr/local/opt/ruby/bin:$PATH:/opt/bin:/opt/local/bin:/opt/chef/embedded/bin:~/bin:~/repos/chef-atom/bin
+PATH=/usr/local/bin:/usr/local/opt/ruby/bin:$PATH:/opt/bin:"${HOME}"/bin
 
 # User specific aliases and functions
 alias curl='curl -sS 2>&1'
@@ -89,14 +83,14 @@ export SUDO_PS1='\e[01;31m[\w] [\t] \h#\[\033[0m\] '
 export PS1='[\w] [\t] \h> '
 #export PYTHONSTARTUP=$HOME/.pythonrc.py
 
-export FZF_TMUX=1
-export FZF_CTRL_R_OPTS='--sort --exact'
-if [ -d /usr/local/Cellar/fzf/0.17.5/shell/ ]; then
-  . /usr/local/Cellar/fzf/0.17.5/shell/key-bindings.bash
-  . /usr/local/Cellar/fzf/0.17.5/shell/completion.bash
-else
-  echo "NO FZF SHELL COMPLETION DIRECTORY! FZF WON'T WORK LIKE YOU THINK IT SHOULD"
-fi
+#export FZF_TMUX=1
+#export FZF_CTRL_R_OPTS='--sort --exact'
+#if [ -d /usr/local/Cellar/fzf/0.17.5/shell/ ]; then
+#  . /usr/local/Cellar/fzf/0.17.5/shell/key-bindings.bash
+#  . /usr/local/Cellar/fzf/0.17.5/shell/completion.bash
+#else
+#  echo "NO FZF SHELL COMPLETION DIRECTORY! FZF WON'T WORK LIKE YOU THINK IT SHOULD"
+#fi
 
 # Avoid duplicates
 export HISTCONTROL=ignoredups:erasedups
@@ -118,60 +112,12 @@ function ta {
   tmux attach -t 0
 }
 
-## Golang Stuff
-export GOPATH="$HOME/go"
-export GOBIN="$HOME/go/bin"
-
-vigo () {
-  vim "${GOPATH}/src/$*/$*.go"
-}
-
-newgo () {
-  if [ ! -d "${GOPATH}/src/$*" ]; then
-    mkdir -p "${GOPATH}/src/$*"
-  fi
-  vigo $*
-  go install "${GOPATH}/src/$*/$*.go"
-}
-
-grun () {
-  if [ "${PWD}X" != "${GOPATH}X" ]; then
-    cd $GOPATH
-  fi
-  export GOBIN="$GOPATH/bin"
-  #go install src/$*/$*.go
-  go install src/$*/$*.go
-  if [ $? -eq 0 ]; then
-    $*
-  else
-    echo "Problem doing a go install of src/$*/$*.go"
-  fi
-}
-
-_grun_dirs() {
-  local cur=${COMP_WORDS[COMP_CWORD]};
-  #COMPREPLY=($(\cd $GOPATH/src; compgen -d "$cur" | sed -e 's,$,/,'))
-  COMPREPLY=($(\cd $GOPATH/src; compgen -d "$cur" ))
-}
-
-complete -o filenames -o nospace -F _grun_dirs grun
-complete -o filenames -o nospace -F _grun_dirs vigo
 ### Functions
 
 alias functions="typeset -f | egrep '^[a-z]+ \\(\\)' | sed -e 's/()//' | sort"
 
 emw() {
   mwin $(echo $*)
-}
-
-kcu() {
-  foodcritic -B ~/repos/cookbooks/"$@" | grep FC && echo "Foodcritic failed!" && return
-  knife cookbook test "$@" || return
-  knife cookbook upload "$@"
-}
-
-metaver() {
-  echo $(awk '/version/ {print $2}' metadata.rb | tr -d \'\")
 }
 
 gitag() {
@@ -182,20 +128,6 @@ gitag() {
     echo ==== Pushing tag "$TAG" ====
     git push --tags
   fi
-}
-
-# Take the previous two functions and combine them to get the metadata version
-# then do git tagging
-cheftag() {
-  gitag $(metaver)
-}
-
-demonbox() {
-  scp -rp $* docxstudios@spectator.dreamhost.com:~/dropbox/demon/
-}
-
-dropbox() {
-  scp -rp $* docxstudios@spectator.dreamhost.com:~/dropbox/
 }
 
 addsshkey() {
@@ -246,34 +178,6 @@ cdr() {
   cd ~/repos/${1}
 }
 
-cdc() {
-  cdr cookbooks/${1}
-}
-
-cdo() {
-  cdr chef-${1}
-}
-
-gcb() {
-  cd ~/repos/cookbooks
-  DIR="${1}"
-  if [ -d "$DIR" ]; then
-    cd "$DIR"
-    git up
-  else 
-    git clone git@bitbucket.org:vgtf/"${DIR}".git
-  fi
-  cd -
-  cd ~/repos/"$DIR"
-}
-
-gco() {
-  cd ~/repos
-  git clone git@bitbucket.org:vgtf/chef-${1}.git
-  cd chef-${1}
-  bundle
-}
-
 gitup() {
   for i in ~/repos/*; do
     if [ -d ${i}/.git ]; then
@@ -289,54 +193,6 @@ gitup() {
 cab() {
   curlv http://${1}${3} | hlhttp
   curlv http://${2}${3} | hlhttp
-}
-
-_good_post_size() {
-  if [ ${#1} -gt 140 ]; then
-    echo "Comment is ${#1} characters long. Please shorten it to 140 or less"
-    return 0
-  fi
-  return 1
-}
-
-post() {
-  if [ -z "${2}" ]; then
-    echo "post MESSAGE"
-    return 1
-  fi
-  # Check the size of our tweet to see how long it is
-  _good_post_size "${1}"
-  if [ $? ]; then
-    echo t update "${1}"
-  fi
-}
-
-dm() {
-  if [ -z "${2}" ]; then
-    echo "dm USER MESSAGE"
-    return 1
-  fi
-  # Check the size of our tweet to see how long it is
-  _good_post_size "${2}"
-  if [ $? ]; then
-    echo t dm ${1} "${2}"
-  fi
-}
-
-reply() {
-  if [ -z "${2}" ]; then
-    echo "reply TWEET_ID MESSAGE"
-    return 1
-  fi
-  # Check the size of our tweet to see how long it is
-  _good_post_size "${2}"
-  if [ $? ]; then
-    echo t reply ${1} "${2}"
-  fi
-}
-
-rt() {
-  t retweet "${1}"
 }
 
 which() {
@@ -370,36 +226,6 @@ decat() {
   gpg --decrypt $@
 }
 
-espy() {
-  knife search node "advertises:${1}" -i
-}
-
-# Completion for chef repos (thanks to Mark J Reed)
-_cdc_dirs() {
-  local cur=${COMP_WORDS[COMP_CWORD]};
-  COMPREPLY=($(\cd ~/repos/cookbooks; compgen -d "$cur" | sed -e 's,$,/,'))
-}
-
-_cdo_dirs() {
-  local cur=${COMP_WORDS[COMP_CWORD]};
-  COMPREPLY=($(\cd ~/repos; compgen -d "chef-$cur" | sed -e 's,^chef-,,' -e 's,$,/,'))
-}
-
-_kcu_dirs() {
-  local cur=${COMP_WORDS[COMP_CWORD]};
-  COMPREPLY=($(\cd ~/repos/cookbooks; compgen -d "$cur" | sed -e 's,$,/,'))
-}
-
-_cdr_dirs() {
-  local cur=${COMP_WORDS[COMP_CWORD]};
-  COMPREPLY=($(\cd ~/repos; compgen -d "$cur" | sed -e 's,$,/,'))
-}
-
-complete -o filenames -o nospace -F _cdc_dirs cdc
-complete -o filenames -o nospace -F _cdo_dirs cdo
-complete -o filenames -o nospace -F _kcu_dirs kcu
-complete -o filenames -o nospace -F _cdr_dirs cdr
-
 notes() {
   NDIR="~/tickets/$@"
   mkdir $NDIR
@@ -407,18 +233,8 @@ notes() {
   vim notes
 }
 
-showcbs() {
-  NODE="$@"
-  echo "Retrieving cookbook list for $@"
-  knife exec -E "puts JSON.pretty_generate(api.get(\"nodes/$NODE/cookbooks\").map { |name,data| {name => data.version} }.reduce :merge)"
-}
-
 cdiff() {
   diff "$@" | colorize blue "^>.*" red "^<.*"
-}
-
-sd() {
-  svn diff "$@" | colorize blue "^+.*" red "^-.*"
 }
 
 hextojson() {
