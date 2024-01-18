@@ -1,2 +1,5 @@
 # Ignore auto generated files
 .zsh/completions.d/kubectl.sh
+
+# Ignore mac cruft
+.DS_Store
