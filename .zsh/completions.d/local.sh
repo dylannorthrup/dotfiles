@@ -13,14 +13,3 @@ compctl -W ${TOCKTIX_PATH}/ -/ cdtt
 
 bindkey "^[OA" up-history
 bindkey "^[OB" down-history
-
-
-_adr() {
-  # Autocomplete only when entering the last term
-  if [ ${COMP_CWORD} -eq $((${#COMP_WORDS[@]} - 1)) ]
-  then
-    COMPREPLY=( $(_adr_autocomplete ${COMP_WORDS[*]} ) )
-  fi
-}
-
-complete -F _adr -o default adr
