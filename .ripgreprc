@@ -1,3 +1,6 @@
 --no-line-number
 --no-heading
 --color=always
+--colors=path:fg:cyan
+--colors=path:style:bold
+--colors=match:fg:yellow
