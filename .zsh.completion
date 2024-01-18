@@ -1,18 +1,26 @@
 autoload -Uz bracketed-paste-magic
 zle -N bracketed-paste bracketed-paste-magic
 
+autoload -Uz compinit && compinit -i
+autoload -Uz bashcompinit && bashcompinit -i
 set functionzeroarg   # $0 is set to the name of file containing function if function was sourced (Not the calling script)
 set alwaystoend       # Completion always matches to the end of the match
 set nocompleteinword  # Cursor is set to the end of the word if completion is started
 
-source_dot_d_files "${HOME}/.zsh/completions.d"
+export KC_COMPLETION_FILE="$HOME/.zsh/completions.d/kubectl.sh"
 
-autoload -Uz compinit && compinit
+fpath=(.zsh/completions.d $fpath)
+
 autoload -Uz url-quote-magic
 zle -N self-insert url-quote-magic
 
 # Put in a test here for if the file is locked and loop until a) it unlocks or
 # b) we timeout after 20 seconds.
+if [[ ! -f "${KC_COMPLETION_FILE}" ]]; then
+  echo "Generating kubectl completion file '${KC_COMPLETION_FILE}'"
+  . "${HOME}/.zsh/completions.d/kubectl-functions.sh"
+  generate_kc_completion_if_needed
+fi
 if [[ -f "${KC_COMPLETION_FILE}" ]]; then
   2>/dev/null zsystem flock -f lockvar -t 20 ${KC_COMPLETION_FILE} && \
     source ${KC_COMPLETION_FILE} && \
@@ -20,8 +28,8 @@ if [[ -f "${KC_COMPLETION_FILE}" ]]; then
   export KC_EXPANDED="True"
 else
   echo "Could not source in the kubectl completion file '${KC_COMPLETION_FILE}'"
-  echo "You'll likely want to run 'generate_kc_completion_if_needed' and restart your shell"
-  echo "If that does not work, you'll want to figure out why and correct the issue."
+  echo "We likely just ran 'generate_kc_completion_if_needed' so you'll need to"
+  echo "figure out why we could not and and correct the issue."
   export KC_EXPANDED="False"
 fi
 
