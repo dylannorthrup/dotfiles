@@ -102,15 +102,29 @@ if [ ! -z "$PS1" ]; then
   # Check if we have an ssh agent running
   SSH_ENV="$HOME/.ssh/environment"
 
-  _start_agent
   # See if we have ssh-agent environment set up
   if [ ! -f $SSH_ENV ]; then
     _start_agent
   fi
 
+  # See if the agent PID we have is actually correct
+  if [ -f $SSH_ENV ]; then
+    _agent_pid=$(awk -F\; '/SSH_AGENT_PID/ {print $1}' "${SSH_ENV}" | awk -F= '{print $2}')
+    if ! kill -0 "${_agent_pid}" > /dev/null; then
+      echo "SSH env file exists, but PID is not running."
+      rm -f "${SSH_ENV}"
+      _start_agent
+    fi
+  fi
+
   # Make sure the SSH_ENV is there and, if so, source it in
   if [ -f $SSH_ENV ]; then
+    # The 'tput' lines are to overwrite the "Agent XXXX" output when sourcing
+    # $SSH_ENV
+    tput sc
     . $SSH_ENV
+    tput rc
+    tput el
     _get_ssh_ids
     _add_identities
     # If we had an error, regen and try again
