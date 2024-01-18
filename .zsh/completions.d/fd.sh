@@ -14,7 +14,11 @@ _fd() {
   local -a context line state state_descr _arguments_options fd_types fd_args
   local -A opt_args
 
-  _arguments_options=( -s -S )
+  if is-at-least 5.2; then
+    _arguments_options=( -s -S )
+  else
+    _arguments_options=( -s )
+  fi
 
   fd_types=(
     {f,file}'\:"regular files"'
@@ -22,6 +26,8 @@ _fd() {
     {l,symlink}'\:"symbolic links"'
     {e,empty}'\:"empty files or directories"'
     {x,executable}'\:"executable (files)"'
+    {b,block-device}'\:"block devices"'
+    {c,char-device}'\:"character devices"'
     {s,socket}'\:"sockets"'
     {p,pipe}'\:"named pipes (FIFOs)"'
   )
@@ -32,7 +38,7 @@ _fd() {
   # for all of the potential negation options listed below!
   if
     # (--[bpsu]* => match all options marked with '$no')
-    [[ $PREFIX$SUFFIX == --[bopsu]* ]] ||
+    [[ $PREFIX$SUFFIX == --[bopsun]* ]] ||
     zstyle -t ":complete:$curcontext:*" complete-all
   then
     no=
@@ -65,6 +71,9 @@ _fd() {
     + '(no-regex-pattern)' # non-regex-based search pattern
     {-g,--glob}'[perform a glob-based search]'
     {-F,--fixed-strings}'[treat pattern as literal string instead of a regex]'
+
+    + '(no-require-git)'
+    "$no(no-ignore-full --no-ignore-vcs --no-require-git)--no-require-git[don't require git repo to respect gitignores]"
 
     + '(match-full)' # match against full path
     {-p,--full-path}'[match the pattern against the full path instead of the basename]'
@@ -114,6 +123,7 @@ _fd() {
 
     + '(filter-mtime-newer)' # filter by files modified after than
     '--changed-within=[limit search to files/directories modified within the given date/duration]:date or duration'
+    '--changed-after=[alias for --changed-within]:date/duration'
     '!--change-newer-than=:date/duration'
     '!--newer=:date/duration'
 
@@ -154,6 +164,10 @@ _fd() {
     + strip-cwd-prefix
     $no'(strip-cwd-prefix exec-cmds)--strip-cwd-prefix[Strip ./ prefix when output is redirected]'
 
+    + and
+    '--and=[additional required search path]:pattern'
+
+
     + args # positional arguments
     '1: :_guard "^-*" pattern'
     '(--search-path)*:directory:_files -/'
@@ -163,10 +177,8 @@ _fd() {
   is-at-least 5.4 ||
   fd_args=( ${(@)args:#(#i)(+|[a-z0-9][a-z0-9_-]#|\([a-z0-9][a-z0-9_-]#\))} )
 
-  set -x
   echo "FDARGS: $fd_args"
   _arguments $_arguments_options : $fd_args && ret=0
-  set +x
 
   case ${state} in
     owner)
@@ -221,9 +233,7 @@ _fd() {
   return ret
 }
 
-complete -F _fd -o fd
-
-#_fd "$@"
+_fd "$@"
 
 # ------------------------------------------------------------------------------
 # Copyright (c) 2011 GitHub zsh-users - http://github.com/zsh-users
