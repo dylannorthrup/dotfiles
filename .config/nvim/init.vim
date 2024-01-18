@@ -9,6 +9,9 @@ let g:ruby_host_prog = '~/.rbenv/versions/2.7.0/bin/neovim-ruby-host'
 " Do a ':sv' to reload the init.vim
 nnoremap <leader>sv :source $MYVIMRC<CR>
 
+" This required vim-plug to be installed which is available from https://github.com/junegunn/vim-plug
+"   mkdir -p ~/.local/share/nvim/site/autoload && cd !$
+"   curl https://raw.githubusercontent.com/junegunn/vim-plug/masger/plug.vim > plug.vim
 " Plugins will be downloaded under the specified directory.
 call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
 
