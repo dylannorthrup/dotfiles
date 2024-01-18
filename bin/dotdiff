@@ -1,0 +1,21 @@
+#!/bin/zsh
+
+# Make sure we have our dependencies in place
+command -v fd > /dev/null || { echo "No 'colorize' command found. Exiting $0."; exit }
+command -v colorize > /dev/null || { echo "No 'colorize' command found. Exiting $0."; exit }
+
+function dotdiff() {
+  cd ${HOME}
+  for i in $(fd -H -t f -E bin -E README.md -E push_dotfiles.sh -E dotdiff.files -E filelist -E gh_extensions.txt '.*' dotfiles | sed -e 's/dotfiles//g; s/^\///;'); do
+    NAME=$(echo "== $i" | colorize cyan '.*')
+    # Use '# dotdiffignore$' to flag sections we know are different
+    # And explicitly exclude ephemeral files that won't be in git
+    2>&1 /usr/bin/diff -I '# dotdiffignore$' \
+      -x "kubectl.completion"           \
+      -x ".*.swp"                       \
+      -qr $i dotfiles/$i |\
+    rg -v 'dynamic_repo_paths' && echo -e "$NAME"
+  done
+}
+
+dotdiff
