@@ -1,37 +1,37 @@
 # .bashrc
 
 # Source global definitions
-if [ -f /etc/bashrc ]; then
+if [[ -f /etc/bashrc ]]; then
 	. /etc/bashrc
 fi
 
 # Source bash_profile definitions
-if [ -z "$BASH_PROFILE_SOURCED" ]; then
-  if [ -f "$HOME/.bash_profile" ]; then
-    . "$HOME/.bash_profile"
+if [[ -z "$BASH_PROFILE_SOURCED" ]]; then
+  if [[ -f "$HOME/.bash_profile" ]]; then
+    . "${HOME}"/.bash_profile
   fi
 fi
 
 # Detect if we're in non-interactive mode
-if [ ! -z "$PS1" ]; then 
+if [[ -n "$PS1" ]]; then
   # Interactive!
   # Check if we have an ssh agent running
   SSH_ENV="$HOME/.ssh/environment"
   # See if we have ssh-agent environment set up
-  if [ ! -f $SSH_ENV ]; then
-    echo "Regenerating '$SSH_ENV'"
-    /usr/bin/ssh-agent > $SSH_ENV
+  if [[ ! -f "${SSH_ENV}" ]]; then
+    echo "Regenerating '${SSH_ENV}'"
+    /usr/bin/ssh-agent > "${SSH_ENV}"
   fi
-  # Make sure the SSH_ENV is there and, if so, source it in 
-  if [ -f $SSH_ENV ]; then
-    . $SSH_ENV
+  # Make sure the SSH_ENV is there and, if so, source it in
+  if [[ -f "${SSH_ENV}" ]]; then
+    . "${SSH_ENV}"
     /usr/bin/ssh-add
   else
-    echo "Was unable to create the file '$SSH_ENV'. Please investigate why"
+    echo "Was unable to create the file '${SSH_ENV}'. Please investigate why"
   fi
 fi
 
-PROMPT_COMMAND='~/bin/show_git_branch.sh'
+PROMPT_COMMAND="${HOME}"/bin/show_git_branch.sh
 
 PATH=/usr/local/bin:/usr/local/opt/ruby/bin:$PATH:/opt/bin:"${HOME}"/bin
 
@@ -41,12 +41,10 @@ alias curlv='curl -sS -o /dev/null -v 2>&1'
 alias curlvt='curl -sS -o /dev/null -v -w "HTTP Code: %{response_code}; Connect time: %{time_connect}; Total time:%{time_total}\n" 2>&1'
 alias curlhead='curl -sSL -D - -o /dev/null'
 alias diff='diff -W $(( $(tput cols) - 2 ))'
-alias domesync="rsync -avz -e 'ssh -p 2222' --rsync-path=/sbin/rsync --progress"
-alias dxn='ssh docxstudios@spectator.dreamhost.com'
 alias fl8='flake8-3 --ignore=E111,E114,E129'
-alias gc='egrep --color'
+alias gc='rg -E --color'
 alias gittyup='git tyup'
-alias grep='egrep'
+alias grep='rg'
 alias gr='gc -r'
 alias gv='gc -v'
 alias kcs='knife cookbook show'
@@ -60,7 +58,6 @@ alias prespace='sed -e "s/^/ /g"'
 #alias python='python3'
 alias random='echo $(( ( RANDOM % 60 )  + 1 ))'
 alias repos='ls ~/repos'
-alias s3cmd="$HOME/bin/gs3"
 alias ssr='ssh -l root'
 alias swift='xcrun swift'
 alias sz='say -v Zarvox'
@@ -69,7 +66,7 @@ alias view='vim -R'
 alias watch='watch -d --color'
 
 # Linux specific aliases
-if [ $(uname) == 'Linux' ]; then
+if [[ $(uname) == 'Linux' ]]; then
   alias ls='ls -F --color'
 else
   alias ls='ls -F'
@@ -85,7 +82,7 @@ export PS1='[\w] [\t] \h> '
 
 #export FZF_TMUX=1
 #export FZF_CTRL_R_OPTS='--sort --exact'
-#if [ -d /usr/local/Cellar/fzf/0.17.5/shell/ ]; then
+#if [[ -d /usr/local/Cellar/fzf/0.17.5/shell/ ]]; then
 #  . /usr/local/Cellar/fzf/0.17.5/shell/key-bindings.bash
 #  . /usr/local/Cellar/fzf/0.17.5/shell/completion.bash
 #else
@@ -105,8 +102,7 @@ export HISTFILESIZE=100000
 
 ## tmux stuff
 function ta {
-  tmux has-session -t 0
-  if [ $? != 0 ]; then
+  if ! tmux has-session -t 0; then
     tmux new-session -s 0 -n "$(~/bin/random_line.rb ~/.tmux/window_names)"
   fi
   tmux attach -t 0
@@ -114,44 +110,41 @@ function ta {
 
 ### Functions
 
-alias functions="typeset -f | egrep '^[a-z]+ \\(\\)' | sed -e 's/()//' | sort"
+alias functions="typeset -f | rg '^[a-z]+ \\(\\)' | sed -e 's/()//' | sort"
 
 emw() {
-  mwin $(echo $*)
+  mwin "$@"
 }
 
 gitag() {
-  TAG="$@"
-  git tag "$TAG"
+  TAG="$*"
   # If the tag was successful, go ahead and push it out
-  if [ $? -eq 0 ]; then
+  if ! git tag "$TAG"; then
     echo ==== Pushing tag "$TAG" ====
     git push --tags
   fi
 }
 
 addsshkey() {
-#  ssh $* 'mkdir ~/.ssh'
-#  scp ~/.ssh/id_rsa.pub $*:~/.ssh/authorized_keys
-  ssh-copy-id -i ~/.ssh/id_rsa.pub $*
-  ssh $*
+  ssh-copy-id -i ~/.ssh/id_rsa.pub "$@"
+  ssh "$@"
 }
 
 distsshkey() {
 #  echo "Trying to login automatically"
-  ssh -o PreferredAuthentications=publickey -o KbdInteractiveAuthentication=no -o PasswordAuthentication=no -o StrictHostKeyChecking=no $* 'hostname'
-  if [ $? == 255 ]; then
+  ssh -o PreferredAuthentications=publickey -o KbdInteractiveAuthentication=no -o PasswordAuthentication=no -o StrictHostKeyChecking=no "$@" 'hostname'
+  if [[ $? == 255 ]]; then
 #    echo "Could not log in automatically. Running ssh-copy-id."
 #    ssh $* 'mkdir ~/.ssh'
 #    scp ~/.ssh/id_rsa.pub $*:~/.ssh/authorized_keys
-    ssh-copy-id -i ~/.ssh/id_rsa.pub $*
+    ssh-copy-id -i ~/.ssh/id_rsa.pub "$@"
   else
     echo "Was able to log in. No need to copy id"
   fi
 }
 
 distkey() {
-  distsshkey $*
+  distsshkey "$@"
 }
 
 delhostkey() {
@@ -160,10 +153,10 @@ delhostkey() {
 }
 
 countdown() {
-  NUM=$*
-  while [ $NUM -gt 0 ]; do
+  NUM="${1}"
+  while [[ $NUM -gt 0 ]]; do
     echo -n "${NUM} "
-    NUM=$(expr $NUM - 1)
+    NUM=$(( NUM - 1 ))
     sleep 1
   done
   echo 0
@@ -175,15 +168,15 @@ branch() {
 }
 
 cdr() {
-  cd ~/repos/${1}
+  cd "${HOME}"/repos/"${1}" || echo "Could not cd to '${HOME}/repos/${1}'"
 }
 
 gitup() {
   for i in ~/repos/*; do
-    if [ -d ${i}/.git ]; then
+    if [[ -d ${i}/.git ]]; then
       echo -e "* Updating ${i}"
       (
-        cd $i
+        cd "${1}" || { echo -e "!!! Could not cd to '${1}'"; return; }
         git up
       )
     fi
@@ -191,18 +184,17 @@ gitup() {
 }
 
 cab() {
-  curlv http://${1}${3} | hlhttp
-  curlv http://${2}${3} | hlhttp
+  curlv http://"${1}${3}" | hlhttp
+  curlv http://"${2}${3}" | hlhttp
 }
 
 which() {
   if declare -f "$*" > /dev/null; then
-    type $*
+    type "$@"
   else
-    WHICHOUT=$(/usr/bin/which $* 2>&1)
-    if [ $? -eq 0 ]; then
-      echo $WHICHOUT
-      #/usr/bin/which $*
+    if ! WHICHOUT=$(/usr/bin/which "$@" 2>&1); then
+      echo "${WHICHOUT}"
+      #/usr/bin/which "$@"
     else
       echo "Command '${*}' not found"
     fi
@@ -210,26 +202,26 @@ which() {
 }
 
 encrypt() {
-  if [ -f "${@}.gpg" ]; then
-    rm ${@}.gpg
+  if [[ -f "${1}.gpg" ]]; then
+    rm "${1}.gpg"
   fi
-  gpg --encrypt --recipient 'northrup@gmail.com' $@
-  rm $@
+  gpg --encrypt --recipient 'northrup@gmail.com' "$@"
+  rm "$@"
 }
 
 decrypt() {
-  FNAME=$(echo $@ | sed -e 's/.gpg$//')
-  gpg --output $FNAME --decrypt $@
+  FNAME="${1//.gpg$//}"
+  gpg --output "${FNAME}" --decrypt "$@"
 }
 
 decat() {
-  gpg --decrypt $@
+  gpg --decrypt "$@"
 }
 
 notes() {
-  NDIR="~/tickets/$@"
-  mkdir $NDIR
-  cd $NDIR
+  NDIR="${HOME}/tickets/$1"
+  mkdir "${NDIR}" || { echo "Could not make directory '${NDIR}'"; return ; }
+  cd "${NDIR}" || { echo "Could not cd into directory '${NDIR}'"; return ; }
   vim notes
 }
 
@@ -242,8 +234,8 @@ hextojson() {
 }
 
 m4atomp3() {
-  i="$@"
-  o=$(echo "$i" | sed -e 's/m4a$/mp3/')
+  i="${1}"
+  o="${i//m4a$/mp3/}"
   ffmpeg -i "$i" -acodec libmp3lame -ab 128k "$o"
 }
 
