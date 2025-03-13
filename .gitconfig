@@ -1,16 +1,14 @@
 [filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
-	required = true
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+  required = true
 
 [user]
   name = Dylan Northrup
   email = github@doc-x.net      # dotdiffignore
-  #email = northrup@ufl.edu     # dotdiffignore
 
 [alias]
-  a = !git add . && git status
   br = branch
   co = checkout
   ci = commit
@@ -27,11 +25,11 @@
   lg2-specific = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(auto)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'
   lg3-specific = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset) %C(bold cyan)(committed: %cD)%C(reset) %C(auto)%d%C(reset)%n''          %C(white)%s%C(reset)%n''          %C(dim white)- %an <%ae> %C(reset) %C(dim white)(committer: %cn <%ce>)%C(reset)'
   plush = !sh -c \"git pull --rebase && git push\"
-  st = status
+  st = !git --no-optional-locks status
   tyup = !sh -c \"git up && git push\"
 
 [color]
-  ui = auto
+  ui = true
   status = auto
   diff = always
   branch = always

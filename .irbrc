@@ -1,22 +1,27 @@
 # Pretty print
 require 'pp'
 
+# From https://alchemists.io/projects/irb-kit
+require "irb/kit"
+IRB::Kit.register_helpers :all
+IRB.conf[:PROMPT][:DYLANIRBKIT] = {
+  PROMPT_I: "[#{IRB::Kit.prompt}]> ",
+  PROMPT_N: "[#{IRB::Kit.prompt}]| ",
+  PROMPT_C: "[#{IRB::Kit.prompt}]| ",
+  PROMPT_S: "[#{IRB::Kit.prompt}]%l ",
+  RETURN: "=> %s\n"
+}
+
 # Tab Completion
 require 'irb/completion'
 IRB.conf[:USE_READLINE] = true
 
-# Histories
-require 'irb/ext/save-history'
-IRB.conf[:SAVE_HISTORY] = 1000
-IRB.conf[:HISTORY_FILE] = "#{ENV['HOME']}/.irb_history"
-IRB.conf[:EVAL_HISTORY] = 100
-
 # Set up prompt
 IRB.conf[:PROMPT][:DYLAN] = {
-  :PROMPT_I => '(%m):%03n:%i> ',
-  :PROMPT_S => '(%m):%03n:%i> ',
-  :PROMPT_C => '(%m):%03n:%i%l ',
-  :PROMPT_N => '(%m):%03n:%i* ',
+  :PROMPT_I => "[#{IRB::Kit.prompt}] (%m):%03n:%i> ",
+  :PROMPT_S => "[#{IRB::Kit.prompt}] (%m):%03n:%i> ",
+  :PROMPT_C => "[#{IRB::Kit.prompt}] (%m):%03n:%i%l ",
+  :PROMPT_N => "[#{IRB::Kit.prompt}] (%m):%03n:%i* ",
   :RETURN => "  ==> %s\n",
 }
 IRB.conf[:PROMPT_MODE] = :DYLAN
@@ -66,13 +71,3 @@ class Module
   end
 end
 
-# A way to look at our history
-def history(file=nil)
-   if file
-     File.open(file, "w") do |f|
-       f.puts IRB::ReadlineInputMethod::HISTORY.to_a
-     end
-   else
-     puts IRB::ReadlineInputMethod::HISTORY.to_a
-   end
-end

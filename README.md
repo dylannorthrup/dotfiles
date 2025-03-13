@@ -1,5 +1,3 @@
-dotfiles
-========
+# NOTE: This repo is a lagging mirror
 
-Lots of '.files' that I use to keep my environments somewhat consistent.  Also a simple 'push_dotfiles.sh' utility 
-to copy out the files to the correct locations after the git repo has been downloaded.
+I've moved to using [chezmoi](https://chezmoi.io) for my "dotfile management". I'll do my best to synchronize the changes I make there with the contents here for non-sensitive files. Unless I take the time to automate that, any synchronization will be mostly manual and done when I am wanting to make a thing available to someone else that hasn't been sync'd yet.
