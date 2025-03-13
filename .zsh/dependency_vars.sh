@@ -147,5 +147,3 @@ source_dot_d_files() {
     _loopCount=$(( _loopCount + 1 ))
   done
 }
-
-alias realcat='/bin/cat'

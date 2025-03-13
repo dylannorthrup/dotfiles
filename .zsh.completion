@@ -1,18 +1,24 @@
 autoload -Uz bracketed-paste-magic
-zle -N bracketed-paste bracketed-paste-magic
+#zle -N bracketed-paste bracketed-paste-magic
+
+# Add completions for asdf
+fpath=(${ASDF_DIR}/completions $fpath)
 
 autoload -Uz compinit && compinit -i
 autoload -Uz bashcompinit && bashcompinit -i
+
+source_dot_d_files "${HOME}/.zsh/bash_completions.d"
+
 set functionzeroarg   # $0 is set to the name of file containing function if function was sourced (Not the calling script)
 set alwaystoend       # Completion always matches to the end of the match
 set nocompleteinword  # Cursor is set to the end of the word if completion is started
 
 export KC_COMPLETION_FILE="$HOME/.zsh/completions.d/kubectl.sh"
 
-fpath=(.zsh/completions.d $fpath)
+fpath=("${HOME}"/.zsh/completions.d /usr/local/share/zsh/site-functions $fpath)
 
 autoload -Uz url-quote-magic
-zle -N self-insert url-quote-magic
+#zle -N self-insert url-quote-magic
 
 # Put in a test here for if the file is locked and loop until a) it unlocks or
 # b) we timeout after 20 seconds.

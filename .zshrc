@@ -114,3 +114,5 @@ if [ -f "$HOME/.zsh.completion" ]; then
 fi
 
 WORDCHARS='~'
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

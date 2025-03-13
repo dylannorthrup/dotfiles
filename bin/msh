@@ -1,19 +1,19 @@
-#!/usr/bin/zsh
+#!/usr/bin/env zsh
 # ssh-multi
 # D.Kovalov
 # Based on http://linuxpixies.blogspot.jp/2011/06/tmux-copy-mode-and-how-to-control.html
- 
+
 # a script to open multiple shells on multiple tmux panes
- 
- 
+
+
 starttmux() {
     if [ -z "$NUM_WIN" ]; then
        echo -n "Please The number of windows you would like created [ENTER]: "
        read NUM_WIN
     fi
- 
+
     local num_win=( $NUM_WIN )
- 
+
     tmux new-window "${SHELL}"
     for i in $(seq 2 $num_win); do
         tmux split-window -h  "echo Opening window $i; ${SHELL}"
@@ -21,9 +21,9 @@ starttmux() {
     done
     tmux select-pane -t 0
     tmux set-window-option synchronize-panes on > /dev/null
- 
+
 }
- 
+
 NUM_WIN=$1
- 
+
 starttmux

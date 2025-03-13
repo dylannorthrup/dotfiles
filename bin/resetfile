@@ -2,5 +2,5 @@
 #
 # Take a file and try to get it back to the correct status on it in git
 
-git reset HEAD $*
-git co $*
+git reset HEAD "$*"
+git co "$*"

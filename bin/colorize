@@ -26,6 +26,17 @@ BEGIN {
   # then again to get the parent of both '/.../bin/' and /.../lib/'. Then
   # we append '/lib' to that and we're off to the races!
   $lib_dir ||= dirname(dirname(abs_path($0))) . "/lib";
+
+  # List::Util 'pairs' is only available approximately after perl 5.20.0. So,
+  # if the local version is less than that, act as a pass-through and exit.
+  # $^V returns version as "vX.YY.ZZ", so to avoid tokenizing it, we instead
+  # use $] which returns version as X.YYYZZZ where Y and Z are 0 padded.
+  if ($] <= 5.020000) {
+    while(my $line = <STDIN>) {
+      print $line;
+    }
+    exit;
+  }
 }
 
 use lib "$lib_dir";

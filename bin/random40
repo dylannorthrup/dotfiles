@@ -1,3 +1,4 @@
 #!/bin/bash
 
-base64 /dev/urandom | sed -e 's/[\+\/]//g;' | head -c 40
+base64 -i /dev/urandom | sed -e 's/[\+\/]//g;' | head -c 40
+echo ""

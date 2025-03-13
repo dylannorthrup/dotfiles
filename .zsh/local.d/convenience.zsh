@@ -2,21 +2,17 @@
 # shellcheck shell=bash
 # Handy shell snippets
 
-# Do a diff of what's on the box and what our `dotfiles` directory says
-function dotdiff() {
-  cd ${HOME}
-  for i in $(grep -v '^#' dotfiles/dotdiff.files); do
-    echo "== $i" | colorize cyan '.*'
-    # Use '# dotdiffignore$' to flag sections we know are different
-    # And explicitly exclude ephemeral files that won't be in git
-    /usr/bin/diff -I '# dotdiffignore$' \
-      -x "kubectl.completion"           \
-      -x ".*.swp"                       \
-      -qr $i dotfiles/$i |\
-    rg -v 'dynamic_repo_paths'
-  done
+if [[ "${_zshConvenienceSourced:-FALSE}" == "TRUE" ]]; then
+  return
+fi
+export _zshConvenienceSourced="TRUE"
+
+# Remove ANSI codes from STDIN
+function decolor() {
+  sed -r "s/[[:cntrl:]]\[([0-9]{1,3};)*[0-9]{1,3}m//g"
 }
 
+# Add commas to numbers per US convention
 function commafy_num() {
   echo "$*" | sed ':a;s/\B[0-9]\{3\}\>/,&/;ta'
 }
@@ -158,9 +154,37 @@ my_remove_last_history_entry() {
 
   # Get the files contents minus the last entry(head -n -1 does that)
   #cat $history_file | head -n -1 &> $history_temp_file
-  unalias cat
   cat $history_file | head -n "${lines_to_remove}" &> $history_temp_file
   mv "$history_temp_file" "$history_file"
 
   fc -R # read history file.
+}
+
+webm2gif() {
+  if [[ -z "${1}" || -z "${2}" ]]; then
+    2>&1 echo "ERROR: Did not get two arguments. An input and output file are required."
+    2>&1 echo "Usage: webm2gif <input.webm> <output.gif>"
+    return
+  fi
+  if [[ ! -f "${1}" ]]; then
+    2>&1 echo "ERROR: Could not find input file: '${1}'. Exiting"
+    return
+  fi
+  ffmpeg -i "${1}" -pix_fmt rgb24 "${2}"
+}
+
+hd() {
+  hexdump -C "$@" | less -X
+}
+
+hdc() {
+  hexdump -f "${HOME}/.config/hexdump/C24.fmt" "$@" | less -X
+}
+
+hdb() {
+  hexdump -f "${HOME}/.config/hexdump/b.fmt" "$@" | less -X
+}
+
+hdw() {
+  hexdump -f "${HOME}/.config/hexdump/wide.fmt" "$@" | less -X
 }

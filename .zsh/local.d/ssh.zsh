@@ -5,6 +5,10 @@
 # Uncomment this if you want to do local debugging
 #DEBUG=$(true)
 
+hostname=$(hostname -s)
+
+export AUTHORITY="${HOME}/.xauth.${hostname}"
+
 declare -a _SSH_IDS
 
 function _get_ssh_ids() {
@@ -13,7 +17,8 @@ function _get_ssh_ids() {
     return
   fi
 
-  for i in ${HOME}/.ssh/*.pub; do
+  find "${HOME}/.ssh" -maxdepth 1 -name '*.pub' ! -name '*-cert.pub' | \
+    sort | uniq | while read -r i; do
     j=$(echo "${i}" | sed -e 's/.pub$//')
     if [[ -f "${j}" ]]; then
       pdebug "Appending '${j}' as an identity. _SSH_IDs is length ${#_SSH_IDS} before appending."
@@ -40,6 +45,13 @@ function _start_agent() {
   ssh-agent | sed '/^echo/d' >! "${SSH_ENV}"
   chmod 600 "${SSH_ENV}"
   . "${SSH_ENV}" > /dev/null
+}
+
+function _add_gpg_identities() {
+  local idFiles
+  for i in ${HOME}/.ssh/*.gpg; do
+    ssh-add - <<< $(gpg --decrypt "${i}")
+  done
 }
 
 function _add_identities() {
@@ -100,7 +112,7 @@ function _add_identities() {
 if [ ! -z "$PS1" ]; then
   # Interactive!
   # Check if we have an ssh agent running
-  SSH_ENV="$HOME/.ssh/environment"
+  SSH_ENV="$HOME/.ssh/environment-$(hostname)"
 
   # See if we have ssh-agent environment set up
   if [ ! -f $SSH_ENV ]; then
@@ -125,16 +137,6 @@ if [ ! -z "$PS1" ]; then
     . $SSH_ENV
     tput rc
     tput el
-    _get_ssh_ids
-    _add_identities
-    # If we had an error, regen and try again
-    if [ $? -ne 0 ]; then
-      echo "Regenerating '$SSH_ENV' and sourcing re-adding"
-      _get_ssh_ids
-      _add_identities
-    fi
-  else
-    echo "Was unable to create the file '$SSH_ENV'. Please investigate why"
   fi
 fi
 
